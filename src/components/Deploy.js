@@ -1,5 +1,6 @@
 import { Store } from '../Store'
-import React, {useEffect} from 'react'
+import React, { useEffect } from 'react'
+import { Constructor } from './Constructor'
 
 export function Deploy() {
   const { state, dispatch } = React.useContext(Store)
@@ -27,5 +28,17 @@ export function Deploy() {
       {Object.entries(contracts).map(
         ([name, data]) => <option key={name} value={name}>{name}</option>)}
     </select>
+    {contracts[selectedContract] &&
+    <Constructor
+      onDeploy={(params) => console.log('onDeploy', params)}
+      onExisting={(address) => console.log('onExisting', address)}
+      method={getConstructor(contracts[selectedContract].abi)}
+    />}
     </div>
 }
+
+function getConstructor (abi) {
+  return abi.filter(
+    (method) => method.type === 'constructor')[0]
+}
+
