@@ -3,6 +3,7 @@ import './App.css'
 import { Network } from './components/Network'
 import { Store } from './Store'
 import { TxMetadata } from './components/TxMetadata'
+import { Deploy } from './components/Deploy'
 
 function App({client}) {
   const { dispatch } = React.useContext(Store)
@@ -17,6 +18,8 @@ function App({client}) {
         <Network/>
         <br/>
         <TxMetadata/>
+        <br/>
+        <Deploy/>
       </div>
   );
 }
@@ -28,11 +31,31 @@ async function initPlugin (client, dispatch) {
       console.log('Network changed')
       fetchNetworkData(client, dispatch)
     })
+
+  fetchCompilationResult(client, dispatch)
+  client.solidity.on('compilationFinished',
+    (fileName, source, languageVersion, data) => {
+      console.log("compilation finished", fileName, source, languageVersion, data)
+      // Do something
+      fetchCompilationResult(client, dispatch)
+    });
 }
 
 async function fetchAccounts (client) {
   let accounts = await client.udapp.getAccounts()
   return (typeof accounts === 'string') ? [accounts] : accounts
+}
+
+async function fetchCompilationResult (client, dispatch) {
+  try {
+    const result = await client.solidity.getCompilationResult()
+    dispatch({
+      type: 'FETCH_COMPILATION',
+      payload: result.data,
+    })
+  } catch (e) {
+    console.log('error getting compilation result', e)
+  }
 }
 
 async function fetchNetworkData (client, dispatch) {

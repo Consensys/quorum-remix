@@ -14,13 +14,31 @@ const initialState = {
     gasPrice: 0,
     value: 0,
     valueDenomination: 'wei',
+  },
+  compilation: {
+    contracts: {}
   }
+}
+
+function normalizeCompilationOutput (data) {
+  if(data === null) {
+    return {};
+  }
+  const contracts = {}
+  Object.entries(data.contracts).forEach(([filename, fileContents]) => {
+    Object.entries(fileContents).forEach(([contractName, contractData]) => {
+      let name = `${contractName} - ${filename}`;
+      contracts[name] = contractData
+    })
+  })
+  return contracts
 }
 
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_NETWORK':
       return { ...state, network: action.payload };
+
     case 'SELECT_ACCOUNT':
       return {
         ...state,
@@ -29,6 +47,27 @@ function reducer(state, action) {
           account: action.payload
         }
       }
+
+    case 'FETCH_COMPILATION':
+      const contracts = normalizeCompilationOutput(action.payload)
+      console.log('comp', contracts)
+      return {
+        ...state,
+        compilation: {
+          ...state.compilation,
+          contracts
+        },
+      }
+
+    case 'SELECT_CONTRACT':
+      return {
+        ...state,
+        compilation: {
+          ...state.compilation,
+          selectedContract: action.payload
+        }
+      }
+
     default:
       return state;
   }
