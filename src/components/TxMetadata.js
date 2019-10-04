@@ -5,7 +5,13 @@ export function TxMetadata () {
   const { state, dispatch } = React.useContext(Store)
   const {
     network: { accounts },
-    txMetadata: { account }
+    txMetadata: {
+      account,
+      gasLimit,
+      gasPrice,
+      value,
+      valueDenomination,
+    }
   } = state
 
   const onChangeAccount = (account) => {
@@ -28,5 +34,8 @@ export function TxMetadata () {
       {accounts.map(
         (account) => <option key={account} value={account}>{account}</option>)}
     </select>
+    <div>Gas price: {gasPrice}</div>
+    <div>Gas limit: {gasLimit}</div>
+    <div>Value: {value} {valueDenomination}</div>
   </div>
 }

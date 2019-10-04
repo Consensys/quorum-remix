@@ -9,7 +9,12 @@ const initialState = {
     endpoint: 'n/a',
     accounts: [],
   },
-  txMetadata: {}
+  txMetadata: {
+    gasLimit: 3000000,
+    gasPrice: 0,
+    value: 0,
+    valueDenomination: 'wei',
+  }
 }
 
 function reducer(state, action) {
