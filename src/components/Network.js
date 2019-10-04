@@ -2,13 +2,14 @@ import { Store } from '../Store'
 import React from 'react'
 
 export function Network () {
-  const { state } = React.useContext(Store)
-  const { network } = state
-
-  const { id, name } = network.details
+  const {
+    provider,
+    endpoint,
+    details: { name, id }
+  } = React.useContext(Store).state.network
 
   return <div>
     <div><strong>Network: </strong>{name} ({id})</div>
-    <div>{network.endpoint} ({network.provider})</div>
+    <div>{endpoint} ({provider})</div>
     </div>
 }

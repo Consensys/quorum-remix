@@ -7,13 +7,23 @@ const initialState = {
     provider: 'none',
     details: {},
     endpoint: 'n/a',
-  }
+    accounts: [],
+  },
+  txMetadata: {}
 }
 
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_NETWORK':
       return { ...state, network: action.payload };
+    case 'SELECT_ACCOUNT':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          account: action.payload
+        }
+      }
     default:
       return state;
   }
