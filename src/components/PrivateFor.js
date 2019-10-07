@@ -1,75 +1,58 @@
-import React, {Component} from "react";
-import Creatable from "react-select/creatable";
-// import Client from "../client/client"
+import React, { useEffect, useState } from 'react'
+import Creatable from 'react-select/creatable/dist/react-select.esm'
 
-export class PrivateFor extends Component {
+export function PrivateFor ({ onChange, tesseraEndpoint }) {
+  const [options, setOptions] = useState([])
+  const [selection, setSelection] = useState([])
 
-    constructor(props, context) {
-        super(props, context);
-        this.state = {options: [], selection: []}
+
+  const onChangeInternal = (options) => {
+    setSelection(options)
+    sendOptionsToParent(options)
+  }
+  const setOptionsAndsSelection = (parties) => {
+    let privateFrom = ''
+    if (!tesseraEndpoint.endsWith('/')) {
+      tesseraEndpoint += '/'
     }
+    const options = parties.map(party => {
+      if (party.url === tesseraEndpoint) {
+        console.log('Found our pub key', party.key)
+        privateFrom = party.key
+      }
+      return createOption(party)
+    })
+      .sort((a, b) => a.label.localeCompare(b.label))
 
-    render() {
-        const {options, selection} = this.state;
-        return <Creatable options={options} className="private_for"
-                       onChange={this.onChangeInternal}
-                       value={selection}
-                       classNamePrefix="private_for" isMulti autosize={false}/>;
+    setOptions(options)
+  }
+
+  function createOption (party) {
+    return {
+      value: party.key,
+      label: `${party.url} (${party.key})`, // default to just the key
     }
+  }
 
-    onChangeInternal = (options) => {
-        this.setState({selection: options})
-        this.sendOptionsToParent(options);
-    };
+  function sendOptionsToParent (options) {
+    const privateFor = options ? options.map(option => option.value) : []
+    onChange({ privateFor })
+  }
 
-    componentDidMount() {
-        // const {initialPrivateFor} = this.props;
-        // let _this = this;
-        // Client.post('api/node/tm/peers')
-        // .then((response) => {
-        //     const parties = response.data.attributes.result.keys;
-        //     Client.get('api/node/nodes')
-        //     .done(function (response) {
-        //             let nodes = response.data.attributes.result;
-        //         _this.setOptionsAndsSelection(parties, nodes, initialPrivateFor);
-        //     })
-        // })
-    }
+  useEffect(() => {
+    const json = fetch(`${tesseraEndpoint}/partyinfo`)
+      .then((response) => response.json())
+      .then((json) => {
 
-    setOptionsAndsSelection = (parties, nodes, initialPrivateFor) => {
-        const options = parties
-            .map(party => this.createOption(party, nodes))
-            .sort((a, b) => a.label.localeCompare(b.label));
+        console.log('got privateFor', json)
+        const parties = json.keys
+        setOptionsAndsSelection(parties)
+      })
+  }, [])
 
-        const initialSelection = options.filter(
-            option => initialPrivateFor.indexOf(option.value) >= 0);
-
-        this.setState({options, selection: initialSelection});
-
-        console.log("initial", options, initialSelection)
-        // setting initial selection through state won't tigger onChange
-        this.sendOptionsToParent(initialSelection);
-    };
-
-    createOption(party, nodes) {
-        let option = {
-            value: party.key,
-            label: party.key // default to just the key
-        };
-        nodes.forEach((node) => {
-            // urls from tessera always have the trailing slash
-            if (!node.transactionManagerUrl.endsWith("/")) {
-                node.transactionManagerUrl += "/"
-            }
-
-            if (node.transactionManagerUrl === party.url) {
-                option.label = `${node.name} (${party.key})`
-            }
-        });
-        return option;
-    }
-
-    sendOptionsToParent(options) {
-        this.props.onChange(options ? options.map(option => option.value) : []);
-    }
+  return <Creatable options={options} className="private_for"
+                    style={{ height: 450 }}
+                    onChange={onChangeInternal}
+                    value={selection}
+                    classNamePrefix="private_for" isMulti autosize={false}/>
 }

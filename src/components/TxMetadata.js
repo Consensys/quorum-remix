@@ -1,10 +1,11 @@
 import { Store } from '../Store'
 import React, { useEffect } from 'react'
+import { PrivateFor } from './PrivateFor'
 
 export function TxMetadata () {
   const { state, dispatch } = React.useContext(Store)
   const {
-    network: { accounts },
+    network: { accounts, tesseraEndpoint },
     txMetadata: {
       account,
       gasLimit,
@@ -34,6 +35,8 @@ export function TxMetadata () {
       {accounts.map(
         (account) => <option key={account} value={account}>{account}</option>)}
     </select>
+    <div>Private for:</div>
+    <PrivateFor onChange={console.log} tesseraEndpoint={tesseraEndpoint} />
     <div>Gas price: {gasPrice}</div>
     <div>Gas limit: {gasLimit}</div>
     <div>Value: {value} {valueDenomination}</div>

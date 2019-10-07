@@ -7,8 +7,9 @@ const initialState = {
   network: {
     provider: 'none',
     details: {},
-    endpoint: 'n/a',
+    endpoint: '',
     accounts: [],
+    tesseraEndpoint: 'http://localhost:9001',
   },
   txMetadata: {
     gasLimit: 3000000,
@@ -41,6 +42,8 @@ function reducer(state, action) {
     case 'FETCH_NETWORK':
       console.log(action.payload)
       const network = action.payload
+      console.log('setting hardcoded tessera url')
+      network.tesseraEndpoint = 'http://localhost:9001'
       let web3
       if (network.endpoint) {
         web3 = new Web3(network.endpoint)

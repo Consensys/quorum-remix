@@ -67,7 +67,7 @@ async function fetchNetworkData (client, dispatch) {
     console.log('Fetching network data')
     const provider = await client.network.getNetworkProvider()
     const details = await client.network.detectNetwork()
-    let endpoint = 'n/a'
+    let endpoint = ''
     if (provider === 'web3') {
       endpoint = await client.network.getEndpoint()
     }
