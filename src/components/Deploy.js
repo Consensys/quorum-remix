@@ -4,13 +4,39 @@ import { Constructor } from './Constructor'
 
 export function Deploy() {
   const { state, dispatch } = React.useContext(Store)
-  const { compilation: {
+  const {
+    txMetadata,
+    web3,
+    compilation: {
     contracts,
     selectedContract,
   }} = state
 
   const onChangeContract = (contractName) => {
     dispatch({ type: 'SELECT_CONTRACT', payload: contractName })
+  }
+  const onDeploy = async (params) => {
+    console.log('onDeploy', params)
+    let contract = contracts[selectedContract]
+    let abi = contract.abi
+    const constructor = getConstructor(abi)
+    const bytecode = '0x' + contract.evm.bytecode.object
+    const orderedParams = constructor.inputs.map(({ name }) => params[name])
+    var simplestorageContract = new web3.eth.Contract(abi)
+    const tx = {
+      from: txMetadata.account,
+      gasPrice: txMetadata.gasPrice,
+      gas: txMetadata.gasLimit,
+    }
+    console.log('contract', simplestorageContract, 'args', orderedParams, 'meta', tx)
+    var simplestorage = await simplestorageContract.deploy({
+      data: bytecode,
+      arguments: orderedParams,
+    })
+    const response = await simplestorage.send(tx)
+
+    console.log('finished', response, response.options.address)
+    dispatch({ type: 'ADD_CONTRACT', payload: { ...contract, address: response.options.address } })
   }
 
   useEffect(() => {
@@ -30,8 +56,11 @@ export function Deploy() {
     </select>
     {contracts[selectedContract] &&
     <Constructor
-      onDeploy={(params) => console.log('onDeploy', params)}
-      onExisting={(address) => console.log('onExisting', address)}
+      onDeploy={onDeploy}
+      onExisting={(address) => {
+        console.log('onExisting', address)
+        dispatch({ type: 'ADD_CONTRACT', payload: { ...contracts[selectedContract], address } })
+      }}
       method={getConstructor(contracts[selectedContract].abi)}
     />}
     </div>

@@ -1,4 +1,5 @@
 import React from 'react'
+import Web3 from 'web3'
 
 export const Store = React.createContext()
 
@@ -17,7 +18,8 @@ const initialState = {
   },
   compilation: {
     contracts: {}
-  }
+  },
+  contracts: []
 }
 
 function normalizeCompilationOutput (data) {
@@ -37,7 +39,13 @@ function normalizeCompilationOutput (data) {
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_NETWORK':
-      return { ...state, network: action.payload };
+      console.log(action.payload)
+      const network = action.payload
+      let web3
+      if (network.endpoint) {
+        web3 = new Web3(network.endpoint)
+      }
+      return { ...state, network: network, web3 }
 
     case 'SELECT_ACCOUNT':
       return {
@@ -66,6 +74,11 @@ function reducer(state, action) {
           ...state.compilation,
           selectedContract: action.payload
         }
+      }
+    case 'ADD_CONTRACT':
+      return {
+        ...state,
+        contracts: [...state.contracts, action.payload]
       }
 
     default:

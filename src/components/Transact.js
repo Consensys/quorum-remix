@@ -50,41 +50,15 @@ export class TransactTable extends React.Component {
 
   constructor(props, context) {
     super(props, context);
-    const accounts = props.accounts.map((account) => ({
-      label: account,
-      value: account
-    }));
     this.state = {
-      accounts,
-      selectedAccount: accounts[0],
       activeContract: props.activeContract,
     }
   }
 
   render() {
-    const {accounts, selectedAccount, activeContract} = this.state;
-    console.log("active", activeContract.abi,
-        activeContract.attributes.privateFor)
+    const {activeContract} = this.state;
     return (
         <tbody>
-        <tr className="from_address">
-          <td colSpan="2" className="from_address"><label>FROM
-            ADDRESS</label>
-            <Select options={accounts} className="accounts"
-                    onChange={this.onAccountSelected}
-                    value={selectedAccount}/>
-          </td>
-        </tr>
-        <tr className="private_for">
-          <td colSpan="2" className="from_address"><label
-              htmlFor="private_for" title="One key per line">Private
-            For</label>
-            <PrivateFor
-                initialPrivateFor={activeContract.attributes.privateFor || ""}
-                onChange={this.onPrivateForChange}/>
-          </td>
-        </tr>
-
         {
           activeContract.abi.filter(
               (method) => method.type === "function")
@@ -102,20 +76,12 @@ export class TransactTable extends React.Component {
   }
 
   onMethodCalled = (method, inputValues) => {
-    const {activeContract, selectedAccount, privateFor} = this.state;
+    const {activeContract, privateFor} = this.state;
 
-    this.doMethodCall(activeContract, selectedAccount.value, method,
+    this.doMethodCall(activeContract, this.props.account, method,
         inputValues,
         "", privateFor);
 
-  };
-
-  onAccountSelected = (account) => {
-    this.setState({selectedAccount: account});
-  };
-
-  onPrivateForChange = (privateFor) => {
-    this.setState({privateFor})
   };
 
   doMethodCall = (contract, from, method, params, privateFrom,

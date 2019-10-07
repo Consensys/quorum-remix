@@ -4,9 +4,11 @@ import { Network } from './components/Network'
 import { Store } from './Store'
 import { TxMetadata } from './components/TxMetadata'
 import { Deploy } from './components/Deploy'
+import { Contract } from './components/Contract'
 
 function App({client}) {
-  const { dispatch } = React.useContext(Store)
+  const { state, dispatch } = React.useContext(Store)
+  const {contracts} = state
 
   React.useEffect(() => {
     initPlugin(client, dispatch)
@@ -20,6 +22,8 @@ function App({client}) {
         <TxMetadata/>
         <br/>
         <Deploy/>
+        <br/>
+        {contracts.map((contract) => <Contract contract={contract}/>)}
       </div>
   );
 }
