@@ -83,6 +83,14 @@ function reducer(state, action) {
         ...state,
         contracts: [...state.contracts, action.payload]
       }
+    case 'UPDATE_PRIVATE_FOR':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          privateFor: action.payload
+        }
+      }
 
     default:
       return state;

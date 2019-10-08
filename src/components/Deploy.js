@@ -27,6 +27,8 @@ export function Deploy() {
       from: txMetadata.account,
       gasPrice: txMetadata.gasPrice,
       gas: txMetadata.gasLimit,
+      privateFrom: txMetadata.privateFrom,
+      privateFor: txMetadata.privateFor
     }
     console.log('contract', simplestorageContract, 'args', orderedParams, 'meta', tx)
     var simplestorage = await simplestorageContract.deploy({

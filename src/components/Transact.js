@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-import Select from "react-select";
-import {PrivateFor} from "./PrivateFor";
+import React, { useState } from 'react'
+import { Store } from '../Store'
 
 export const Method = ({method, onSubmit, inlineButton = true}) => {
 
@@ -46,66 +45,52 @@ export const Method = ({method, onSubmit, inlineButton = true}) => {
   </tr>;
 };
 
-export class TransactTable extends React.Component {
+export function TransactTable (props) {
+  const { activeContract } = props
+  const { state, dispatch } = React.useContext(Store)
+  const { txMetadata: { privateFor, privateFrom, account }} = state
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      activeContract: props.activeContract,
-    }
-  }
-
-  render() {
-    const {activeContract} = this.state;
-    return (
-        <tbody>
-        {
-          activeContract.abi.filter(
-              (method) => method.type === "function")
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((method) => (
-              <Method key={method.name}
-                      method={method}
-                      onSubmit={(inputValues) => this.onMethodCalled(method,
-                          inputValues)}
-              />
-          ))
-        }
-        </tbody>
-    )
-  }
-
-  onMethodCalled = (method, inputValues) => {
-    const {activeContract, privateFor} = this.state;
-
-    this.doMethodCall(activeContract, this.props.account, method,
-        inputValues,
-        "", privateFor);
-
-  };
-
-  doMethodCall = (contract, from, method, params, privateFrom,
-      privateFor) => {
+  function doMethodCall (contract, from, method, params, privateFrom,
+    privateFor) {
     var _params = Object.values(params)
-    var _sig_params = _params.map((value) => JSON.stringify(value)).join(", ");
-    var methodSig = method.name + "(" + _sig_params + ")";
-    var methodArgs = {from: from, args: _params};
+    var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
+    var methodSig = method.name + '(' + _sig_params + ')'
+    var methodArgs = { from: from, args: _params }
 
     if (!method.constant) {
       // txn
-      methodArgs.privateFrom = privateFrom;
-      methodArgs.privateFor = privateFor;
+      methodArgs.privateFrom = privateFrom
+      methodArgs.privateFor = privateFor
     }
 
-    let web3Contract = new this.props.web3.eth.Contract(contract.abi, contract.address);
-    let web3Method = web3Contract.methods[method.name](..._params);
-    let callOrSend = method.constant ? 'call' : 'send';
-    console.log("test", callOrSend, method.name, _params, methodArgs);
+    let web3Contract = new props.web3.eth.Contract(contract.abi, contract.address)
+    let web3Method = web3Contract.methods[method.name](..._params)
+    let callOrSend = method.constant ? 'call' : 'send'
+    console.log('test', callOrSend, method.name, _params, methodArgs)
     web3Method[callOrSend](methodArgs).then((res) => {
-      this.props.onTransactionSubmitted(res, method, methodSig,
-          methodArgs)
-    });
-  };
+      props.onTransactionSubmitted(res, method, methodSig,
+        methodArgs)
+    })
+  }
+
+  return (
+    <tbody>
+    {
+      activeContract.abi.filter(
+        (method) => method.type === 'function')
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map((method) => (
+          <Method key={method.name}
+                  method={method}
+                  onSubmit={(inputValues) => doMethodCall(props.activeContract, account, method,
+                    inputValues,
+                    privateFrom,
+                    privateFor)}
+          />
+        ))
+    }
+    </tbody>
+  )
 }
 
 export const TransactionInput = ({input, onChange}) => {
