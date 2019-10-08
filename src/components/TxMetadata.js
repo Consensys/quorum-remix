@@ -30,7 +30,7 @@ export function TxMetadata () {
 
   return <div>
     <div>Account:</div>
-    <select defaultValue={account}
+    <select className="form-control" defaultValue={account}
             onChange={(e) => onChangeAccount(e.target.value)}>
       {accounts.map(
         (account) => <option key={account} value={account}>{account}</option>)}

@@ -23,7 +23,7 @@ function App({client}) {
         <br/>
         <Deploy/>
         <br/>
-        {contracts.map((contract) => <Contract contract={contract}/>)}
+        {contracts.map((contract) => <Contract key={contract.address} contract={contract}/>)}
       </div>
   );
 }

@@ -52,7 +52,7 @@ export function Deploy() {
 
   return <div>
     <div>Compiled Contracts:</div>
-    <select defaultValue={selectedContract} onChange={(e) => onChangeContract(e.target.value)}>
+    <select className="form-control" defaultValue={selectedContract} onChange={(e) => onChangeContract(e.target.value)}>
       {Object.entries(contracts).map(
         ([name, data]) => <option key={name} value={name}>{name}</option>)}
     </select>
