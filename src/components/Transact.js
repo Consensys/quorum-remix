@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toAscii } from '../utils/TypeUtils'
 
 const containerStyle = {
   display: 'flex',
@@ -124,9 +125,8 @@ export const Method = ({ method, onSubmit, result }) => {
   return <div className="method"
               data-method={methodName}>
     {expanded ? expandedView() : collapsedView()}
-    {result && <div>{normalizeResult(result).map(([key, value]) => value).join(', ')}</div>}
+    {result && <div>{normalizeResult(result, method.outputs).map(([key, value]) => `${key}: ${value}`).join(', ')}</div>}
   </div>
-
 };
 
 export const TransactionInput = ({ input, onChange, value }) => {
@@ -193,14 +193,29 @@ const getInputPlaceholder =
 
 const isDynamicArray = (input) => input.type.match(/\[(\d+)?\]/);
 
-const normalizeResult = (result) => {
-  console.log('formatting', typeof result, result)
+const normalizeResult = (result, outputs = []) => {
   // call results with multiple return values are objects with numbered keys
   // normalize single value returns and 'send' responses
   if (typeof result !== 'object') {
-    result = { 0: result }
-  } else if (!(0 in result)) {
-    result = { 0: result.status ? 'Success' : 'Failed' }
+    let singleOutput = outputs[0]
+    result = { [singleOutput.name ? singleOutput.name : 0]: result }
+  } else if ('status' in result) {
+    return [['Status', result.status ? 'Success' : 'Failed']]
   }
-  return Object.entries(result)
+
+  return outputs.map((output, index) => {
+    console.log('out', output, result)
+    let key = index
+    if (output.name && output.name in result) {
+      key = output.name
+    }
+    let value = result[key]
+    console.log('value', value, key)
+
+    if (output.type.startsWith('bytes')) {
+      // TODO maybe they want bytes, not a string. show both
+      value = toAscii(value)
+    }
+    return [key, value]
+  })
 }

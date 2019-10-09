@@ -1,6 +1,7 @@
 import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Constructor } from './Constructor'
+import { fromAscii } from '../utils/TypeUtils'
 
 export function Deploy() {
   const { state, dispatch } = React.useContext(Store)
@@ -21,8 +22,15 @@ export function Deploy() {
     let abi = contract.abi
     const constructor = getConstructor(abi)
     const bytecode = '0x' + contract.evm.bytecode.object
-    const orderedParams = constructor.inputs.map(({ name }) => params[name])
-    var simplestorageContract = new web3.eth.Contract(abi)
+    const orderedParams = constructor.inputs.map(({ name, type }) => {
+      const value = params[name]
+      if (type.startsWith('bytes')) {
+        // web3js doesn't automatically convert string to bytes32
+        return fromAscii(value)
+      }
+      return value
+    })
+    const web3Contract = new web3.eth.Contract(abi)
     const tx = {
       from: txMetadata.account,
       gasPrice: txMetadata.gasPrice,
@@ -30,12 +38,12 @@ export function Deploy() {
       privateFrom: txMetadata.privateFrom,
       privateFor: txMetadata.privateFor
     }
-    console.log('contract', simplestorageContract, 'args', orderedParams, 'meta', tx)
-    var simplestorage = await simplestorageContract.deploy({
+    console.log('contract', web3Contract, 'args', orderedParams, 'meta', tx)
+    const deployableContract = await web3Contract.deploy({
       data: bytecode,
       arguments: orderedParams,
     })
-    const response = await simplestorage.send(tx)
+    const response = await deployableContract.send(tx)
 
     console.log('finished', response, response.options.address)
     dispatch({ type: 'ADD_CONTRACT', payload: { ...contract, address: response.options.address } })
