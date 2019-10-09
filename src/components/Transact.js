@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Store } from '../Store'
 
 const containerStyle = {
   display: 'flex',
@@ -41,11 +40,13 @@ const caretStyle = {
   float: 'right',
 }
 
-export const Method = ({ method, onSubmit }) => {
+export const Method = ({ method, onSubmit, result }) => {
 
   const [expanded, setExpanded] = useState(false)
   const [inputValues, setInputValues] = useState({});
   const [singleLineInput, setSingleLineInput] = useState('')
+
+  console.log(method.name, result)
 
   const submit = (e) => {
     e.stopPropagation();
@@ -123,57 +124,10 @@ export const Method = ({ method, onSubmit }) => {
   return <div className="method"
               data-method={methodName}>
     {expanded ? expandedView() : collapsedView()}
+    {result && <div>{normalizeResult(result).map(([key, value]) => value).join(', ')}</div>}
   </div>
 
 };
-
-export function TransactTable (props) {
-  const { activeContract } = props
-  const { state, dispatch } = React.useContext(Store)
-  const { txMetadata: { privateFor, privateFrom, account }} = state
-
-  function doMethodCall (contract, from, method, params, privateFrom,
-    privateFor) {
-    var _params = Object.values(params)
-    var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
-    var methodSig = method.name + '(' + _sig_params + ')'
-    var methodArgs = { from: from, args: _params }
-
-    if (!method.constant) {
-      // txn
-      methodArgs.privateFrom = privateFrom
-      methodArgs.privateFor = privateFor
-    }
-
-    let web3Contract = new props.web3.eth.Contract(contract.abi, contract.address)
-    let web3Method = web3Contract.methods[method.name](..._params)
-    let callOrSend = method.constant ? 'call' : 'send'
-    console.log('test', callOrSend, method.name, _params, methodArgs)
-    web3Method[callOrSend](methodArgs).then((res) => {
-      props.onTransactionSubmitted(res, method, methodSig,
-        methodArgs)
-    })
-  }
-
-  return (
-    <div>
-    {
-      activeContract.abi.filter(
-        (method) => method.type === 'function')
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .map((method) => (
-          <Method key={method.name}
-                  method={method}
-                  onSubmit={(inputValues) => doMethodCall(props.activeContract, account, method,
-                    inputValues,
-                    privateFrom,
-                    privateFor)}
-          />
-        ))
-    }
-    </div>
-  )
-}
 
 export const TransactionInput = ({ input, onChange, value }) => {
 
@@ -238,3 +192,15 @@ const getInputPlaceholder =
     (input) => `${input.name || "input"} (${input.type})`;
 
 const isDynamicArray = (input) => input.type.match(/\[(\d+)?\]/);
+
+const normalizeResult = (result) => {
+  console.log('formatting', typeof result, result)
+  // call results with multiple return values are objects with numbered keys
+  // normalize single value returns and 'send' responses
+  if (typeof result !== 'object') {
+    result = { 0: result }
+  } else if (!(0 in result)) {
+    result = { 0: result.status ? 'Success' : 'Failed' }
+  }
+  return Object.entries(result)
+}

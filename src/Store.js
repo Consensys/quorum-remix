@@ -20,7 +20,8 @@ const initialState = {
   compilation: {
     contracts: {}
   },
-  contracts: []
+  deployedAddresses: [],
+  deployedContracts: {},
 }
 
 function normalizeCompilationOutput (data) {
@@ -79,9 +80,16 @@ function reducer(state, action) {
         }
       }
     case 'ADD_CONTRACT':
+      const contract = action.payload
+      console.log('add contract', contract)
       return {
         ...state,
-        contracts: [...state.contracts, action.payload]
+        deployedAddresses:
+          [...state.deployedAddresses, contract.address],
+        deployedContracts: {
+          ...state.deployedContracts,
+          [contract.address]: contract
+        }
       }
     case 'UPDATE_PRIVATE_FOR':
       return {
@@ -89,6 +97,23 @@ function reducer(state, action) {
         txMetadata: {
           ...state.txMetadata,
           privateFor: action.payload
+        }
+      }
+
+    case 'METHOD_CALL':
+      const { address, methodSignature, result } = action.payload
+      const deployedContract = state.deployedContracts[address]
+      return {
+        ...state,
+        deployedContracts: {
+          ...state.deployedContracts,
+          [address]: {
+            ...deployedContract,
+            results: {
+              ...deployedContract.results,
+              [methodSignature]: result,
+            }
+          }
         }
       }
 
