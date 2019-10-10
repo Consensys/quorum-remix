@@ -47,8 +47,6 @@ export const Method = ({ method, onSubmit, result }) => {
   const [inputValues, setInputValues] = useState({});
   const [singleLineInput, setSingleLineInput] = useState('')
 
-  console.log(method.name, result)
-
   const submit = (e) => {
     e.stopPropagation();
     onSubmit(inputValues)

@@ -9,9 +9,10 @@ export function Deploy() {
     txMetadata,
     web3,
     compilation: {
-    contracts,
-    selectedContract,
-  }} = state
+      contracts,
+      selectedContract,
+    }
+  } = state
 
   const onChangeContract = (contractName) => {
     dispatch({ type: 'SELECT_CONTRACT', payload: contractName })

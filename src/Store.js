@@ -32,7 +32,7 @@ function normalizeCompilationOutput (data) {
   Object.entries(data.contracts).forEach(([filename, fileContents]) => {
     Object.entries(fileContents).forEach(([contractName, contractData]) => {
       let name = `${contractName} - ${filename}`;
-      contracts[name] = contractData
+      contracts[name] = { ...contractData, contractName, filename }
     })
   })
   return contracts
@@ -79,18 +79,35 @@ function reducer(state, action) {
           selectedContract: action.payload
         }
       }
+
     case 'ADD_CONTRACT':
       const contract = action.payload
       console.log('add contract', contract)
+      const newAddresses = [...state.deployedAddresses]
+      if(newAddresses.indexOf(contract.address) === -1) {
+        newAddresses.push(contract.address)
+      }
       return {
         ...state,
-        deployedAddresses:
-          [...state.deployedAddresses, contract.address],
+        deployedAddresses: newAddresses,
         deployedContracts: {
           ...state.deployedContracts,
           [contract.address]: contract
         }
       }
+
+    case 'REMOVE_CONTRACT':
+      const addressToDelete = action.payload
+      console.log('remove contract', addressToDelete)
+      const newDeployedContracts = { ...state.deployedContracts }
+      delete newDeployedContracts[addressToDelete]
+      return {
+        ...state,
+        deployedAddresses: state.deployedAddresses.filter(
+          (a) => a !== addressToDelete),
+        deployedContracts: newDeployedContracts
+      }
+
     case 'UPDATE_PRIVATE_FOR':
       return {
         ...state,
@@ -113,6 +130,19 @@ function reducer(state, action) {
               ...deployedContract.results,
               [methodSignature]: result,
             }
+          }
+        }
+      }
+
+    case 'EXPAND_CONTRACT':
+      const expandContract = state.deployedContracts[action.payload.address]
+      return {
+        ...state,
+        deployedContracts: {
+          ...state.deployedContracts,
+          [action.payload.address]: {
+            ...expandContract,
+            expanded: action.payload.expand,
           }
         }
       }
