@@ -48,7 +48,7 @@ export function TxMetadata () {
   return <div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Private for:</div>
-      <div style={{width: 250}}><PrivateFor/></div>
+      <div style={{width: 224}}><PrivateFor/></div>
     </div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Account:</div>
