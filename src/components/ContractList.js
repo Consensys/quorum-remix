@@ -11,6 +11,7 @@ export function ContractList () {
 
   return <div>
     <div>Deployed Contracts:</div>
+    {deployedAddresses.length === 0 && <div>None</div>}
     {deployedAddresses.map((address) => <Contract key={address} address={address}/>)}
   </div>
 }

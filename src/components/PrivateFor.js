@@ -35,7 +35,6 @@ export function PrivateFor () {
   }, [tesseraEndpoint])
 
   return <Creatable options={options} className="private_for"
-                    style={{ height: 450 }}
                     onChange={(selection) => dispatch({
                       type: 'UPDATE_PRIVATE_FOR',
                       payload: selection && selection.map((option) => option.value)

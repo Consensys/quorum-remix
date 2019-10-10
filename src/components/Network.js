@@ -1,5 +1,6 @@
 import { Store } from '../Store'
 import React from 'react'
+import { iconStyle, labelStyle, txMetaRowStyle } from '../utils/Styles'
 
 export function Network () {
   const { state, dispatch } = React.useContext(Store)
@@ -24,11 +25,14 @@ export function Network () {
   return <div>
     <div><strong>Network: </strong>{name} ({id})</div>
     <div>{endpoint} ({provider})</div>
-    <div>Tessera endpoint: <input className="form-control" type="text"
+    <div style={txMetaRowStyle}>
+      <div style={labelStyle}>Tessera:</div>
+      <input className="form-control" type="text"
                                   value={endpointInput}
                                   onChange={(e) => setEndpointInput(
                                     e.target.value)}/>
-      <button type="submit" onClick={(e) => onUpdateClicked(e)}>Update</button>
+      <i style={iconStyle} className="fa fa-refresh" onClick={(e) => onUpdateClicked(e)}/>
+
     </div>
   </div>
 }

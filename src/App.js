@@ -17,7 +17,6 @@ function App({client}) {
   return (
       <div className="App">
         <Network/>
-        <br/>
         <TxMetadata/>
         <br/>
         <Deploy/>

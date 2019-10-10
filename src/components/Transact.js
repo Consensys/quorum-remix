@@ -1,45 +1,12 @@
 import React, { useState } from 'react'
 import { toAscii } from '../utils/TypeUtils'
-
-const containerStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  height: 36,
-  marginTop: 8,
-}
-const addonButtonStyle = {
-  margin: 0,
-  wordBreak: 'inherit',
-  borderTopRightRadius: 0,
-  borderBottomRightRadius: 0,
-  borderRight: 0,
-}
-const buttonStyle = {
-  margin: 0,
-  minWidth: 100,
-  width: 100,
-  wordBreak: 'inherit',
-  borderTopRightRadius: 0,
-  borderBottomRightRadius: 0,
-  borderRight: 0,
-}
-const inputStyle = {
-  fontSize: 10,
-  padding: '.25rem',
-  borderTopLeftRadius: 0,
-  borderBottomLeftRadius: 0,
-  borderLeft: 0,
-  flexGrow: 1,
-}
-
-const caretStyle = {
-  cursor: 'pointer',
-  fontSize: 16,
-  padding: 8,
-  verticalAlign: 'center',
-  textDecoration: 'none',
-  float: 'right',
-}
+import {
+  addonButtonStyle,
+  buttonStyle,
+  containerStyle,
+  iconStyle,
+  inputStyle
+} from '../utils/Styles'
 
 export const Method = ({ method, onSubmit, result }) => {
 
@@ -87,7 +54,7 @@ export const Method = ({ method, onSubmit, result }) => {
     return <div style={{display: 'flex', flexDirection: 'column'}}>
       <div style={containerStyle}>
         <div style={{ flexGrow: 1 }}>{methodName}</div>
-        <i style={caretStyle} title="Deploy" className="fa fa-caret-up methCaret"
+        <i style={iconStyle} title="Deploy" className="fa fa-caret-up methCaret"
            onClick={(e) => onCaretClick(e, false)}/>
       </div>
       {method.inputs.map((input) =>
@@ -115,7 +82,7 @@ export const Method = ({ method, onSubmit, result }) => {
              onChange={(e) => onSingleLineInputChange(e.target.value)}
              value={singleLineInput}
              type="text"/>}
-      { method.inputs.length > 0 && <i style={caretStyle} title="Deploy" className="fa fa-caret-down methCaret"
+      { method.inputs.length > 0 && <i style={iconStyle} title="Deploy" className="fa fa-caret-down methCaret"
          onClick={(e) => onCaretClick(e, true)}/>}
     </div>
   }

@@ -1,27 +1,6 @@
 import React, { useState } from 'react'
 import { Method } from './Transact'
-
-const containerStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  marginTop: 8,
-}
-const buttonStyle = {
-  margin: 0,
-  minWidth: 100,
-  width: 100,
-  wordBreak: 'inherit',
-  borderTopRightRadius: 0,
-  borderBottomRightRadius: 0,
-  borderRight: 0,
-}
-const inputStyle = {
-  fontSize: 10,
-  padding: '.25rem',
-  borderTopLeftRadius: 0,
-  borderBottomLeftRadius: 0,
-  borderLeft: 0,
-}
+import { buttonStyle, containerStyle, inputStyle } from '../utils/Styles'
 
 export const Constructor = ({ method, onDeploy, onExisting }) => {
 
