@@ -4,7 +4,8 @@ import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
 import Web3 from 'web3'
 import {
-  bodyStyle, contractStyle,
+  bodyStyle,
+  contractStyle,
   ellipsisStyle,
   headerStyle,
   iconStyle
@@ -19,14 +20,14 @@ export function Contract ({ address }) {
   const { state, dispatch } = React.useContext(Store)
   const { txMetadata, web3, deployedContracts } = state
   const contract = deployedContracts[address]
-  const { expanded = false, contractName } = contract
+  const { expanded = false, contractName, privateFor } = contract
   console.log('contract', contract)
 
   useEffect(() => {
   }, [])
 
   function doMethodCall (method, params) {
-    const { privateFor, privateFrom, account, gasLimit, gasPrice, value, valueDenomination } = txMetadata
+    const { account, gasLimit, gasPrice, value, valueDenomination } = txMetadata
     var _params = Object.values(params)
     var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
     var methodSig = method.name + '(' + _sig_params + ')'
@@ -36,16 +37,10 @@ export function Contract ({ address }) {
       gasPrice,
       value: Web3.utils.toWei(value, valueDenomination),
       args: _params,
+      privateFor
     }
 
-    if (!method.constant) {
-      // txn
-      methodArgs.privateFrom = privateFrom
-      methodArgs.privateFor = privateFor
-    }
-
-    let web3Contract = new web3.eth.Contract(contract.abi,
-      contract.address)
+    let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
     let web3Method = web3Contract.methods[method.name](..._params)
     let callOrSend = method.constant ? 'call' : 'send'
     console.log('test', callOrSend, method.name, _params, methodArgs)
@@ -94,6 +89,11 @@ export function Contract ({ address }) {
   </div>
 
   const renderExpanded = () => <div style={bodyStyle}>
+    {privateFor &&
+    <div style={{ fontSize: 10 }}>
+      <div>Private for:</div>
+      {privateFor.map((pk) => <div>{pk}</div>)}
+    </div>}
     {
       contract.abi.filter(
         (method) => method.type === 'function')

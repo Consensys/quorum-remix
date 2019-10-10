@@ -49,7 +49,15 @@ export function Deploy() {
     const response = await deployableContract.send(tx)
 
     console.log('finished', response, response.options.address)
-    dispatch({ type: 'ADD_CONTRACT', payload: { ...contract, address: response.options.address } })
+    dispatch({
+      type: 'ADD_CONTRACT',
+      payload: {
+        ...contract,
+        address: response.options.address,
+        privateFor: txMetadata.privateFor,
+        privateFrom: txMetadata.privateFrom
+      }
+    })
   }
 
   useEffect(() => {
@@ -72,7 +80,15 @@ export function Deploy() {
       onDeploy={onDeploy}
       onExisting={(address) => {
         console.log('onExisting', address)
-        dispatch({ type: 'ADD_CONTRACT', payload: { ...contracts[selectedContract], address } })
+        dispatch({
+          type: 'ADD_CONTRACT',
+          payload: {
+            ...contracts[selectedContract],
+            address,
+            privateFor: txMetadata.privateFor,
+            privateFrom: txMetadata.privateFrom
+          }
+        })
       }}
       method={getConstructor(contracts[selectedContract].abi)}
     />}
