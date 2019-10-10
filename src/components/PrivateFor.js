@@ -2,9 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import Creatable from 'react-select/creatable/dist/react-select.esm'
 import { Store } from '../Store'
 
-export function PrivateFor ({ onChange, tesseraEndpoint }) {
+export function PrivateFor () {
   const { state, dispatch } = useContext(Store)
   const {
+    network: {
+      tesseraEndpoint,
+    },
     txMetadata: {
       privateFor
     }
@@ -20,28 +23,16 @@ export function PrivateFor ({ onChange, tesseraEndpoint }) {
   }
 
   useEffect(() => {
-    const json = fetch(`${tesseraEndpoint}/partyinfo`)
+    if (!tesseraEndpoint) {
+      return
+    }
+    fetch(`${tesseraEndpoint}/partyinfo`)
       .then((response) => response.json())
       .then((json) => {
-
-        console.log('got privateFor', json)
-        const parties = json.keys
-        let privateFrom = ''
-        if (!tesseraEndpoint.endsWith('/')) {
-          tesseraEndpoint += '/'
-        }
-        const formattedParties = parties.map(party => {
-          if (party.url === tesseraEndpoint) {
-            console.log('Found our pub key', party.key)
-            privateFrom = party.key
-          }
-          return createOption(party)
-        })
-          .sort((a, b) => a.label.localeCompare(b.label))
-
-        setOptions(formattedParties)
+        setOptions(json.keys.map(party => createOption(party))
+        .sort((a, b) => a.label.localeCompare(b.label)))
       })
-  }, [])
+  }, [tesseraEndpoint])
 
   return <Creatable options={options} className="private_for"
                     style={{ height: 450 }}

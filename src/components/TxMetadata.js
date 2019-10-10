@@ -29,16 +29,38 @@ export function TxMetadata () {
   }, [accounts])
 
   return <div>
+    <div>Private for:</div>
+    <PrivateFor/>
     <div>Account:</div>
     <select className="form-control" defaultValue={account}
             onChange={(e) => onChangeAccount(e.target.value)}>
       {accounts.map(
         (account) => <option key={account} value={account}>{account}</option>)}
     </select>
-    <div>Private for:</div>
-    <PrivateFor onChange={console.log} tesseraEndpoint={tesseraEndpoint} />
-    <div>Gas price: {gasPrice}</div>
-    <div>Gas limit: {gasLimit}</div>
-    <div>Value: {value} {valueDenomination}</div>
+    <div>Gas price: <input className="form-control" type="text" value={gasPrice}
+                           onChange={(e) => dispatch({
+                             type: 'CHANGE_GAS_PRICE',
+                             payload: e.target.value
+                           })}/></div>
+    <div>Gas limit: <input className="form-control" type="text" value={gasLimit}
+                           onChange={(e) => dispatch({
+                             type: 'CHANGE_GAS_LIMIT',
+                             payload: e.target.value
+                           })}/></div>
+    <div>
+      Value: <input className="form-control" type="text" value={value}
+                    onChange={(e) => dispatch(
+                      { type: 'CHANGE_VALUE', payload: e.target.value })}/>
+      <select className="form-control" defaultValue={valueDenomination}
+              onChange={(e) => dispatch({
+                type: 'CHANGE_VALUE_DENOMINATION',
+                payload: e.target.value
+              })}>
+        <option value="wei">wei</option>
+        <option value="gwei">gwei</option>
+        <option value="finney">finney</option>
+        <option value="ether">ether</option>
+      </select>
+    </div>
   </div>
 }

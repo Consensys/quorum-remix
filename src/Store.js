@@ -9,7 +9,7 @@ const initialState = {
     details: {},
     endpoint: '',
     accounts: [],
-    tesseraEndpoint: 'http://localhost:9001',
+    tesseraEndpoint: '',
   },
   txMetadata: {
     gasLimit: 3000000,
@@ -43,10 +43,12 @@ function reducer(state, action) {
     case 'FETCH_NETWORK':
       console.log(action.payload)
       const network = action.payload
-      console.log('setting hardcoded tessera url')
-      network.tesseraEndpoint = 'http://localhost:9001'
       let web3
       if (network.endpoint) {
+        if(network.endpoint.startsWith('http://localhost:22000')) {
+          console.log('setting 7 nodes tessera url')
+          network.tesseraEndpoint = 'http://localhost:9001'
+        }
         web3 = new Web3(network.endpoint)
       }
       return { ...state, network: network, web3 }
@@ -57,6 +59,50 @@ function reducer(state, action) {
         txMetadata: {
           ...state.txMetadata,
           account: action.payload
+        }
+      }
+
+    case 'CHANGE_TESSERA_ENDPOINT':
+      return {
+        ...state,
+        network: {
+          ...state.network,
+          tesseraEndpoint: action.payload,
+        }
+      }
+    case 'CHANGE_GAS_PRICE':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          gasPrice: action.payload
+        }
+      }
+
+    case 'CHANGE_GAS_LIMIT':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          gasLimit: action.payload
+        }
+      }
+
+    case 'CHANGE_VALUE':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          value: action.payload
+        }
+      }
+
+    case 'CHANGE_VALUE_DENOMINATION':
+      return {
+        ...state,
+        txMetadata: {
+          ...state.txMetadata,
+          valueDenomination: action.payload
         }
       }
 
