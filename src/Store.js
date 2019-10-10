@@ -12,9 +12,9 @@ const initialState = {
     tesseraEndpoint: '',
   },
   txMetadata: {
-    gasLimit: 3000000,
-    gasPrice: 0,
-    value: 0,
+    gasLimit: '3000000',
+    gasPrice: '0',
+    value: '0',
     valueDenomination: 'wei',
   },
   compilation: {

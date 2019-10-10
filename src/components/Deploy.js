@@ -2,6 +2,7 @@ import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Constructor } from './Constructor'
 import { fromAscii } from '../utils/TypeUtils'
+import Web3 from 'web3'
 
 export function Deploy() {
   const { state, dispatch } = React.useContext(Store)
@@ -36,6 +37,7 @@ export function Deploy() {
       from: txMetadata.account,
       gasPrice: txMetadata.gasPrice,
       gas: txMetadata.gasLimit,
+      value: Web3.utils.toWei(txMetadata.value, txMetadata.valueDenomination),
       privateFrom: txMetadata.privateFrom,
       privateFor: txMetadata.privateFor
     }
@@ -78,7 +80,17 @@ export function Deploy() {
 }
 
 function getConstructor (abi) {
-  return abi.filter(
-    (method) => method.type === 'constructor')[0]
+  const constructorMethods = abi.filter(
+    (method) => method.type === 'constructor')
+  if(constructorMethods.length > 0) {
+    return constructorMethods[0]
+  }
+  return {
+    type: 'constructor',
+    inputs: [],
+    payable: false,
+    constant: false,
+    name: '',
+  }
 }
 

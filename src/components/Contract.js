@@ -2,6 +2,7 @@ import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
+import Web3 from 'web3'
 
 const contractStyle = {
   display: 'flex',
@@ -53,7 +54,7 @@ function getMethodSignature (method) {
 
 export function Contract ({ address }) {
   const { state, dispatch } = React.useContext(Store)
-  const { txMetadata: { privateFor, privateFrom, account }, web3, deployedContracts } = state
+  const { txMetadata, web3, deployedContracts } = state
   const contract = deployedContracts[address]
   const { expanded = false, contractName } = contract
   console.log('contract', contract)
@@ -61,12 +62,18 @@ export function Contract ({ address }) {
   useEffect(() => {
   }, [])
 
-  function doMethodCall (contract, from, method, params, privateFrom,
-    privateFor) {
+  function doMethodCall (method, params) {
+    const { privateFor, privateFrom, account, gasLimit, gasPrice, value, valueDenomination } = txMetadata
     var _params = Object.values(params)
     var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
     var methodSig = method.name + '(' + _sig_params + ')'
-    var methodArgs = { from: from, args: _params }
+    var methodArgs = {
+      from: account,
+      gas: gasLimit,
+      gasPrice,
+      value: Web3.utils.toWei(value, valueDenomination),
+      args: _params,
+    }
 
     if (!method.constant) {
       // txn
@@ -132,11 +139,7 @@ export function Contract ({ address }) {
         <Method key={method.name}
                 method={method}
                 result={getResultForMethod(method)}
-                onSubmit={(inputValues) => doMethodCall(contract,
-                  account, method,
-                  inputValues,
-                  privateFrom,
-                  privateFor)}
+                onSubmit={(inputValues) => doMethodCall(method, inputValues)}
         />
       ))
     }
