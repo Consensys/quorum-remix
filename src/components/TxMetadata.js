@@ -12,7 +12,7 @@ import copy from 'copy-to-clipboard'
 export function TxMetadata () {
   const { state, dispatch } = React.useContext(Store)
   const {
-    network: { accounts, tesseraEndpoint },
+    network: { accounts = [], tesseraEndpoint },
     txMetadata: {
       account,
       gasLimit,

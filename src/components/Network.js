@@ -23,8 +23,8 @@ export function Network () {
   }
 
   return <div>
-    <div><strong>Network: </strong>{name} ({id})</div>
-    <div>{endpoint} ({provider})</div>
+    <div><strong>Network: </strong>{name} {provider} ({id}) </div>
+    <div style={{ marginBottom: 4 }}><strong>Endpoint:</strong> {endpoint}</div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Tessera:</div>
       <input className="form-control" type="text"
