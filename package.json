@@ -2,6 +2,7 @@
   "name": "quorum-remix",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jpmorganchase.github.io/qr/",
   "dependencies": {
     "@remixproject/plugin": "^0.1.11",
     "copy-to-clipboard": "^3.2.0",
