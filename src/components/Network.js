@@ -22,6 +22,10 @@ export function Network () {
     dispatch({ type: 'CHANGE_TESSERA_ENDPOINT', payload: endpointInput})
   }
 
+  if(provider !== 'web3') {
+    return <div>Quorum support does not work on Javascript VM or Injected Web3. <strong>Please choose a different Environment from the Deploy & Run tab.</strong></div>
+  }
+
   return <div>
     <div><strong>Network: </strong>{name} {provider} ({id}) </div>
     <div style={{ marginBottom: 4 }}><strong>Endpoint:</strong> {endpoint}</div>
