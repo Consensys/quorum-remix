@@ -27,7 +27,6 @@ export const Method = ({ method, onSubmit, result }) => {
         return
       }
       let inputName = method.inputs[i].name
-      console.log('gathered', inputName, value.trim())
       newInputValues[inputName] = value.trim()
     })
     setInputValues(newInputValues)
@@ -169,13 +168,11 @@ const normalizeResult = (result, outputs = []) => {
   }
 
   return outputs.map((output, index) => {
-    console.log('out', output, result)
     let key = index
     if (output.name && output.name in result) {
       key = output.name
     }
     let value = result[key]
-    console.log('value', value, key)
 
     if (output.type.startsWith('bytes')) {
       // TODO maybe they want bytes, not a string. show both

@@ -41,10 +41,10 @@ function normalizeCompilationOutput (data) {
 function reducer(state, action) {
   switch (action.type) {
     case 'FETCH_NETWORK':
-      console.log(action.payload)
       const network = action.payload
       let web3
       if (network.endpoint) {
+        // just to make it easier when using 7nodes
         if(network.endpoint.startsWith('http://localhost:22000')) {
           console.log('setting 7 nodes tessera url')
           network.tesseraEndpoint = 'http://localhost:9001'
@@ -108,7 +108,6 @@ function reducer(state, action) {
 
     case 'FETCH_COMPILATION':
       const contracts = normalizeCompilationOutput(action.payload)
-      console.log('comp', contracts)
       return {
         ...state,
         compilation: {
@@ -155,11 +154,14 @@ function reducer(state, action) {
       }
 
     case 'UPDATE_PRIVATE_FOR':
+      // empty [] privateFor is different than undefined. Disallow [] for now
+      const privateFor = action.payload && action.payload.length > 0
+        ? action.payload : undefined
       return {
         ...state,
         txMetadata: {
           ...state.txMetadata,
-          privateFor: action.payload
+          privateFor,
         }
       }
 

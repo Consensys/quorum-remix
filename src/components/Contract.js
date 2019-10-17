@@ -5,6 +5,7 @@ import copy from 'copy-to-clipboard'
 import Web3 from 'web3'
 import {
   bodyStyle,
+  checkboxLabelStyle,
   contractStyle,
   ellipsisStyle,
   headerStyle,
@@ -21,7 +22,9 @@ export function Contract ({ address }) {
   const { txMetadata, web3, deployedContracts } = state
   const contract = deployedContracts[address]
   const { expanded = false, contractName, privateFor } = contract
-  console.log('contract', contract)
+
+  const [selectedPrivateFor, setSelectedPrivateFor] = React.useState(
+    privateFor && privateFor.map(key => { return { enabled: true, key }}))
 
   useEffect(() => {
   }, [])
@@ -37,7 +40,8 @@ export function Contract ({ address }) {
       gasPrice,
       value: Web3.utils.toWei(value, valueDenomination),
       args: _params,
-      privateFor
+      privateFor: privateFor && selectedPrivateFor.filter(
+        ({ enabled }) => enabled).map(({ key }) => key)
     }
 
     let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
@@ -89,10 +93,24 @@ export function Contract ({ address }) {
   </div>
 
   const renderExpanded = () => <div style={bodyStyle}>
-    {privateFor &&
+    {selectedPrivateFor &&
     <div style={{ fontSize: 10 }}>
       <div>Private for:</div>
-      {privateFor.map((pk) => <div>{pk}</div>)}
+      {selectedPrivateFor.map(
+        ({ enabled, key }, index) => (
+          <label key={key} style={checkboxLabelStyle}>
+            <input type="checkbox" name={key}
+                   style={{marginRight: 4}}
+                   checked={enabled}
+                   onChange={(e) => {
+                     const newSelected = [...selectedPrivateFor]
+                     newSelected[index].enabled = e.target.checked
+                     setSelectedPrivateFor(newSelected)
+                   }}/>
+            {key}
+          </label>
+        )
+      )}
     </div>}
     {
       contract.abi.filter(

@@ -90,3 +90,10 @@ export const inlineInputStyle = {
   marginRight: 4,
 }
 
+export const checkboxLabelStyle = {
+  display: 'block',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+}
+
