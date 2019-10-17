@@ -36,7 +36,7 @@ client.onload(async () => {
   // unregister() to register() below. Note this comes with some pitfalls.
   // Learn more about service workers: https://bit.ly/CRA-PWA
   await client.network.addNetwork(
-      {id: 10, name: "quorum-node1", url: "http://localhost:22000"})
+      {id: 10, name: "quorum-examples-node-1", url: "http://localhost:22000"})
   serviceWorker.unregister();
 });
 
