@@ -3,6 +3,7 @@ import { Constructor } from './Constructor'
 import { fromAscii } from '../utils/TypeUtils'
 import Web3 from 'web3'
 import { useDispatch, useSelector } from 'react-redux'
+import { addContract, selectContract } from '../actions'
 
 export function Deploy() {
   const state = useSelector(state => state)
@@ -17,7 +18,7 @@ export function Deploy() {
   } = state
 
   const onChangeContract = (contractName) => {
-    dispatch({ type: 'SELECT_CONTRACT', payload: contractName })
+    dispatch(selectContract(contractName))
   }
   const onDeploy = async (params) => {
     console.log('onDeploy', params)
@@ -50,15 +51,7 @@ export function Deploy() {
     const response = await deployableContract.send(tx)
 
     console.log('finished', response, response.options.address)
-    dispatch({
-      type: 'ADD_CONTRACT',
-      payload: {
-        ...contract,
-        address: response.options.address,
-        privateFor: txMetadata.privateFor,
-        privateFrom: txMetadata.privateFrom
-      }
-    })
+    dispatch(addContract(contract, response.options.address, txMetadata))
   }
 
   useEffect(() => {
@@ -81,15 +74,7 @@ export function Deploy() {
       onDeploy={onDeploy}
       onExisting={(address) => {
         console.log('onExisting', address)
-        dispatch({
-          type: 'ADD_CONTRACT',
-          payload: {
-            ...contracts[selectedContract],
-            address,
-            privateFor: txMetadata.privateFor,
-            privateFrom: txMetadata.privateFrom
-          }
-        })
+        dispatch(addContract(contracts[selectedContract], address, txMetadata))
       }}
       method={getConstructor(contracts[selectedContract].abi)}
     />}

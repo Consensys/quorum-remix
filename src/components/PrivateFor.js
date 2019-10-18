@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Creatable from 'react-select/creatable/dist/react-select.esm'
 import { useDispatch, useSelector } from 'react-redux'
+import { updatePrivateFor } from '../actions'
 
 export function PrivateFor () {
   const state = useSelector(state => state)
@@ -36,10 +37,7 @@ export function PrivateFor () {
   }, [tesseraEndpoint])
 
   return <Creatable options={options} className="private_for"
-                    onChange={(selection) => dispatch({
-                      type: 'UPDATE_PRIVATE_FOR',
-                      payload: selection && selection.map((option) => option.value)
-                    })}
+                    onChange={(selection) => dispatch(updatePrivateFor(selection))}
                     value={options.filter((option) => privateFor && privateFor.includes(option.value))}
                     classNamePrefix="private_for" isMulti autosize={false}/>
 }

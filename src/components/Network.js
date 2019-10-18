@@ -1,6 +1,7 @@
 import React from 'react'
 import { iconStyle, labelStyle, txMetaRowStyle } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
+import { changeTesseraEndpoint } from '../actions'
 
 export function Network () {
   const state = useSelector(state => state)
@@ -20,7 +21,7 @@ export function Network () {
   }, [tesseraEndpoint])
   const onUpdateClicked = (e) => {
     e.preventDefault()
-    dispatch({ type: 'CHANGE_TESSERA_ENDPOINT', payload: endpointInput})
+    dispatch(changeTesseraEndpoint(endpointInput))
   }
 
   if(provider !== 'web3') {

@@ -6,6 +6,7 @@ import { TxMetadata } from './components/TxMetadata'
 import { Deploy } from './components/Deploy'
 import { ContractList } from './components/ContractList'
 import { useDispatch } from 'react-redux'
+import { fetchCompilationSuccess, fetchNetworkSuccess } from './actions'
 
 function App({client}) {
   const dispatch = useDispatch()
@@ -52,10 +53,7 @@ async function fetchAccounts (client) {
 async function fetchCompilationResult (client, dispatch) {
   try {
     const result = await client.solidity.getCompilationResult()
-    dispatch({
-      type: 'FETCH_COMPILATION',
-      payload: result.data,
-    })
+    dispatch(fetchCompilationSuccess(result))
   } catch (e) {
     console.log('error getting compilation result', e)
   }
@@ -73,15 +71,7 @@ async function fetchNetworkData (client, dispatch) {
     // accounts are updated on each network change, so it makes sense to grab
     // them together
     const accounts = await fetchAccounts(client)
-    dispatch({
-      type: 'FETCH_NETWORK',
-      payload: {
-        provider,
-        details,
-        endpoint,
-        accounts,
-      }
-    })
+    dispatch(fetchNetworkSuccess(provider, details, endpoint, accounts))
   } catch (e) {
     console.error('Error fetching network data', e)
   }

@@ -8,6 +8,13 @@ import {
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  changeGasLimit,
+  changeGasPrice,
+  changeValue,
+  changeValueDenomination,
+  selectAccount
+} from '../actions'
 
 export function TxMetadata () {
   const state = useSelector(state => state)
@@ -24,7 +31,7 @@ export function TxMetadata () {
   } = state
 
   const onChangeAccount = (account) => {
-    dispatch({ type: 'SELECT_ACCOUNT', payload: account })
+    dispatch(selectAccount(account))
   }
 
   const copyAddress = async () => {
@@ -41,7 +48,7 @@ export function TxMetadata () {
     // maybe a better way to do this, but select the first account if unset or
     // if selected account is no longer in the list of accounts
     if (accounts.length > 0 && !accounts.includes(account)) {
-      console.log('setting first account as selected')
+      console.log('setting first account as selected', accounts[0])
       onChangeAccount(accounts[0])
     }
   }, [accounts])
@@ -66,29 +73,20 @@ export function TxMetadata () {
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Gas price:</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasPrice}
-                           onChange={(e) => dispatch({
-                             type: 'CHANGE_GAS_PRICE',
-                             payload: e.target.value
-                           })}/>
+                           onChange={(e) => dispatch(changeGasPrice(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Gas limit:</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasLimit}
-             onChange={(e) => dispatch({
-               type: 'CHANGE_GAS_LIMIT',
-               payload: e.target.value
-             })}/>
+             onChange={(e) => dispatch(changeGasLimit(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Value:</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={value}
              onChange={(e) => dispatch(
-               { type: 'CHANGE_VALUE', payload: e.target.value })}/>
+               changeValue(e.target.value))}/>
       <select style={inlineInputStyle} className="form-control" defaultValue={valueDenomination}
-              onChange={(e) => dispatch({
-                type: 'CHANGE_VALUE_DENOMINATION',
-                payload: e.target.value
-              })}>
+              onChange={(e) => dispatch(changeValueDenomination(e.target.value))}>
         <option value="wei">wei</option>
         <option value="gwei">gwei</option>
         <option value="finney">finney</option>

@@ -11,11 +11,8 @@ import {
   iconStyle
 } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
-
-function getMethodSignature (method) {
-  return `${method.name}(${method.inputs.map(
-    (input) => `${input.type} ${input.name}`).join(', ')})`
-}
+import { expandContract, methodCallSuccess, removeContract } from '../actions'
+import { getMethodSignature } from '../utils/ContractUtils'
 
 export function Contract ({ address }) {
   const state = useSelector(state => state)
@@ -52,14 +49,7 @@ export function Contract ({ address }) {
     web3Method[callOrSend](methodArgs).then((res) => {
       console.log('transaction send response', res, method, methodSig,
         methodArgs)
-      dispatch({
-        type: "METHOD_CALL",
-        payload: {
-          address,
-          methodSignature: getMethodSignature(method),
-          result: res,
-        }
-      })
+      dispatch(methodCallSuccess(address, method, res))
     })
   }
 
@@ -80,17 +70,14 @@ export function Contract ({ address }) {
 
     <i style={iconStyle} title="Expand contract instance"
        className={`fa fa-caret-${expanded ? 'down' : 'right'} methCaret`}
-       onClick={(e) => dispatch({
-         type: 'EXPAND_CONTRACT',
-         payload: { address, expand: !expanded }
-       })}/>
+       onClick={(e) => dispatch(expandContract(address, expanded))}/>
     <div style={ellipsisStyle}>{contractName}({address})</div>
     <i style={iconStyle} title="Copy contract address"
        className="fa fa-clipboard"
        onClick={(e) => copyAddress()}/>
     <i style={iconStyle} title="Remove contract instance"
        className="fa fa-close"
-       onClick={(e) => dispatch({type: 'REMOVE_CONTRACT', payload: address})}/>
+       onClick={(e) => dispatch(removeContract(address))}/>
   </div>
 
   const renderExpanded = () => <div style={bodyStyle}>

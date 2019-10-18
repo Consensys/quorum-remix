@@ -38,7 +38,7 @@ function normalizeCompilationOutput (data) {
 
 export default function rootReducer (state = initialState, action) {
   switch (action.type) {
-    case 'FETCH_NETWORK':
+    case 'FETCH_NETWORK_SUCCESS':
       const network = action.payload
       let web3
       if (network.endpoint) {
