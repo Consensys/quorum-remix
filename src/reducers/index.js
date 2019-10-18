@@ -1,5 +1,4 @@
-import React from 'react'
-import Web3 from 'web3'
+import { updateWeb3Url } from '../api'
 
 const initialState = {
   network: {
@@ -40,16 +39,15 @@ export default function rootReducer (state = initialState, action) {
   switch (action.type) {
     case 'FETCH_NETWORK_SUCCESS':
       const network = action.payload
-      let web3
       if (network.endpoint) {
         // just to make it easier when using 7nodes
         if(network.endpoint.startsWith('http://localhost:22000')) {
           console.log('setting 7 nodes tessera url')
           network.tesseraEndpoint = 'http://localhost:9001'
         }
-        web3 = new Web3(network.endpoint)
+        updateWeb3Url(network.endpoint)
       }
-      return { ...state, network: network, web3 }
+      return { ...state, network: network }
 
     case 'SELECT_ACCOUNT':
       return {

@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
-import Web3 from 'web3'
 import {
   bodyStyle,
   checkboxLabelStyle,
@@ -11,47 +10,18 @@ import {
   iconStyle
 } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { expandContract, methodCallSuccess, removeContract } from '../actions'
+import { doMethodCall, expandContract, removeContract } from '../actions'
 import { getMethodSignature } from '../utils/ContractUtils'
 
 export function Contract ({ address }) {
   const state = useSelector(state => state)
   const dispatch = useDispatch()
-  const { txMetadata, web3, deployedContracts } = state
+  const { txMetadata, deployedContracts } = state
   const contract = deployedContracts[address]
   const { expanded = false, contractName, privateFor } = contract
 
   const [selectedPrivateFor, setSelectedPrivateFor] = React.useState(
     privateFor && privateFor.map(key => { return { enabled: true, key }}))
-
-  useEffect(() => {
-  }, [])
-
-  function doMethodCall (method, params) {
-    const { account, gasLimit, gasPrice, value, valueDenomination } = txMetadata
-    var _params = Object.values(params)
-    var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
-    var methodSig = method.name + '(' + _sig_params + ')'
-    var methodArgs = {
-      from: account,
-      gas: gasLimit,
-      gasPrice,
-      value: Web3.utils.toWei(value, valueDenomination),
-      args: _params,
-      privateFor: privateFor && selectedPrivateFor.filter(
-        ({ enabled }) => enabled).map(({ key }) => key)
-    }
-
-    let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
-    let web3Method = web3Contract.methods[method.name](..._params)
-    let callOrSend = method.constant ? 'call' : 'send'
-    console.log('test', callOrSend, method.name, _params, methodArgs)
-    web3Method[callOrSend](methodArgs).then((res) => {
-      console.log('transaction send response', res, method, methodSig,
-        methodArgs)
-      dispatch(methodCallSuccess(address, method, res))
-    })
-  }
 
   const getResultForMethod = (method) => {
     return contract.results && contract.results[getMethodSignature(method)]
@@ -108,7 +78,9 @@ export function Contract ({ address }) {
         <Method key={method.name}
                 method={method}
                 result={getResultForMethod(method)}
-                onSubmit={(inputValues) => doMethodCall(method, inputValues)}
+                onSubmit={(inputValues) => dispatch(
+                  doMethodCall(contract, method,
+                    inputValues, txMetadata, privateFor, selectedPrivateFor))}
         />
       ))
     }
@@ -120,5 +92,4 @@ export function Contract ({ address }) {
       {expanded && renderExpanded()}
     </div>
   )
-
 }

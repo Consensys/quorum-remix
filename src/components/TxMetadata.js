@@ -20,7 +20,7 @@ export function TxMetadata () {
   const state = useSelector(state => state)
   const dispatch = useDispatch()
   const {
-    network: { accounts = [], tesseraEndpoint },
+    network: { accounts = [] },
     txMetadata: {
       account,
       gasLimit,
@@ -30,13 +30,8 @@ export function TxMetadata () {
     }
   } = state
 
-  const onChangeAccount = (account) => {
-    dispatch(selectAccount(account))
-  }
-
   const copyAddress = async () => {
     try {
-      // eslint-disable-next-line no-undef
       await copy(account)
     } catch (e) {
       console.error('Could not copy to clipboard: ', account, e)
@@ -49,7 +44,7 @@ export function TxMetadata () {
     // if selected account is no longer in the list of accounts
     if (accounts.length > 0 && !accounts.includes(account)) {
       console.log('setting first account as selected', accounts[0])
-      onChangeAccount(accounts[0])
+      dispatch(selectAccount(accounts[0]))
     }
   }, [accounts])
 
@@ -61,7 +56,7 @@ export function TxMetadata () {
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Account:</div>
       <select className="form-control" defaultValue={account}
-              onChange={(e) => onChangeAccount(e.target.value)}>
+              onChange={(e) => dispatch(selectAccount(e.target.value))}>
         {accounts.map(
           (account) => <option key={account}
                                value={account}>{account}</option>)}
