@@ -1,9 +1,10 @@
-import { Store } from '../Store'
 import React from 'react'
 import { iconStyle, labelStyle, txMetaRowStyle } from '../utils/Styles'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function Network () {
-  const { state, dispatch } = React.useContext(Store)
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
   const {
     provider,
     endpoint,

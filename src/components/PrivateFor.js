@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Creatable from 'react-select/creatable/dist/react-select.esm'
-import { Store } from '../Store'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function PrivateFor () {
-  const { state, dispatch } = useContext(Store)
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
   const {
     network: {
       tesseraEndpoint,

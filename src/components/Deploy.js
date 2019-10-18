@@ -1,11 +1,12 @@
-import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Constructor } from './Constructor'
 import { fromAscii } from '../utils/TypeUtils'
 import Web3 from 'web3'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function Deploy() {
-  const { state, dispatch } = React.useContext(Store)
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
   const {
     txMetadata,
     web3,

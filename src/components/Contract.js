@@ -1,4 +1,3 @@
-import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
@@ -11,6 +10,7 @@ import {
   headerStyle,
   iconStyle
 } from '../utils/Styles'
+import { useDispatch, useSelector } from 'react-redux'
 
 function getMethodSignature (method) {
   return `${method.name}(${method.inputs.map(
@@ -18,7 +18,8 @@ function getMethodSignature (method) {
 }
 
 export function Contract ({ address }) {
-  const { state, dispatch } = React.useContext(Store)
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
   const { txMetadata, web3, deployedContracts } = state
   const contract = deployedContracts[address]
   const { expanded = false, contractName, privateFor } = contract

@@ -1,8 +1,6 @@
 import React from 'react'
 import Web3 from 'web3'
 
-export const Store = React.createContext()
-
 const initialState = {
   network: {
     provider: 'none',
@@ -38,7 +36,7 @@ function normalizeCompilationOutput (data) {
   return contracts
 }
 
-function reducer(state, action) {
+export default function rootReducer (state = initialState, action) {
   switch (action.type) {
     case 'FETCH_NETWORK':
       const network = action.payload
@@ -200,10 +198,3 @@ function reducer(state, action) {
   }
 }
 
-export function StoreProvider (props) {
-  const [state, dispatch] = React.useReducer(reducer, initialState);
-  const store = { state, dispatch };
-
-  return <Store.Provider
-    value={store}>{props.children}</Store.Provider>
-}

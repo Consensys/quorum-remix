@@ -1,9 +1,9 @@
-import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { Contract } from './Contract'
+import { useSelector } from 'react-redux'
 
 export function ContractList () {
-  const { state, dispatch } = React.useContext(Store)
+  const state = useSelector(state => state)
   const { deployedAddresses } = state
 
   useEffect(() => {

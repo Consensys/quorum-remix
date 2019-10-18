@@ -1,4 +1,3 @@
-import { Store } from '../Store'
 import React, { useEffect } from 'react'
 import { PrivateFor } from './PrivateFor'
 import {
@@ -8,9 +7,11 @@ import {
   txMetaRowStyle
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
+import { useDispatch, useSelector } from 'react-redux'
 
 export function TxMetadata () {
-  const { state, dispatch } = React.useContext(Store)
+  const state = useSelector(state => state)
+  const dispatch = useDispatch()
   const {
     network: { accounts = [], tesseraEndpoint },
     txMetadata: {

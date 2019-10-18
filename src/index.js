@@ -4,7 +4,10 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import { StoreProvider } from './Store'
+import rootReducer from './reducers'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import { devToolsEnhancer } from 'redux-devtools-extension'
 
 const profile = {
   name: 'quorum',
@@ -25,13 +28,16 @@ class QuorumPlugin extends PluginClient {
 
 }
 
+const store = createStore(rootReducer, devToolsEnhancer())
+
 const client = buildIframeClient(new QuorumPlugin())
 client.onload(async () => {
   ReactDOM.render(
-    <StoreProvider>
+    <Provider store={store}>
       <App client={client}/>
-    </StoreProvider>,
+    </Provider>,
     document.getElementById('root'))
+
   // If you want your app to work offline and load faster, you can change
   // unregister() to register() below. Note this comes with some pitfalls.
   // Learn more about service workers: https://bit.ly/CRA-PWA
@@ -40,3 +46,19 @@ client.onload(async () => {
   serviceWorker.unregister();
 });
 
+if (module.hot) {
+  console.log('hot')
+  module.hot.accept('./App', () => {
+    const NextApp = require('./App').default
+    ReactDOM.render(
+      <Provider store={store}>
+        <NextApp client={client}/>
+      </Provider>,
+      document.getElementById('root')
+    )
+  })
+  module.hot.accept('./reducers', () => {
+    const nextRootReducer = require('./reducers').default
+    store.replaceReducer(nextRootReducer)
+  })
+}

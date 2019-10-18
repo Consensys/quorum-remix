@@ -1,13 +1,14 @@
 import React from 'react'
 import './App.css'
 import { Network } from './components/Network'
-import { Store } from './Store'
+
 import { TxMetadata } from './components/TxMetadata'
 import { Deploy } from './components/Deploy'
 import { ContractList } from './components/ContractList'
+import { useDispatch } from 'react-redux'
 
 function App({client}) {
-  const { state, dispatch } = React.useContext(Store)
+  const dispatch = useDispatch()
 
   React.useEffect(() => {
     initPlugin(client, dispatch)
