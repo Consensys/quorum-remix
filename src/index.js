@@ -26,9 +26,6 @@ client.onload(async () => {
     </Provider>,
     document.getElementById('root'))
 
-  await client.network.addNetwork(
-    { id: 10, name: 'quorum-examples-node-1', url: 'http://localhost:22000' })
-
   initPlugin(client, store.dispatch)
   .catch((e) => console.error('Error initializing plugin', e))
   // If you want your app to work offline and load faster, you can change
@@ -38,7 +35,6 @@ client.onload(async () => {
 });
 
 if (module.hot) {
-  console.log('hot')
   module.hot.accept('./App', () => {
     const NextApp = require('./App').default
     ReactDOM.render(
@@ -56,6 +52,10 @@ if (module.hot) {
 
 // we only want to subscribe to these once, so we do it outside of components
 async function initPlugin (client, dispatch) {
+  if(process.env.NODE_ENV === 'development') {
+    await initDev(client)
+  }
+
   dispatch(fetchNetworkData(client))
   client.network.on('providerChanged',
     (_) => {
@@ -71,4 +71,10 @@ async function initPlugin (client, dispatch) {
       // Do something
       dispatch(fetchCompilationResult(client))
     })
+}
+
+async function initDev (client) {
+  console.log('In development mode, adding 7nodes network')
+  await client.network.addNetwork(
+    { id: 10, name: 'quorum-examples-node-1', url: 'http://localhost:22000' })
 }
