@@ -1,8 +1,27 @@
+export const appStyle = {
+  display: 'flex',
+  alignItems: 'flex-start',
+  flexDirection: 'column',
+  minHeight: '100%',
+}
+
+export const networkStyle = {
+  display: 'flex',
+  alignItems: 'flex-end',
+  flexDirection: 'column',
+  width: '100%',
+}
+
+export const formContainerStyle = {
+  width: '100%',
+}
+
 export const containerStyle = {
   display: 'flex',
   alignItems: 'center',
   marginTop: 8,
 }
+
 export const buttonStyle = {
   margin: 0,
   minWidth: 100,
@@ -12,6 +31,7 @@ export const buttonStyle = {
   borderBottomRightRadius: 0,
   borderRight: 0,
 }
+
 export const inputStyle = {
   fontSize: 10,
   padding: '.25rem',
@@ -26,6 +46,7 @@ export const contractStyle = {
   flexDirection: 'column',
   marginTop: 8,
 }
+
 export const headerStyle = {
   display: 'flex',
   alignItems: 'center',
@@ -34,6 +55,7 @@ export const headerStyle = {
   background: '#95a5a6',
   padding: '4px',
 }
+
 export const bodyStyle = {
   padding: '0px 0 10px 10px',
   border: '1px solid rgba(0,0,0,0.125)',
@@ -78,11 +100,25 @@ export const txMetaRowStyle = {
   display: 'flex',
   alignItems: 'center',
   paddingTop: 4,
+  width: '100%',
+}
+
+export const txMetaRowRightStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  paddingTop: 4,
+  justifyContent: 'flex-end',
 }
 
 export const labelStyle = {
   whiteSpace: 'nowrap',
   minWidth: 72,
+}
+
+export const smallLabelStyle = {
+  whiteSpace: 'nowrap',
+  minWidth: 72,
+  fontSize: 12,
 }
 
 export const inlineInputStyle = {
@@ -95,5 +131,30 @@ export const checkboxLabelStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+}
+
+export const logoStyle = {
+  height: 18,
+  alignSelf: 'flex-end',
+  marginTop: 12,
+  marginBottom: 12,
+}
+
+export const statusStyle = (status) => {
+  let color
+  if (status === 'Connected') {
+    color = 'green'
+  } else if (status === 'Connecting...') {
+    color = 'black'
+  } else {
+    color = 'red'
+  }
+  return {
+    color,
+    fontSize: 11,
+    marginRight: 8,
+    // display: 'block',
+    // flexGrow: 1,
+  }
 }
 

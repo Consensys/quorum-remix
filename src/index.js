@@ -9,7 +9,7 @@ import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
-import { fetchCompilationResult, fetchNetworkData } from './actions'
+import { fetchCompilationResult, setNetwork } from './actions'
 
 class QuorumPlugin extends PluginClient {
 
@@ -53,22 +53,17 @@ if (module.hot) {
 // we only want to subscribe to these once, so we do it outside of components
 async function initPlugin (client, dispatch) {
   if(process.env.NODE_ENV === 'development') {
-    await initDev(client)
+    await initDev(client, dispatch)
   }
 
-  dispatch(fetchNetworkData(client))
-  client.network.on('providerChanged',
-    (_) => {
-      console.log('Network changed')
-      dispatch(fetchNetworkData(client))
-    })
-
+  const savedNetwork = JSON.parse(localStorage.network)
+  if (savedNetwork) {
+    dispatch(setNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+  }
   dispatch(fetchCompilationResult(client))
   client.solidity.on('compilationFinished',
     (fileName, source, languageVersion, data) => {
-      console.log('compilation finished', fileName, source, languageVersion,
-        data)
-      // Do something
+      // just refetching every time for now
       dispatch(fetchCompilationResult(client))
     })
 }

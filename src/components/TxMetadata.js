@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { PrivateFor } from './PrivateFor'
 import {
+  formContainerStyle,
   iconStyle,
   inlineInputStyle,
   labelStyle,
@@ -43,12 +44,11 @@ export function TxMetadata () {
     // maybe a better way to do this, but select the first account if unset or
     // if selected account is no longer in the list of accounts
     if (accounts.length > 0 && !accounts.includes(account)) {
-      console.log('setting first account as selected', accounts[0])
       dispatch(selectAccount(accounts[0]))
     }
   }, [accounts])
 
-  return <div>
+  return <div style={formContainerStyle}>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Private for:</div>
       <div style={{width: 224}}><PrivateFor/></div>

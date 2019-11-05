@@ -1,12 +1,11 @@
-import { updateWeb3Url } from '../api'
-
 const initialState = {
+  error: '',
   network: {
-    provider: 'none',
-    details: {},
     endpoint: '',
-    accounts: [],
     tesseraEndpoint: '',
+    accounts: [],
+    editing: true,
+    status: 'Disconnected',
   },
   txMetadata: {
     gasLimit: '3000000',
@@ -37,17 +36,9 @@ function normalizeCompilationOutput (data) {
 
 export default function rootReducer (state = initialState, action) {
   switch (action.type) {
-    case 'FETCH_NETWORK_SUCCESS':
-      const network = action.payload
-      if (network.endpoint) {
-        // just to make it easier when using 7nodes
-        if(network.endpoint.startsWith('http://localhost:22000')) {
-          console.log('setting 7 nodes tessera url')
-          network.tesseraEndpoint = 'http://localhost:9001'
-        }
-        updateWeb3Url(network.endpoint)
-      }
-      return { ...state, network: network }
+    case 'SET_NETWORK':
+      localStorage.network = JSON.stringify(action.payload)
+      return { ...state, network: action.payload }
 
     case 'SELECT_ACCOUNT':
       return {
@@ -58,14 +49,24 @@ export default function rootReducer (state = initialState, action) {
         }
       }
 
-    case 'CHANGE_TESSERA_ENDPOINT':
+    case 'EDIT_NETWORK':
       return {
         ...state,
         network: {
           ...state.network,
-          tesseraEndpoint: action.payload,
+          editing: action.payload,
         }
       }
+
+    case 'SET_NETWORK_CONNECTING':
+      return {
+        ...state,
+        network: {
+          ...state.network,
+          status: 'Connecting...',
+        }
+      }
+
     case 'CHANGE_GAS_PRICE':
       return {
         ...state,
@@ -123,7 +124,6 @@ export default function rootReducer (state = initialState, action) {
 
     case 'ADD_CONTRACT':
       const contract = action.payload
-      console.log('add contract', contract)
       const newAddresses = [...state.deployedAddresses]
       if(newAddresses.indexOf(contract.address) === -1) {
         newAddresses.push(contract.address)
@@ -139,7 +139,6 @@ export default function rootReducer (state = initialState, action) {
 
     case 'REMOVE_CONTRACT':
       const addressToDelete = action.payload
-      console.log('remove contract', addressToDelete)
       const newDeployedContracts = { ...state.deployedContracts }
       delete newDeployedContracts[addressToDelete]
       return {
@@ -189,6 +188,12 @@ export default function rootReducer (state = initialState, action) {
             expanded: action.payload.expand,
           }
         }
+      }
+
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload
       }
 
     default:

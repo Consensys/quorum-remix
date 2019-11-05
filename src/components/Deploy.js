@@ -32,7 +32,6 @@ export function Deploy() {
       onDeploy={params => dispatch(
         deployContract(params, contracts[selectedContract], txMetadata))}
       onExisting={(address) => {
-        console.log('onExisting', address)
         dispatch(addContract(contracts[selectedContract], address, txMetadata))
       }}
       method={getConstructor(contracts[selectedContract].abi)}

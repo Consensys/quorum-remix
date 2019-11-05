@@ -1,12 +1,52 @@
 import Web3 from 'web3'
 import { fromAscii } from '../utils/TypeUtils'
 import { getConstructor } from '../utils/ContractUtils'
+import axios from 'axios'
+
+axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 let web3;
 
-export function updateWeb3Url(url) {
-  console.log('updating web3', url)
-  web3 = new Web3(url)
+export async function updateWeb3Url (endpoint, tesseraEndpoint) {
+  web3 = new Web3(endpoint)
+  await testUrls(endpoint, tesseraEndpoint)
+}
+
+export async function testUrls (rpcEndpoint, tesseraEndpoint) {
+  if (!rpcEndpoint) {
+    throw new Error('RPC url must not be blank.')
+  }
+  try {
+    await axios.post(rpcEndpoint, {
+      body: JSON.stringify(
+        { 'jsonrpc': '2.0', 'method': 'eth_protocolVersion', 'params': [] }),
+    })
+  } catch (e) {
+    if (e.response) {
+      throw new Error(
+        `Error connecting to ${rpcEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+    } else {
+      throw new Error(
+        `Network error connecting to ${rpcEndpoint}: ${e.message}. This could be: a. geth is not running at this address, b. the port is not accessible, or c. CORS settings on geth do not allow this url (check the developer console for CORS errors)`)
+    }
+  }
+  if (tesseraEndpoint !== '') {
+    try {
+      await axios.get(`${tesseraEndpoint}/partyinfo`)
+    } catch (e) {
+      if (e.response) {
+        throw new Error(
+          `Error connecting to ${tesseraEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+      } else {
+        throw new Error(
+          `Network error connecting to ${tesseraEndpoint}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
+      }
+    }
+  }
+}
+
+export async function getAccounts () {
+  return await web3.eth.getAccounts()
 }
 
 export async function deploy (contract, params, txMetadata) {
@@ -30,7 +70,6 @@ export async function deploy (contract, params, txMetadata) {
     privateFor: txMetadata.privateFor
   }
   const web3Contract = new web3.eth.Contract(abi)
-  console.log('contract', web3Contract, 'args', orderedParams, 'meta', tx)
   const deployableContract = await web3Contract.deploy({
     data: bytecode,
     arguments: orderedParams,
@@ -58,7 +97,6 @@ export async function contractMethod (txMetadata, params, method, privateFor,
   let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
   let web3Method = web3Contract.methods[method.name](..._params)
   let callOrSend = method.constant ? 'call' : 'send'
-  console.log('test', callOrSend, method.name, _params, methodArgs)
   const res = await web3Method[callOrSend](methodArgs)
   return { methodSig, methodArgs, res }
 }

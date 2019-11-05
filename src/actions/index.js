@@ -1,5 +1,11 @@
 import { getMethodSignature } from '../utils/ContractUtils'
-import { contractMethod, deploy } from '../api'
+import {
+  contractMethod,
+  deploy,
+  getAccounts,
+  testUrls,
+  updateWeb3Url
+} from '../api'
 
 export function methodCallSuccess (address, method, res) {
   return {
@@ -35,8 +41,12 @@ export function addContract (contract, address, txMetadata) {
   }
 }
 
-export function changeTesseraEndpoint (endpointInput) {
-  return { type: 'CHANGE_TESSERA_ENDPOINT', payload: endpointInput }
+export function setError (message = '') {
+  return { type: 'SET_ERROR', payload: message }
+}
+
+export function editNetwork (edit) {
+  return { type: 'EDIT_NETWORK', payload: edit }
 }
 
 export function updatePrivateFor (selection) {
@@ -82,28 +92,11 @@ export function fetchCompilationSuccess (result) {
   }
 }
 
-export function fetchNetworkSuccess (provider, details, endpoint, accounts) {
-  return {
-    type: 'FETCH_NETWORK_SUCCESS',
-    payload: {
-      provider,
-      details,
-      endpoint,
-      accounts,
-    }
-  }
-}
-
 export function removeContract (address) {
   return { type: 'REMOVE_CONTRACT', payload: address }
 }
 
-async function fetchAccounts (client) {
-  let accounts = await client.udapp.getAccounts()
-  return (typeof accounts === 'string') ? [accounts] : accounts
-}
-
-export function fetchCompilationResult (client, dispatch) {
+export function fetchCompilationResult (client) {
   return async dispatch => {
     try {
       const result = await client.solidity.getCompilationResult()
@@ -114,32 +107,60 @@ export function fetchCompilationResult (client, dispatch) {
   }
 }
 
-export function fetchNetworkData (client) {
+export function setNetwork (endpoint, tesseraEndpoint) {
+  return async dispatch => {
+    dispatch({ type: 'SET_NETWORK_CONNECTING' })
+    let accounts = [], status = 'Disconnected', editing = true, error = ''
+    try {
+      if (endpoint !== '') {
+        await updateWeb3Url(endpoint, tesseraEndpoint)
+        status = 'Connected'
+        editing = false
+        accounts = await getAccounts()
+      }
+
+    } catch (e) {
+      console.log('Error fetching network data', e.message)
+      error = e.message
+    }
+
+    dispatch(setError(error))
+
+    dispatch({
+      type: 'SET_NETWORK',
+      payload: {
+        endpoint,
+        tesseraEndpoint,
+        accounts,
+        status,
+        editing
+      }
+    })
+  }
+}
+
+export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
   return async dispatch => {
     try {
-      console.log('Fetching network data')
-      const provider = await client.network.getNetworkProvider()
-      const details = await client.network.detectNetwork()
-      let endpoint = ''
-      if (provider === 'web3') {
-        endpoint = await client.network.getEndpoint()
+      if (tesseraEndpoint.endsWith('/')) {
+        tesseraEndpoint = tesseraEndpoint.substring(0,
+          tesseraEndpoint.length - 1)
       }
-      // accounts are updated on each network change, so it makes sense to grab
-      // them together
-      const accounts = await fetchAccounts(client)
-      dispatch(fetchNetworkSuccess(provider, details, endpoint, accounts))
+
+      await testUrls(endpoint, tesseraEndpoint)
+      dispatch(setNetwork(endpoint, tesseraEndpoint))
+
     } catch (e) {
-      console.error('Error fetching network data', e)
+      console.log('Error fetching network data', e.message)
+      dispatch(setError(e.message))
     }
   }
 }
 
 export function deployContract (params, contract, txMetadata) {
   return async dispatch => {
-    console.log('onDeploy', params)
     const response = await deploy(contract, params, txMetadata)
 
-    console.log('finished', response, response.options.address)
     dispatch(addContract(contract, response.options.address, txMetadata))
   }
 }
@@ -149,10 +170,7 @@ export function doMethodCall (contract, method, params, txMetadata, privateFor,
   return async dispatch => {
     const __ret = await contractMethod(txMetadata, params, method, privateFor,
       selectedPrivateFor, contract)
-    var methodSig = __ret.methodSig
-    var methodArgs = __ret.methodArgs
     const res = __ret.res
-    console.log('transaction send response', res, method, methodSig, methodArgs)
     dispatch(methodCallSuccess(contract.address, method, res))
   }
 }

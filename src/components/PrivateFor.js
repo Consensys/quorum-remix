@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Creatable from 'react-select/creatable/dist/react-select.esm'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 import { updatePrivateFor } from '../actions'
 
 export function PrivateFor () {
@@ -26,17 +27,19 @@ export function PrivateFor () {
 
   useEffect(() => {
     if (!tesseraEndpoint) {
+      setOptions([])
       return
     }
-    fetch(`${tesseraEndpoint}/partyinfo`)
-      .then((response) => response.json())
-      .then((json) => {
-        setOptions(json.keys.map(party => createOption(party))
+    axios.get(`${tesseraEndpoint}/partyinfo`)
+    .then((response) => {
+      setOptions(response.data.keys.map(party => createOption(party))
         .sort((a, b) => a.label.localeCompare(b.label)))
       })
   }, [tesseraEndpoint])
 
-  return <Creatable options={options} className="private_for"
+  return <Creatable options={options}
+                    className="private_for"
+                    placeholder="Select or add..."
                     onChange={(selection) => dispatch(updatePrivateFor(selection))}
                     value={options.filter((option) => privateFor && privateFor.includes(option.value))}
                     classNamePrefix="private_for" isMulti autosize={false}/>
