@@ -140,6 +140,14 @@ export const logoStyle = {
   marginBottom: 12,
 }
 
+export const errorStyle = {
+  fontSize: 11,
+  color: 'red',
+  marginBottom: 6,
+  width: '100%',
+}
+
+
 export const statusStyle = (status) => {
   let color
   if (status === 'Connected') {
@@ -153,8 +161,6 @@ export const statusStyle = (status) => {
     color,
     fontSize: 11,
     marginRight: 8,
-    // display: 'block',
-    // flexGrow: 1,
   }
 }
 

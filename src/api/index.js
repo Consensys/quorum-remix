@@ -24,10 +24,10 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
   } catch (e) {
     if (e.response) {
       throw new Error(
-        `Error connecting to ${rpcEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+        `Error response from ${rpcEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
     } else {
       throw new Error(
-        `Network error connecting to ${rpcEndpoint}: ${e.message}. This could be: a. geth is not running at this address, b. the port is not accessible, or c. CORS settings on geth do not allow this url (check the developer console for CORS errors)`)
+        `Could not connect to ${rpcEndpoint}: ${e.message}. This could be: a. geth is not running at this address, b. the port is not accessible, or c. CORS settings on geth do not allow this url (check the developer console for CORS errors)`)
     }
   }
   if (tesseraEndpoint !== '') {
@@ -36,10 +36,10 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
     } catch (e) {
       if (e.response) {
         throw new Error(
-          `Error connecting to ${tesseraEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+          `Error response from ${tesseraEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
       } else {
         throw new Error(
-          `Network error connecting to ${tesseraEndpoint}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
+          `Could not connect to ${tesseraEndpoint}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
       }
     }
   }

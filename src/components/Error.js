@@ -1,5 +1,5 @@
 import React from 'react'
-import { statusStyle } from '../utils/Styles'
+import { errorStyle } from '../utils/Styles'
 import { useSelector } from 'react-redux'
 
 export function Error () {
@@ -7,5 +7,5 @@ export function Error () {
   if (error === '') {
     return ''
   }
-  return <div style={statusStyle('error')}>{error}</div>
+  return <div style={errorStyle}>{error}</div>
 }

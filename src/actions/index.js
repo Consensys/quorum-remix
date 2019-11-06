@@ -112,11 +112,13 @@ export function setNetwork (endpoint, tesseraEndpoint) {
     dispatch({ type: 'SET_NETWORK_CONNECTING' })
     let accounts = [], status = 'Disconnected', editing = true, error = ''
     try {
-      if (endpoint !== '') {
+      if (endpoint) {
         await updateWeb3Url(endpoint, tesseraEndpoint)
         status = 'Connected'
         editing = false
         accounts = await getAccounts()
+      } else {
+        error = "Please connect to a quorum node"
       }
 
     } catch (e) {

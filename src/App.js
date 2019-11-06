@@ -7,17 +7,21 @@ import { Deploy } from './components/Deploy'
 import { ContractList } from './components/ContractList'
 import { appStyle, logoStyle } from './utils/Styles'
 import { Error } from './components/Error'
+import { useSelector } from 'react-redux'
 
 function App() {
+  const isConnected = useSelector(
+    state => state.network.status !== 'Disconnected')
+
   return (
     <div style={appStyle} className="App">
       <Error/>
       <Network/>
-      <TxMetadata/>
+      {isConnected && <TxMetadata/>}
       <br/>
-      <Deploy/>
+      {isConnected && <Deploy/>}
       <br/>
-      <ContractList/>
+      {isConnected && <ContractList/>}
       <div style={{ flexGrow: 1 }}/>
       <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
     </div>

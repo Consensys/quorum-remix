@@ -56,10 +56,9 @@ async function initPlugin (client, dispatch) {
     await initDev(client, dispatch)
   }
 
-  const savedNetwork = JSON.parse(localStorage.network)
-  if (savedNetwork) {
-    dispatch(setNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
-  }
+  const savedNetwork = JSON.parse(localStorage.network || '{}')
+  dispatch(setNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+
   dispatch(fetchCompilationResult(client))
   client.solidity.on('compilationFinished',
     (fileName, source, languageVersion, data) => {
