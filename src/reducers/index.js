@@ -16,6 +16,10 @@ const initialState = {
   compilation: {
     contracts: {}
   },
+  tessera: {
+    keysFromUser: [],
+    keysFromServer: [],
+  },
   deployedAddresses: [],
   deployedContracts: {},
 }
@@ -194,6 +198,38 @@ export default function rootReducer (state = initialState, action) {
       return {
         ...state,
         error: action.payload
+      }
+
+    case 'ADD_PUBLIC_KEY':
+      const keysFromUser = [...state.tessera.keysFromUser, action.payload]
+      localStorage.keysFromUser = JSON.stringify(keysFromUser)
+      return {
+        ...state,
+        tessera: {
+          ...state.tessera,
+          keysFromUser,
+        }
+      }
+
+    case 'REMOVE_PUBLIC_KEY':
+      const newKeys = state.tessera.keysFromUser.filter(
+        (option) => option.value !== action.payload)
+      localStorage.keysFromUser = JSON.stringify(newKeys)
+      return {
+        ...state,
+        tessera: {
+          ...state.tessera,
+          keysFromUser: newKeys,
+        }
+      }
+
+    case 'SET_TESSERA_OPTIONS':
+      return {
+        ...state,
+        tessera: {
+          ...state.tessera,
+          keysFromServer: action.payload,
+        }
       }
 
     default:

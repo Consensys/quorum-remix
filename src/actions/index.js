@@ -3,6 +3,7 @@ import {
   contractMethod,
   deploy,
   getAccounts,
+  getTesseraParties,
   testUrls,
   updateWeb3Url
 } from '../api'
@@ -92,6 +93,27 @@ export function fetchCompilationSuccess (result) {
   }
 }
 
+export function addPublicKey (option) {
+  return {
+    type: 'ADD_PUBLIC_KEY',
+    payload: option,
+  }
+}
+
+export function removePublicKey (key) {
+  return {
+    type: 'REMOVE_PUBLIC_KEY',
+    payload: key,
+  }
+}
+
+export function setTesseraOptions (options) {
+  return {
+    type: 'SET_TESSERA_OPTIONS',
+    payload: options,
+  }
+}
+
 export function removeContract (address) {
   return { type: 'REMOVE_CONTRACT', payload: address }
 }
@@ -117,6 +139,8 @@ export function setNetwork (endpoint, tesseraEndpoint) {
         status = 'Connected'
         editing = false
         accounts = await getAccounts()
+        const options = await getTesseraParties()
+        dispatch(setTesseraOptions(options))
       } else {
         error = "Please connect to a quorum node"
       }

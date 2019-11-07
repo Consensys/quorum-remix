@@ -5,10 +5,11 @@ import axios from 'axios'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-let web3;
+let web3, tessera
 
 export async function updateWeb3Url (endpoint, tesseraEndpoint) {
   web3 = new Web3(endpoint)
+  tessera = tesseraEndpoint
   await testUrls(endpoint, tesseraEndpoint)
 }
 
@@ -48,6 +49,24 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
 export async function getAccounts () {
   return await web3.eth.getAccounts()
 }
+
+export async function getTesseraParties () {
+  if (!tessera) {
+    return []
+  }
+  const response = await axios.get(`${tessera}/partyinfo`)
+  return response.data.keys
+  .sort((a, b) => a.url.localeCompare(b.url))
+  .map(party => formatAsSelectOption(party))
+}
+
+function formatAsSelectOption (party) {
+  return {
+    value: party.key,
+    label: party.url,
+  }
+}
+
 
 export async function deploy (contract, params, txMetadata) {
   let abi = contract.abi

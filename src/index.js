@@ -9,7 +9,7 @@ import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
-import { fetchCompilationResult, setNetwork } from './actions'
+import { addPublicKey, fetchCompilationResult, setNetwork } from './actions'
 
 class QuorumPlugin extends PluginClient {
 
@@ -58,6 +58,9 @@ async function initPlugin (client, dispatch) {
 
   const savedNetwork = JSON.parse(localStorage.network || '{}')
   dispatch(setNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+
+  const savedPublicKeys = JSON.parse(localStorage.keysFromUser || '[]')
+  savedPublicKeys.forEach((key) => dispatch(addPublicKey(key)))
 
   dispatch(fetchCompilationResult(client))
   client.solidity.on('compilationFinished',

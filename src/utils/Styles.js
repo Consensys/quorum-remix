@@ -73,7 +73,6 @@ export const iconStyle = {
   padding: 8,
   verticalAlign: 'center',
   textDecoration: 'none',
-  float: 'right',
 }
 
 export const ellipsisStyle = {
@@ -147,6 +146,24 @@ export const errorStyle = {
   width: '100%',
 }
 
+export const optionStyle = {
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+  alignItems: 'center',
+}
+export const optionLabelContainerStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  flexGrow: 1,
+}
+export const optionLabelStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+}
 
 export const statusStyle = (status) => {
   let color
