@@ -76,7 +76,6 @@ export const Method = ({ method, onSubmit, result }) => {
       </button>
       {method.inputs.length > 0 &&
       <input placeholder={method.inputs.map((input) => `${input.type} ${input.name}`).join(', ')}
-             className="form-control"
              style={inputStyle}
              onChange={(e) => onSingleLineInputChange(e.target.value)}
              value={singleLineInput}
@@ -128,7 +127,7 @@ export const TransactionInput = ({ input, onChange, value }) => {
     {values.map((value, index) => (
       <div key={`${input.name}${index}`} className="input-group method-inputs"
            data-param={input.name}>
-        <input type="text" className="form-control" data-param={input.name}
+        <input type="text" data-param={input.name}
                data-type={input.type}
                value={value}
                onChange={(e) => onInputChange(index, e.target.value)}>

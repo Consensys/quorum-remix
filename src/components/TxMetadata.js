@@ -50,10 +50,6 @@ export function TxMetadata () {
 
   return <div style={formContainerStyle}>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Private for:</div>
-      <div style={{width: 224}}><PrivateFor/></div>
-    </div>
-    <div style={txMetaRowStyle}>
       <div style={labelStyle}>Account:</div>
       <select className="form-control" defaultValue={account}
               onChange={(e) => dispatch(selectAccount(e.target.value))}>
@@ -87,6 +83,10 @@ export function TxMetadata () {
         <option value="finney">finney</option>
         <option value="ether">ether</option>
       </select>
+    </div>
+    <div style={txMetaRowStyle}>
+      <div style={labelStyle}>Private for:</div>
+      <div style={{width: 224}}><PrivateFor/></div>
     </div>
   </div>
 }

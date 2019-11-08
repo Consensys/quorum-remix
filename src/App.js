@@ -5,7 +5,7 @@ import { Network } from './components/Network'
 import { TxMetadata } from './components/TxMetadata'
 import { Deploy } from './components/Deploy'
 import { ContractList } from './components/ContractList'
-import { appStyle, logoStyle } from './utils/Styles'
+import { appStyle, footerStyle, logoStyle } from './utils/Styles'
 import { Error } from './components/Error'
 import { useSelector } from 'react-redux'
 
@@ -23,9 +23,17 @@ function App() {
       <br/>
       {isConnected && <ContractList/>}
       <div style={{ flexGrow: 1 }}/>
-      <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
+      <Footer/>
     </div>
   );
+}
+
+function Footer () {
+  console.log(process.env)
+  return <div style={footerStyle}>
+    <div>v{process.env.REACT_APP_VERSION}</div>
+    <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
+  </div>
 }
 
 export default App;

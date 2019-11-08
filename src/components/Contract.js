@@ -36,12 +36,15 @@ export function Contract ({ address }) {
     }
   }
 
-  const renderHeader = () => <div style={headerStyle}>
+  const renderHeader = () => <div className="alert alert-secondary p-2"
+                                  style={headerStyle}>
 
     <i style={iconStyle} title="Expand contract instance"
        className={`fa fa-caret-${expanded ? 'down' : 'right'} methCaret`}
        onClick={(e) => dispatch(expandContract(address, expanded))}/>
-    <div style={ellipsisStyle}>{contractName}({address})</div>
+    <div className="input-group-text"
+         style={ellipsisStyle}>{contractName}({address})
+    </div>
     <i style={iconStyle} title="Copy contract address"
        className="fa fa-clipboard"
        onClick={(e) => copyAddress()}/>

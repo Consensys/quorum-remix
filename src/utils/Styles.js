@@ -18,7 +18,6 @@ export const formContainerStyle = {
 
 export const containerStyle = {
   display: 'flex',
-  alignItems: 'center',
   marginTop: 8,
 }
 
@@ -27,14 +26,17 @@ export const buttonStyle = {
   minWidth: 100,
   width: 100,
   wordBreak: 'inherit',
+  borderRadius: 3,
   borderTopRightRadius: 0,
   borderBottomRightRadius: 0,
   borderRight: 0,
 }
 
 export const inputStyle = {
+  border: '1px solid #dddddd',
   fontSize: 10,
-  padding: '.25rem',
+  padding: '.36em',
+  borderRadius: 5,
   borderTopLeftRadius: 0,
   borderBottomLeftRadius: 0,
   borderLeft: 0,
@@ -50,10 +52,6 @@ export const contractStyle = {
 export const headerStyle = {
   display: 'flex',
   alignItems: 'center',
-  borderRadius: '0.25rem',
-  border: '1px solid #95a5a6',
-  background: '#95a5a6',
-  padding: '4px',
 }
 
 export const bodyStyle = {
@@ -76,15 +74,10 @@ export const iconStyle = {
 }
 
 export const ellipsisStyle = {
-  backgroundColor: '#ecf0f1',
-  border: '1px solid #ced4da',
-  borderRadius: '0.25rem',
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  color: '#7b8a8b',
   fontSize: '11px',
-  padding: '0.375rem 0.75rem',
 }
 
 export const addonButtonStyle = {
@@ -110,6 +103,7 @@ export const txMetaRowRightStyle = {
 }
 
 export const labelStyle = {
+  fontSize: 12,
   whiteSpace: 'nowrap',
   minWidth: 72,
 }
@@ -132,11 +126,20 @@ export const checkboxLabelStyle = {
   textOverflow: 'ellipsis',
 }
 
+export const footerStyle = {
+  display: 'flex',
+  width: '100%',
+  justifyContent: 'space-between',
+  height: 18,
+  marginTop: 12,
+  marginBottom: 8,
+  fontSize: 12,
+}
+
 export const logoStyle = {
   height: 18,
+  marginBottom: 4,
   alignSelf: 'flex-end',
-  marginTop: 12,
-  marginBottom: 12,
 }
 
 export const errorStyle = {
@@ -163,6 +166,7 @@ export const optionLabelStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  color: '#222'
 }
 
 export const statusStyle = (status) => {
