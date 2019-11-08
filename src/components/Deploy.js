@@ -19,7 +19,7 @@ export function Deploy() {
   }, [contracts])
 
 
-  return <div>
+  return <div style={{width: '100%'}}>
     <div>Compiled Contracts:</div>
     <select className="form-control"
             defaultValue={selectedContract}

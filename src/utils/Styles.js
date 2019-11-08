@@ -30,6 +30,8 @@ export const buttonStyle = {
   borderTopRightRadius: 0,
   borderBottomRightRadius: 0,
   borderRight: 0,
+  overflowX: 'hidden',
+  textOverflow: 'ellipsis',
 }
 
 export const inputStyle = {
@@ -52,6 +54,7 @@ export const contractStyle = {
 export const headerStyle = {
   display: 'flex',
   alignItems: 'center',
+  marginBottom: 0,
 }
 
 export const bodyStyle = {
