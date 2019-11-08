@@ -185,18 +185,29 @@ export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
 
 export function deployContract (params, contract, txMetadata) {
   return async dispatch => {
-    const response = await deploy(contract, params, txMetadata)
-
-    dispatch(addContract(contract, response.options.address, txMetadata))
+    try {
+      const response = await deploy(contract, params, txMetadata)
+      dispatch(addContract(contract, response.options.address, txMetadata))
+      dispatch(setError())
+    } catch (e) {
+      console.error("Error deploying contract", e)
+      dispatch(setError(e.message))
+    }
   }
 }
 
 export function doMethodCall (contract, method, params, txMetadata, privateFor,
   selectedPrivateFor) {
   return async dispatch => {
-    const __ret = await contractMethod(txMetadata, params, method, privateFor,
-      selectedPrivateFor, contract)
-    const res = __ret.res
-    dispatch(methodCallSuccess(contract.address, method, res))
+    try {
+      const __ret = await contractMethod(txMetadata, params, method, privateFor,
+        selectedPrivateFor, contract)
+      const res = __ret.res
+      dispatch(methodCallSuccess(contract.address, method, res))
+      dispatch(setError())
+    } catch (e) {
+      console.error("Error calling contract method", e)
+      dispatch(setError(e.message))
+    }
   }
 }
