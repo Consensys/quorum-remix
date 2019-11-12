@@ -29,7 +29,6 @@ function App() {
 }
 
 function Footer () {
-  console.log(process.env)
   return <div style={footerStyle}>
     <div>v{process.env.REACT_APP_VERSION}</div>
     <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
