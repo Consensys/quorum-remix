@@ -9,6 +9,7 @@ import {
 } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { editNetwork, saveNetwork, setError, setNetwork } from '../actions'
+import { InputTooltip } from './InputTooltip'
 
 export function Network () {
   const state = useSelector(state => state)
@@ -48,26 +49,39 @@ export function Network () {
     dispatch(setNetwork(endpoint, tesseraEndpoint))
   }
 
-  return <div style={networkStyle}>
+  return <form style={networkStyle}
+    onSubmit={async (e) => {
+      e.preventDefault()
+      await onSave()
+    }}>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Geth RPC:</div>
-      <input className="form-control"
-             type="text"
-             placeholder="e.g. http://localhost:22000"
-             disabled={!editing}
-             value={endpointInput}
-             onChange={(e) => setEndpointInput(
+      <div style={labelStyle}>
+        Geth RPC
+      </div>
+      <InputTooltip
+        enabled={editing}
+        text="This should be the url for your geth node\'s RPC endpoint. It should include http(s), host/ip, and port. For example: http://localhost:22000/">
+        <input className="form-control"
+               type="text"
+               disabled={!editing}
+               value={endpointInput}
+               onChange={(e) => setEndpointInput(
                e.target.value)}/>
+      </InputTooltip>
     </div>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Tessera:</div>
-      <input className="form-control"
-             type="text"
-             placeholder="Optional, http://localhost:9001"
-             disabled={!editing}
-             value={tesseraEndpointInput}
-             onChange={(e) => setTesseraEndpointInput(
+      <div style={labelStyle}>Tessera</div>
+      <InputTooltip
+        enabled={editing}
+        text="This should be the url for your tessera keys endpoint. It should include http(s), host/ip, port, and path. For example: http://localhost:9081/partyInfo/keys">
+        <input className="form-control"
+               type="text"
+               placeholder="(Optional)"
+               disabled={!editing}
+               value={tesseraEndpointInput}
+               onChange={(e) => setTesseraEndpointInput(
                e.target.value)}/>
+      </InputTooltip>
     </div>
     {editing ?
       <div style={txMetaRowRightStyle}>
@@ -83,5 +97,6 @@ export function Network () {
         <i style={iconStyle} className="fa fa-pencil" onClick={() => onEdit()}/>
       </div>
     }
-  </div>
+    <button type="submit" style={{display: 'none'}} />
+  </form>
 }

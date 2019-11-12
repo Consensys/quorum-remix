@@ -1,14 +1,21 @@
 import React from 'react'
-import Creatable from 'react-select/creatable/dist/react-select.esm'
 import { components } from 'react-select/dist/react-select.browser.esm'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { addPublicKey, removePublicKey, updatePrivateFor } from '../actions'
+import {
+  addPublicKey,
+  removePublicKey,
+  setError,
+  updatePrivateFor
+} from '../actions'
 import {
   iconStyle,
   optionLabelContainerStyle,
   optionLabelStyle,
   optionStyle
 } from '../utils/Styles'
+import Creatable from 'react-select/creatable/dist/react-select.esm'
+import Select from 'react-select'
+import isBase64 from 'validator/lib/isBase64'
 
 export function PrivateFor () {
   const dispatch = useDispatch()
@@ -19,23 +26,40 @@ export function PrivateFor () {
   const keysFromServer =
     useSelector(state => state.tessera.keysFromServer, shallowEqual)
 
-  const options = [...keysFromServer, ...keysFromUser]
+  const isFromServer = keysFromServer.length > 0
+
+  // don't allow user-added keys when using keys retrieved from the server.
+  // If a key is not in the list, the transaction will be rejected anyway.
+  const options = isFromServer ? keysFromServer : keysFromUser
   const selectedOptions = options.filter(
     (option) => privateFor && privateFor.includes(option.value))
 
-  return <Creatable
+  // Don't allow creation of options if we're using keys from the server
+  const SelectContainer = isFromServer ? Select : Creatable
+
+  return <SelectContainer
     components={{ Option }}
     placeholder="Select or add..."
     options={options}
     value={selectedOptions}
     closeMenuOnSelect={true}
     isMulti
-    autosize={false}
+    autosize="false"
     onChange={(selection) => dispatch(updatePrivateFor(selection))}
+    formatCreateLabel={(value) => `Add '${value}'`}
     onCreateOption={(inputValue) => {
-      const option = { label: inputValue, value: inputValue }
-      dispatch(addPublicKey(option))
-      dispatch(updatePrivateFor([...selectedOptions, option]))
+      const isValid = isBase64(inputValue)
+      if(isValid) {
+        const option = {
+          label: inputValue,
+          value: inputValue,
+          userCreated: true
+        }
+        dispatch(addPublicKey(option))
+        dispatch(updatePrivateFor([...selectedOptions, option]))
+      } else {
+        dispatch(setError(`Invalid public key: ${inputValue}`))
+      }
     }}/>
 }
 
@@ -43,28 +67,18 @@ export function PrivateFor () {
 const Option = (props) => {
   const dispatch = useDispatch()
 
-  // user created options don't have a url for their label
-  const isUserCreatedOption = props.label === props.value
-
-  // the 'Create' option and user-created options will show value double, don't
-  const shouldShowValue = !isUserCreatedOption &&
-    !props.label.startsWith('Create')
+  const option = props.data
 
   return <components.Option {...props}>
     <div style={optionStyle}>
       <div style={optionLabelContainerStyle}>
         <div style={optionLabelStyle}>
-          {props.label}
+          {option.label}
         </div>
-        {shouldShowValue &&
-        <div style={optionLabelStyle}>
-          {props.value}
-        </div>
-        }
       </div>
-      {isUserCreatedOption &&
+      {option.userCreated &&
       <i style={iconStyle} className="fa fa-close"
-         onClick={() => dispatch(removePublicKey(props.value))}/>
+         onClick={() => dispatch(removePublicKey(option.value))}/>
       }
     </div>
   </components.Option>

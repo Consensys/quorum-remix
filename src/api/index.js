@@ -33,7 +33,7 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
   }
   if (tesseraEndpoint !== '') {
     try {
-      await axios.get(`${tesseraEndpoint}/partyinfo`)
+      await axios.get(`${tesseraEndpoint}`)
     } catch (e) {
       if (e.response) {
         throw new Error(
@@ -54,16 +54,15 @@ export async function getTesseraParties () {
   if (!tessera) {
     return []
   }
-  const response = await axios.get(`${tessera}/partyinfo`)
+  const response = await axios.get(`${tessera}`)
   return response.data.keys
-  .sort((a, b) => a.url.localeCompare(b.url))
   .map(party => formatAsSelectOption(party))
 }
 
 function formatAsSelectOption (party) {
   return {
     value: party.key,
-    label: party.url,
+    label: party.key,
   }
 }
 
