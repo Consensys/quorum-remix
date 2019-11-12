@@ -4,7 +4,7 @@ import {
   formContainerStyle,
   iconStyle,
   inlineInputStyle,
-  labelStyle,
+  labelStyle, reactSelectStyle,
   txMetaRowStyle
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
@@ -50,7 +50,7 @@ export function TxMetadata () {
 
   return <div style={formContainerStyle}>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Account:</div>
+      <div style={labelStyle}>Account</div>
       <select className="form-control" defaultValue={account}
               onChange={(e) => dispatch(selectAccount(e.target.value))}>
         {accounts.map(
@@ -62,17 +62,17 @@ export function TxMetadata () {
          onClick={(e) => copyAddress()}/>
     </div>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Gas price:</div>
+      <div style={labelStyle}>Gas price</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasPrice}
                            onChange={(e) => dispatch(changeGasPrice(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Gas limit:</div>
+      <div style={labelStyle}>Gas limit</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasLimit}
              onChange={(e) => dispatch(changeGasLimit(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Value:</div>
+      <div style={labelStyle}>Value</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={value}
              onChange={(e) => dispatch(
                changeValue(e.target.value))}/>
@@ -85,8 +85,8 @@ export function TxMetadata () {
       </select>
     </div>
     <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Private for:</div>
-      <div style={{width: 224}}><PrivateFor/></div>
+      <div style={labelStyle}>Private for</div>
+      <div style={reactSelectStyle}><PrivateFor/></div>
     </div>
   </div>
 }

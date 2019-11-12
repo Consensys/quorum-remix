@@ -152,6 +152,11 @@ export const errorStyle = {
   width: '100%',
 }
 
+export const reactSelectStyle = {
+  width: 0,
+  flexGrow: 1
+}
+
 export const optionStyle = {
   display: 'flex',
   width: '100%',
