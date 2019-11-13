@@ -48,18 +48,23 @@ export function PrivateFor () {
     onChange={(selection) => dispatch(updatePrivateFor(selection))}
     formatCreateLabel={(value) => `Add '${value}'`}
     onCreateOption={(inputValue) => {
-      const isValid = isBase64(inputValue)
-      if(isValid) {
-        const option = {
-          label: inputValue,
-          value: inputValue,
-          userCreated: true
-        }
-        dispatch(addPublicKey(option))
-        dispatch(updatePrivateFor([...selectedOptions, option]))
-      } else {
-        dispatch(setError(`Invalid public key: ${inputValue}`))
+
+      if(inputValue.length !== 44) {
+        dispatch(setError(`Public key length must equal 44: (actual: ${inputValue.length}) ${inputValue}`))
+        return;
       }
+      if(!isBase64(inputValue)) {
+        dispatch(setError(`Public key must be a valid base64 string: ${inputValue}`))
+        return;
+      }
+
+      const option = {
+        label: inputValue,
+        value: inputValue,
+        userCreated: true
+      }
+      dispatch(addPublicKey(option))
+      dispatch(updatePrivateFor([...selectedOptions, option]))
     }}/>
 }
 
