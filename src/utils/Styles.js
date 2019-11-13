@@ -76,6 +76,15 @@ export const iconStyle = {
   textDecoration: 'none',
 }
 
+export const smallIconStyle = {
+  cursor: 'pointer',
+  textAlign: 'center',
+  fontSize: 11,
+  padding: 3,
+  verticalAlign: 'center',
+  textDecoration: 'none',
+}
+
 export const ellipsisStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
@@ -145,11 +154,17 @@ export const logoStyle = {
   alignSelf: 'flex-end',
 }
 
+export const errorContainerStyle = {
+  display: 'flex',
+  marginBottom: 6,
+  width: '100%',
+}
+
 export const errorStyle = {
   fontSize: 11,
   color: 'red',
-  marginBottom: 6,
-  width: '100%',
+  width: 0,
+  flexGrow: 1,
 }
 
 export const reactSelectStyle = {
