@@ -162,6 +162,10 @@ export function setNetwork (endpoint, tesseraEndpoint) {
         editing
       }
     })
+
+    dispatch({
+      type: 'RESET_TX_RESULTS',
+    })
   }
 }
 

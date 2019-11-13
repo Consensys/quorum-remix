@@ -181,6 +181,15 @@ export default function rootReducer (state = initialState, action) {
         }
       }
 
+    case 'RESET_TX_RESULTS':
+      const resetDeployedContracts = { ...state.deployedContracts }
+      state.deployedAddresses.forEach(
+        (address) => resetDeployedContracts[address].results = {})
+      return {
+        ...state,
+        deployedContracts: resetDeployedContracts
+      }
+
     case 'EXPAND_CONTRACT':
       const expandContract = state.deployedContracts[action.payload.address]
       return {
