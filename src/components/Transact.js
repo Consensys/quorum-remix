@@ -8,7 +8,7 @@ import {
   inputStyle
 } from '../utils/Styles'
 
-export const Method = ({ method, onSubmit, result }) => {
+export const Method = ({ method, onSubmit, result, disabled }) => {
 
   const [expanded, setExpanded] = useState(false)
   const [inputValues, setInputValues] = useState({});
@@ -58,12 +58,17 @@ export const Method = ({ method, onSubmit, result }) => {
       </div>
       {method.inputs.map((input) =>
         <TransactionInput
+          disabled={disabled}
           key={methodName + input.name}
           onChange={onInputChange}
           value={inputValues[input.name]}
           input={input}/>
       )}
-      <button onClick={submit} style={{ marginTop: 8, alignSelf: 'flex-end'}} className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
+      <button
+        disabled={disabled}
+        onClick={submit}
+        style={{ marginTop: 8, alignSelf: 'flex-end' }}
+        className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
         {methodName}
       </button>
     </div>
@@ -71,11 +76,16 @@ export const Method = ({ method, onSubmit, result }) => {
 
   function collapsedView () {
     return <div style={containerStyle}>
-      <button onClick={submit} style={buttonStyle} className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
+      <button
+        disabled={disabled}
+        onClick={submit}
+        style={buttonStyle}
+        className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
         {methodName}
       </button>
       {method.inputs.length > 0 &&
       <input placeholder={method.inputs.map((input) => `${input.type} ${input.name}`).join(', ')}
+             disabled={disabled}
              style={inputStyle}
              onChange={(e) => onSingleLineInputChange(e.target.value)}
              value={singleLineInput}
@@ -92,7 +102,7 @@ export const Method = ({ method, onSubmit, result }) => {
   </div>
 };
 
-export const TransactionInput = ({ input, onChange, value }) => {
+export const TransactionInput = ({ input, onChange, value, disabled }) => {
 
   const initialValues = value ? value.toString().split(',').map((v) => v.trim()) : ['']
   const isDynamic = isDynamicArray(input);
@@ -130,16 +140,23 @@ export const TransactionInput = ({ input, onChange, value }) => {
         <input type="text" data-param={input.name}
                data-type={input.type}
                value={value}
+               disabled={disabled}
                onChange={(e) => onInputChange(index, e.target.value)}>
         </input>
         {isDynamic &&
         // handle dynamic array input types - like bytes32[]
         ([
-          <button style={addonButtonStyle} key={'minus'} onClick={() => onMinus(index)}
+          <button style={addonButtonStyle}
+                  key={'minus'}
+                  onClick={() => onMinus(index)}
+                  disabled={disabled}
                   className="btn btn-sm remove input-group-addon text-danger">
             <i className="fa fa-minus"/>
           </button>,
-          <button style={addonButtonStyle} key={'plus'} onClick={() => onPlus(index)}
+          <button style={addonButtonStyle}
+                  key={'plus'}
+                  onClick={() => onPlus(index)}
+                  disabled={disabled}
                   className="btn btn-sm add input-group-addon text-success">
             <i className="fa fa-plus"/>
           </button>

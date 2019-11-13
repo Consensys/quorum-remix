@@ -5,8 +5,26 @@ import {
   getAccounts,
   getTesseraParties,
   testUrls,
-  updateWeb3Url
+  updateWeb3Url,
+  verifyContract
 } from '../api'
+
+export function setContractDeploying (isDeploying) {
+  return {
+    type: 'SET_CONTRACT_DEPLOYING',
+    payload: isDeploying,
+  }
+}
+
+export function startMethodCall (address, method) {
+  return {
+    type: 'START_METHOD_CALL',
+    payload: {
+      address,
+      methodSignature: getMethodSignature(method),
+    }
+  }
+}
 
 export function methodCallSuccess (address, method, res) {
   return {
@@ -187,8 +205,24 @@ export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
   }
 }
 
+export function addExistingContract (contract, address, txMetadata) {
+  return async dispatch => {
+    dispatch(setContractDeploying(true))
+    try {
+      await verifyContract(address)
+      dispatch(addContract(contract, address, txMetadata))
+      dispatch(setError())
+    } catch (e) {
+      console.error("Error attaching to existing contract", e)
+      dispatch(setError(e.message))
+    }
+    dispatch(setContractDeploying(false))
+  }
+}
+
 export function deployContract (params, contract, txMetadata) {
   return async dispatch => {
+    dispatch(setContractDeploying(true))
     try {
       const response = await deploy(contract, params, txMetadata)
       dispatch(addContract(contract, response.options.address, txMetadata))
@@ -197,12 +231,14 @@ export function deployContract (params, contract, txMetadata) {
       console.error("Error deploying contract", e)
       dispatch(setError(e.message))
     }
+    dispatch(setContractDeploying(false))
   }
 }
 
 export function doMethodCall (contract, method, params, txMetadata, privateFor,
   selectedPrivateFor) {
   return async dispatch => {
+    dispatch(startMethodCall(contract.address, method))
     try {
       const __ret = await contractMethod(txMetadata, params, method, privateFor,
         selectedPrivateFor, contract)

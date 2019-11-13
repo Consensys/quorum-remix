@@ -14,7 +14,8 @@ const initialState = {
     valueDenomination: 'wei',
   },
   compilation: {
-    contracts: {}
+    contracts: {},
+    deploying: false
   },
   tessera: {
     keysFromUser: [],
@@ -164,6 +165,28 @@ export default function rootReducer (state = initialState, action) {
         }
       }
 
+    case 'SET_CONTRACT_DEPLOYING':
+      return {
+        ...state,
+        compilation: {
+          ...state.compilation,
+          deploying: action.payload
+        },
+      }
+
+    case 'START_METHOD_CALL':
+      const toContract = state.deployedContracts[action.payload.address]
+      return {
+        ...state,
+        deployedContracts: {
+          ...state.deployedContracts,
+          [action.payload.address]: {
+            ...toContract,
+            loading: true,
+          }
+        }
+      }
+
     case 'METHOD_CALL':
       const { address, methodSignature, result } = action.payload
       const deployedContract = state.deployedContracts[address]
@@ -176,7 +199,8 @@ export default function rootReducer (state = initialState, action) {
             results: {
               ...deployedContract.results,
               [methodSignature]: result,
-            }
+            },
+            loading: false,
           }
         }
       }

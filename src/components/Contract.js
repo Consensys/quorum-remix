@@ -18,7 +18,7 @@ export function Contract ({ address }) {
   const dispatch = useDispatch()
   const { txMetadata, deployedContracts } = state
   const contract = deployedContracts[address]
-  const { expanded = false, contractName, privateFor } = contract
+  const { expanded = false, contractName, privateFor, loading } = contract
 
   const [selectedPrivateFor, setSelectedPrivateFor] = React.useState(
     privateFor && privateFor.map(key => { return { enabled: true, key }}))
@@ -79,6 +79,7 @@ export function Contract ({ address }) {
       .sort((a, b) => a.name.localeCompare(b.name))
       .map((method) => (
         <Method key={method.name}
+                disabled={loading}
                 method={method}
                 result={getResultForMethod(method)}
                 onSubmit={(inputValues) => dispatch(

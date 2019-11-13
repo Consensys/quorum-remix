@@ -7,12 +7,13 @@ import {
   orStyle
 } from '../utils/Styles'
 
-export const Constructor = ({ method, onDeploy, onExisting }) => {
+export const Constructor = ({ method, onDeploy, onExisting, disabled }) => {
 
   const [existingAddress, setExistingAddress] = useState('')
 
   return <div>
     <Method key={'constructor'}
+            disabled={disabled}
             method={method}
             onSubmit={(inputValues) => onDeploy(inputValues)}
     />
@@ -21,12 +22,12 @@ export const Constructor = ({ method, onDeploy, onExisting }) => {
       <button
         style={buttonStyle}
         className="btn btn-sm btn-info"
-        disabled={existingAddress === ''}
+        disabled={disabled || existingAddress === ''}
         onClick={() => onExisting(existingAddress)}>
         At Address
       </button>
       <input placeholder="Existing contract address"
-             className=""
+             disabled={disabled}
              style={inputStyle}
              onChange={(e) => setExistingAddress(e.target.value)}
              value={existingAddress}

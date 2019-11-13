@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react'
 import { Constructor } from './Constructor'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { addContract, deployContract, selectContract } from '../actions'
+import { addExistingContract, deployContract, selectContract } from '../actions'
 import { getConstructor } from '../utils/ContractUtils'
 
 export function Deploy() {
   const txMetadata = useSelector(state => state.txMetadata, shallowEqual)
-  const { contracts, selectedContract } = useSelector(
-    state => state.compilation)
+  const {
+    contracts,
+    selectedContract,
+    deploying
+  } = useSelector(state => state.compilation)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -29,10 +32,11 @@ export function Deploy() {
     </select>
     {contracts[selectedContract] &&
     <Constructor
+      disabled={deploying}
       onDeploy={params => dispatch(
         deployContract(params, contracts[selectedContract], txMetadata))}
       onExisting={(address) => {
-        dispatch(addContract(contracts[selectedContract], address, txMetadata))
+        dispatch(addExistingContract(contracts[selectedContract], address, txMetadata))
       }}
       method={getConstructor(contracts[selectedContract].abi)}
     />}

@@ -112,9 +112,18 @@ export async function contractMethod (txMetadata, params, method, privateFor,
       ({ enabled }) => enabled).map(({ key }) => key)
   }
 
+  await verifyContract(contract.address)
+
   let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
   let web3Method = web3Contract.methods[method.name](..._params)
   let callOrSend = method.constant ? 'call' : 'send'
   const res = await web3Method[callOrSend](methodArgs)
   return { methodSig, methodArgs, res }
+}
+
+export async function verifyContract(address) {
+  const contractBinary = await web3.eth.getCode(address)
+  if (contractBinary === '0x') {
+    throw new Error(`Contract does not exist at ${address}`)
+  }
 }
