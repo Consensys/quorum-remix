@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import { Method } from './Transact'
-import { buttonStyle, containerStyle, inputStyle } from '../utils/Styles'
+import {
+  buttonStyle,
+  containerStyle,
+  inputStyle,
+  orStyle
+} from '../utils/Styles'
 
 export const Constructor = ({ method, onDeploy, onExisting }) => {
 
@@ -11,7 +16,7 @@ export const Constructor = ({ method, onDeploy, onExisting }) => {
             method={method}
             onSubmit={(inputValues) => onDeploy(inputValues)}
     />
-    <div>or</div>
+    <div style={orStyle}>or</div>
     <div style={containerStyle} className="btn-group-sm">
       <button
         style={buttonStyle}

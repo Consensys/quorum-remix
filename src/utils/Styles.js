@@ -66,6 +66,14 @@ export const bodyStyle = {
   borderBottomRightRadius: '0.25rem',
 }
 
+export const orStyle = {
+  width: 100,
+  height: 28,
+  textAlign: 'center',
+  marginTop: 4,
+  marginBottom: -5
+}
+
 export const iconStyle = {
   cursor: 'pointer',
   minWidth: 28,
