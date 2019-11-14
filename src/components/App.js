@@ -1,12 +1,12 @@
 import React from 'react'
 import './App.css'
-import { Network } from './components/Network'
+import { Network } from './Network'
 
-import { TxMetadata } from './components/TxMetadata'
-import { Deploy } from './components/Deploy'
-import { ContractList } from './components/ContractList'
-import { appStyle, footerStyle, logoStyle } from './utils/Styles'
-import { Error } from './components/Error'
+import { TxMetadata } from './TxMetadata'
+import { Deploy } from './Deploy'
+import { ContractList } from './ContractList'
+import { appStyle, footerStyle, logoStyle } from '../utils/Styles'
+import { Error } from './Error'
 import { useSelector } from 'react-redux'
 
 function App() {

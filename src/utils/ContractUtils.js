@@ -17,3 +17,17 @@ export function getConstructor (abi) {
     name: '',
   }
 }
+
+export function normalizeCompilationOutput (data) {
+  if (data === null) {
+    return {}
+  }
+  const contracts = {}
+  Object.entries(data.contracts).forEach(([filename, fileContents]) => {
+    Object.entries(fileContents).forEach(([contractName, contractData]) => {
+      let name = `${contractName} - ${filename}`
+      contracts[name] = { ...contractData, contractName, filename }
+    })
+  })
+  return contracts
+}

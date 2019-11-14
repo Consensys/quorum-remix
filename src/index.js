@@ -2,14 +2,18 @@ import { buildIframeClient, PluginClient } from '@remixproject/plugin'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-import App from './App'
+import App from './components/App'
 import * as serviceWorker from './serviceWorker'
-import rootReducer from './reducers'
+import { rootReducer } from './reducers'
 import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
-import { addPublicKey, fetchCompilationResult, setNetwork } from './actions'
+import {
+  addPublicKey,
+  connectToNetwork,
+  fetchCompilationResult
+} from './actions'
 
 class QuorumPlugin extends PluginClient {
 
@@ -35,8 +39,8 @@ client.onload(async () => {
 });
 
 if (module.hot) {
-  module.hot.accept('./App', () => {
-    const NextApp = require('./App').default
+  module.hot.accept('./components/App', () => {
+    const NextApp = require('./components/App').default
     ReactDOM.render(
       <Provider store={store}>
         <NextApp client={client}/>
@@ -57,7 +61,8 @@ async function initPlugin (client, dispatch) {
   }
 
   const savedNetwork = JSON.parse(localStorage.network || '{}')
-  dispatch(setNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+  dispatch(
+    connectToNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
 
   const savedPublicKeys = JSON.parse(localStorage.keysFromUser || '[]')
   savedPublicKeys.forEach((key) => dispatch(addPublicKey(key)))

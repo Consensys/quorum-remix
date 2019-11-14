@@ -4,8 +4,7 @@ import { useSelector } from 'react-redux'
 import { formContainerStyle } from '../utils/Styles'
 
 export function ContractList () {
-  const state = useSelector(state => state)
-  const { deployedAddresses } = state
+  const deployedAddresses = useSelector(state => state.deployed.deployedAddresses)
 
   useEffect(() => {
   }, [])

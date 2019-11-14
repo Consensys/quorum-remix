@@ -14,9 +14,11 @@ import { doMethodCall, expandContract, removeContract } from '../actions'
 import { getMethodSignature } from '../utils/ContractUtils'
 
 export function Contract ({ address }) {
-  const state = useSelector(state => state)
   const dispatch = useDispatch()
-  const { txMetadata, deployedContracts } = state
+  const txMetadata = useSelector(state => state.txMetadata)
+  const deployedContracts = useSelector(
+    state => state.deployed.deployedContracts)
+
   const contract = deployedContracts[address]
   const { expanded = false, contractName, privateFor, loading } = contract
 

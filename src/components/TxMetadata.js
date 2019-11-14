@@ -4,7 +4,8 @@ import {
   formContainerStyle,
   iconStyle,
   inlineInputStyle,
-  labelStyle, reactSelectStyle,
+  labelStyle,
+  reactSelectStyle,
   txMetaRowStyle
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'

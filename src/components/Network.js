@@ -8,7 +8,7 @@ import {
   txMetaRowStyle
 } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { editNetwork, saveNetwork, setError, setNetwork } from '../actions'
+import { editNetwork, saveNetwork, setError, connectToNetwork } from '../actions'
 import { InputTooltip } from './InputTooltip'
 
 export function Network () {
@@ -46,7 +46,7 @@ export function Network () {
   }
 
   const onRefresh = () => {
-    dispatch(setNetwork(endpoint, tesseraEndpoint))
+    dispatch(connectToNetwork(endpoint, tesseraEndpoint))
   }
 
   return <form style={networkStyle}
@@ -62,6 +62,7 @@ export function Network () {
         enabled={editing}
         text="This should be the url for your geth node\'s RPC endpoint. It should include http(s), host/ip, and port. For example: http://localhost:22000/">
         <input className="form-control"
+               placeholder="http://localhost:22000"
                type="text"
                disabled={!editing}
                value={endpointInput}
