@@ -1,68 +1,47 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![quorum](docs/images/quorum_logo.png "screenshot")
 
-## Available Scripts
+# Quorum Plugin for Remix
 
-In the project directory, you can run:
+<a href="https://bit.ly/quorum-slack" target="_blank" rel="noopener"><img title="Quorum Slack" src="https://clh7rniov2.execute-api.us-east-1.amazonaws.com/Express/badge.svg" alt="Quorum Slack" /></a>
 
-### `npm start`
+The Quorum plugin for Ethereum's Remix IDE adds support for creating and interacting with private contracts on a Quorum network.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![screenshot](docs/images/quorum-remix.png "screenshot")
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+Just go to the [Remix IDE](https://remix.ethereum.org) and activate the **Quorum Network** plugin on the plugins page. For step-by-step instructions, go to the [Getting Started](docs/getting_started.md) doc.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Common Issues
+**Firefox CORS Issues:**
+- Firefox seems to be a little more strict than Chrome at the moment about making cross-origin http requests on https pages. Remix currently loads our plugin in an iframe from an HTTPS url, but our users are frequently running their Quorum node on an HTTP localhost url. The latest Chrome release seems to allow these calls, but Firefox will block them and report a CORS error. We are tracking this issue in #8, but until that is fixed please use Chrome or another browser that doesn't block these requests. 
 
-### `npm run build`
+**Tessera Keys Endpoint:**
+- To auto-populate the Private For field with all the public keys in the network, you need to provide the path to tessera's keys endpoint.
+- For Tessera v10.1 and below, this is on the P2P API at /partyinfo
+- For Tessera v10.2 and up, this is on the 3rd Party API at /partyinfo/keys
+- For either of these to work, you will need to add a CORS config value to allow the plugin to make requests. [See here](http://docs.goquorum.com/en/latest/Privacy/Tessera/Configuration/Configuration%20Overview/#cors-server-sub-config) 
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Contributing
+Quorum Plugin for Remix is built on open source and we invite you to contribute enhancements. Upon review you will be required to complete a Contributor License Agreement (CLA) before we are able to merge. If you have any questions about the contribution process, please feel free to send an email to [info@goquorum.com](mailto:info@goquorum.com).
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Development Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Clone the repo and run:
 
-### `npm run eject`
+```
+yarn install
+yarn start
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- This will start the webpack development server and serve the plugin at http://localhost:3000
+- Go to the [Remix IDE](https://remix.ethereum.org) or [Remix Alpha](https://remix-alpha.ethereum.org), click on the plugins icon, and click "Connect to a local plugin".
+- Plugin Name and Display Name can be anything.
+- Url is http://localhost:3000
+- Location is **Side Panel**
+- The smiley face icon on the left side is the quorum plugin’s tab
+- The extension should automatically reload with any changes you make.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Building
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+`yarn build` to run a production build of the plugin. The output is in the build/ directory.
