@@ -8,7 +8,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 let web3, tessera
 
 export async function updateWeb3Url (endpoint, tesseraEndpoint) {
-  web3 = new Web3(endpoint)
+  web3 = createWeb3(endpoint)
   tessera = tesseraEndpoint
   await testUrls(endpoint, tesseraEndpoint)
 }
@@ -18,12 +18,34 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
     throw new Error('RPC url must not be blank.')
   }
   try {
-    await axios.post(rpcEndpoint, {
-      body: JSON.stringify(
-        { 'jsonrpc': '2.0', 'method': 'eth_protocolVersion', 'params': [] }),
-    })
+    if (rpcEndpoint.startsWith('http')) {
+      const parsed = new URL(rpcEndpoint)
+      const username = parsed.username
+      const password = parsed.password
+      const config = {}
+      parsed.username = ''
+      parsed.password = ''
+      if (username) {
+        config.auth = {
+          username: username,
+          password: password
+        }
+      }
+      // test with axios because we get more detailed errors back than web3
+      await axios.post(parsed.toString(),
+        { 'jsonrpc': '2.0', 'method': 'eth_protocolVersion', 'params': [] },
+        config)
+    }
+
+    // test with Web3 because there are slight differences in how it connects
+    const testWeb3 = createWeb3(rpcEndpoint)
+    await testWeb3.eth.getProtocolVersion()
+
   } catch (e) {
     if (e.response) {
+      if(e.response.status === 401) {
+        throw new Error(`401 Unauthorized. Did you include Basic Auth credentials in the URL? (https://username:password@example.com)`)
+      }
       throw new Error(
         `Error response from ${rpcEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
     } else {
@@ -44,6 +66,31 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
       }
     }
   }
+}
+
+function createWeb3 (endpoint) {
+  let provider
+  if (endpoint.startsWith('http')) {
+    const parsed = new URL(endpoint)
+    const headers = []
+    if (parsed.username) {
+      const encoded = new Buffer(
+        `${parsed.username}:${parsed.password}`).toString('base64')
+      parsed.username = ''
+      parsed.password = ''
+      headers.push({ name: 'Authorization', value: `Basic ${encoded}` })
+    }
+    provider = new Web3.providers.HttpProvider(parsed.toString(), {
+      headers: headers,
+    })
+  } else if (endpoint.startsWith('ws')) {
+    // ws provider creates auth header automatically
+    provider = new Web3.providers.WebsocketProvider(endpoint)
+
+  } else {
+    provider = endpoint
+  }
+  return new Web3(provider)
 }
 
 export async function getAccounts () {
