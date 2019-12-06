@@ -70,7 +70,7 @@ export function Network () {
                e.target.value)}/>
       </InputTooltip>
     </div>
-    <div style={txMetaRowStyle}>
+    <div style={{...txMetaRowStyle, display: 'none'}}>
       <div style={labelStyle}>Tessera</div>
       <InputTooltip
         enabled={editing}
@@ -78,7 +78,7 @@ export function Network () {
         <input className="form-control"
                type="text"
                placeholder="(Optional)"
-               disabled={!editing}
+               disabled={true}
                value={tesseraEndpointInput}
                onChange={(e) => setTesseraEndpointInput(
                e.target.value)}/>
