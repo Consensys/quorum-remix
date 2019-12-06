@@ -71,12 +71,21 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
 export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
   return async dispatch => {
     try {
+      // TODO clearing tessera endpoint every time since we are hiding that field for now. Delete this line later
+      tesseraEndpoint = ''
+
       if (tesseraEndpoint.endsWith('/')) {
         tesseraEndpoint = tesseraEndpoint.substring(0,
           tesseraEndpoint.length - 1)
       }
 
       await testUrls(endpoint, tesseraEndpoint)
+
+      // helper to automatically find partyinfo endpoint when adding a known local node
+      if(endpoint.startsWith('http://localhost:2200')) {
+        tesseraEndpoint = await getLocalPartyInfoIfAvailable(endpoint)
+      }
+
       dispatch(connectToNetwork(endpoint, tesseraEndpoint))
 
     } catch (e) {
@@ -85,3 +94,18 @@ export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
     }
   }
 }
+
+async function getLocalPartyInfoIfAvailable (endpoint) {
+  try {
+    const {port} = new URL(endpoint)
+    // 7nodes default urls are localhost:2200X and localhost:900(X+1)
+    const lastDigitIncremented = (port % 10) + 1
+    const likelyTesseraEndpoint = `http://localhost:900${lastDigitIncremented}/partyinfo`
+    await testUrls(endpoint, likelyTesseraEndpoint)
+    console.log("Using known quorum-examples partyinfo endpoint found at", likelyTesseraEndpoint)
+    return likelyTesseraEndpoint
+  } catch (e) {
+    return ''
+  }
+}
+
