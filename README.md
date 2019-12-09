@@ -10,17 +10,11 @@ The Quorum plugin for Ethereum's Remix IDE adds support for creating and interac
 
 ## Getting Started
 
-Just go to the [Remix IDE](https://remix.ethereum.org) and activate the **Quorum Network** plugin on the plugins page. For step-by-step instructions, go to the [Getting Started](docs/getting_started.md) doc.
+Just go to the [Remix IDE](https://remix.ethereum.org) and activate the **Quorum Network** plugin on the plugins page. For step-by-step instructions, go to the [Getting Started](https://medium.com/remix-ide/quorum-plugin-for-remix-ee232ebca64c) doc.
 
 ## Common Issues
 **Firefox CORS Issues:**
 - Firefox seems to be a little more strict than Chrome at the moment about making cross-origin http requests on https pages. Remix currently loads our plugin in an iframe from an HTTPS url, but our users are frequently running their Quorum node on an HTTP localhost url. The latest Chrome release seems to allow these calls, but Firefox will block them and report a CORS error. We are tracking this issue in #8, but until that is fixed please use Chrome or another browser that doesn't block these requests. 
-
-**Tessera Keys Endpoint:**
-- To auto-populate the Private For field with all the public keys in the network, you need to provide the path to tessera's keys endpoint.
-- For Tessera v10.1 and below, this is on the P2P API at /partyinfo
-- For Tessera v10.2 and up, this is on the 3rd Party API at /partyinfo/keys
-- For either of these to work, you will need to add a CORS config value to allow the plugin to make requests. [See here](http://docs.goquorum.com/en/latest/Privacy/Tessera/Configuration/Configuration%20Overview/#cors-server-sub-config) 
 
 ## Contributing
 Quorum Plugin for Remix is built on open source and we invite you to contribute enhancements. Upon review you will be required to complete a Contributor License Agreement (CLA) before we are able to merge. If you have any questions about the contribution process, please feel free to send an email to [info@goquorum.com](mailto:info@goquorum.com).

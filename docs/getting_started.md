@@ -14,7 +14,7 @@
 
 ![geth_rpc](./images/geth_rpc.png)
 
-5. If the node is running, the plugin should now say Connected and the rest of the UI should have appeared.
+5. If the node is running, the plugin should now say Connected and the rest of the UI will have appeared.
 
 ![ui_ready](./images/ui_ready.png)
 
@@ -36,7 +36,7 @@
 
 ![private_add](./images/private_add.png)
 
-11. Add as many peers as you want, then deploy the contract again.
+11. Add as many peers as you want, then deploy the contract again like you did in step 7.
 
 ![private_multiple](./images/private_multiple.png)
 
