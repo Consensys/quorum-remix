@@ -3,6 +3,10 @@ export const appStyle = {
   alignItems: 'flex-start',
   flexDirection: 'column',
   minHeight: '100%',
+  padding: 6,
+  paddingBottom: 6,
+  paddingLeft: 12,
+  paddingRight: 12
 }
 
 export const networkStyle = {
@@ -152,7 +156,6 @@ export const footerStyle = {
   justifyContent: 'space-between',
   height: 18,
   marginTop: 12,
-  marginBottom: 8,
   fontSize: 12,
 }
 
@@ -169,6 +172,7 @@ export const errorContainerStyle = {
 }
 
 export const errorStyle = {
+  wordBreak: 'break-word',
   fontSize: 11,
   color: 'red',
   width: 0,
