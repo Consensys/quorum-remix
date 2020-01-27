@@ -35,7 +35,11 @@ yarn start
 - The extension should automatically reload with any changes you make.
 
 ## Testing
-The Quorum plugin uses NightwatchJS to run integration tests on chrome and firefox. To run them, run one of the following:
+The Quorum plugin uses NightwatchJS to run integration tests on chrome and firefox.
+
+**First you need to make a copy of .env.local.template called .env.local** Then either replace the password placeholder with the rpc password, or uncomment the bottom section to use your local 7nodes instance to run the tests.
+
+Once those environment variables are set up, run one of the following:
 
 ```
 yarn test_chrome
