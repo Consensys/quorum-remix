@@ -49,7 +49,7 @@ export function Network () {
     dispatch(connectToNetwork(endpoint, tesseraEndpoint))
   }
 
-  return <form style={networkStyle}
+  return <form id="network-form" style={networkStyle}
     onSubmit={async (e) => {
       e.preventDefault()
       await onSave()
@@ -62,6 +62,7 @@ export function Network () {
         enabled={editing}
         text="This should be the url for your geth node\'s RPC endpoint. It should include http(s), host/ip, and port. For example: http://localhost:22000/">
         <input className="form-control"
+               id="geth-endpoint"
                // placeholder="http://localhost:22000"
                type="text"
                disabled={!editing}
@@ -76,6 +77,7 @@ export function Network () {
         enabled={editing}
         text="This should be the url for your tessera keys endpoint. It should include http(s), host/ip, port, and path. For example: http://localhost:9081/partyInfo/keys">
         <input className="form-control"
+               id="tessera-endpoint"
                type="text"
                placeholder="(Optional)"
                disabled={true}

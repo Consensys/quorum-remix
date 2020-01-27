@@ -25,6 +25,7 @@ export function Deploy() {
   return <div style={{width: '100%'}}>
     <div>Compiled Contracts:</div>
     <select className="form-control"
+            id="compiled-select"
             defaultValue={selectedContract}
             onChange={(e) => dispatch(selectContract(e.target.value))}>
       {Object.entries(contracts).map(

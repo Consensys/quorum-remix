@@ -53,6 +53,7 @@ export function TxMetadata () {
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Account</div>
       <select className="form-control" defaultValue={account}
+              id="account-select"
               onChange={(e) => dispatch(selectAccount(e.target.value))}>
         {accounts.map(
           (account) => <option key={account}
@@ -65,19 +66,23 @@ export function TxMetadata () {
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Gas price</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasPrice}
-                           onChange={(e) => dispatch(changeGasPrice(e.target.value))}/>
+             id="gas-price-input"
+             onChange={(e) => dispatch(changeGasPrice(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Gas limit</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={gasLimit}
+             id="gas-limit-input"
              onChange={(e) => dispatch(changeGasLimit(e.target.value))}/>
     </div>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Value</div>
       <input style={inlineInputStyle} className="form-control" type="text" value={value}
+             id="value-input"
              onChange={(e) => dispatch(
                changeValue(e.target.value))}/>
       <select style={inlineInputStyle} className="form-control" defaultValue={valueDenomination}
+              id="value-denomination-select"
               onChange={(e) => dispatch(changeValueDenomination(e.target.value))}>
         <option value="wei">wei</option>
         <option value="gwei">gwei</option>

@@ -93,7 +93,7 @@ export function Contract ({ address }) {
   </div>
 
   return (
-    <div style={contractStyle}>
+    <div className="deployed-contract" style={contractStyle}>
       {renderHeader()}
       {expanded && renderExpanded()}
     </div>

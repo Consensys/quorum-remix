@@ -9,7 +9,7 @@ export function Error () {
   if (error === '') {
     return ''
   }
-  return <div style={errorContainerStyle}>
+  return <div id="error-container" style={errorContainerStyle}>
     <div style={errorStyle}>
       {error}
     </div>
