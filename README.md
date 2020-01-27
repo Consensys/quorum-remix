@@ -29,12 +29,20 @@ yarn start
 ```
 
 - This will start the webpack development server and serve the plugin at http://localhost:3000
-- Go to the [Remix IDE](https://remix.ethereum.org) or [Remix Alpha](https://remix-alpha.ethereum.org), click on the plugins icon, and click "Connect to a local plugin".
-- Plugin Name and Display Name can be anything.
-- Url is http://localhost:3000
-- Location is **Side Panel**
-- The smiley face icon on the left side is the quorum plugin’s tab
+- Go to our dev version of [Remix IDE](https://remix-dev.goquorum.com)
+- Click on the plugins tab
+- Activate the Quorum Network plugin
 - The extension should automatically reload with any changes you make.
+
+## Testing
+The Quorum plugin uses NightwatchJS to run integration tests on chrome and firefox. To run them, run one of the following:
+
+```
+yarn test_chrome
+yarn test_firefox
+```
+
+To extend or add new tests, go to the [test-browser/tests](test-browser/tests) folder.
 
 ## Building
 

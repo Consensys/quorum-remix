@@ -29,10 +29,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "nightwatch_firefox": "nightwatch --env firefox",
-    "nightwatch_firefox_headless": "nightwatch --env firefox --headless",
-    "nightwatch_chrome": "nightwatch --env chrome",
-    "nightwatch_chrome_headless": "nightwatch --env chrome --headless"
+    "test_firefox": "nightwatch --env firefox",
+    "test_firefox_headless": "nightwatch --env firefox --headless",
+    "test_chrome": "nightwatch --env chrome",
+    "test_chrome_headless": "nightwatch --env chrome --headless"
   },
   "eslintConfig": {
     "extends": "react-app"
