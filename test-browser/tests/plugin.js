@@ -17,6 +17,12 @@ if(PASSWORD === 'PASSWORD_HERE') {
   throw new Error("You forgot to replace the rpc password in .env.local.")
 }
 
+if(URL.indexOf('remix-dev.goquorum.com') > 0) {
+  testLocalhostConnection().catch((error) => {
+    throw new Error("Couldn't connect to http://localhost:3000. Make sure you run `yarn start` before running the tests.")
+  })
+}
+
 let ADDRESS = 'not set'
 
 module.exports = {
@@ -176,3 +182,9 @@ function rpcUrl (host) {
   return `${RPC_SCHEME}://${authString}${host}`
 }
 
+function testLocalhostConnection () {
+  const axios = require('axios')
+  return axios.get('http://localhost:3000').then((result) => {
+    // success, do nothing
+  })
+}
