@@ -29,7 +29,7 @@ yarn start
 ```
 
 - This will start the webpack development server and serve the plugin at http://localhost:3000
-- Go to our dev version of [Remix IDE](https://remix-dev.goquorum.com)
+- Go to our dev version of [Remix IDE](http://remix-dev.goquorum.com). Make sure you connect to the http version of the site, not https.
 - Click on the plugins tab
 - Activate the Quorum Network plugin
 - The extension should automatically reload with any changes you make.
