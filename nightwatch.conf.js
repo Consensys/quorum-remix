@@ -13,7 +13,7 @@ module.exports = {
   output_folder: 'reports',
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/#writing-custom-commands
-  custom_commands_path:  ['node_modules/remix-ide/test-browser/commands','test-browser/commands'],
+  custom_commands_path:  ['test-browser/commands'],
 
   // See https://nightwatchjs.org/guide/extending-nightwatch/#writing-custom-assertions
   custom_assertions_path: '',
