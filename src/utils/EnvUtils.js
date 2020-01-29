@@ -15,6 +15,8 @@ export function getPluginDevMode () {
   } else {
     return {
       origins: [
+        'http://remix-dev.goquorum.com',
+        'https://remix-dev.goquorum.com',
         'http://remix-staging.goquorum.com',
         'https://remix-staging.goquorum.com',
       ],
