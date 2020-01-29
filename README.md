@@ -14,7 +14,7 @@ Just go to the [Remix IDE](https://remix.ethereum.org) and activate the **Quorum
 
 ## Common Issues
 **Firefox CORS Issues:**
-- Firefox seems to be a little more strict than Chrome at the moment about making cross-origin http requests on https pages. Remix currently loads our plugin in an iframe from an HTTPS url, but our users are frequently running their Quorum node on an HTTP localhost url. The latest Chrome release seems to allow these calls, but Firefox will block them and report a CORS error. We are tracking this issue in #8, but until that is fixed please use Chrome or another browser that doesn't block these requests. 
+- Firefox seems to be a little more strict than Chrome at the moment about making cross-origin http requests on https pages. Remix currently loads our plugin in an iframe from an HTTPS url, but our users are frequently running their Quorum node on an HTTP localhost url. The latest Chrome release seems to allow these calls, but Firefox will block them and report a CORS error. We are tracking this issue in #8, but until that is fixed please use Chrome or another browser that doesn't block these requests.
 
 ## Contributing
 Quorum Plugin for Remix is built on open source and we invite you to contribute enhancements. Upon review you will be required to complete a Contributor License Agreement (CLA) before we are able to merge. If you have any questions about the contribution process, please feel free to send an email to [info@goquorum.com](mailto:info@goquorum.com).
@@ -51,3 +51,4 @@ To extend or add new tests, go to the [test-browser/tests](test-browser/tests) f
 ## Building
 
 `yarn build` to run a production build of the plugin. The output is in the build/ directory.
+`yarn serve` to serve the build folder from port 3000
