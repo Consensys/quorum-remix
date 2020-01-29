@@ -14,15 +14,15 @@ import {
   connectToNetwork,
   fetchCompilationResult
 } from './actions'
-
-class QuorumPlugin extends PluginClient {
-
-}
+import { getPluginDevMode, isDevelopment } from './utils/EnvUtils'
 
 const store = createStore(rootReducer,
   composeWithDevTools(applyMiddleware(thunk)))
 
-const client = buildIframeClient(new QuorumPlugin())
+const client = buildIframeClient(new PluginClient({
+  devMode: getPluginDevMode()
+}))
+
 client.onload(async () => {
   ReactDOM.render(
     <Provider store={store}>
@@ -56,7 +56,7 @@ if (module.hot) {
 
 // we only want to subscribe to these once, so we do it outside of components
 async function initPlugin (client, dispatch) {
-  if(process.env.NODE_ENV === 'development') {
+  if(isDevelopment()) {
     await initDev(client, dispatch)
   }
 

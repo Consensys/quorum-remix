@@ -38,6 +38,7 @@ export function PrivateFor () {
   const SelectContainer = isFromServer ? Select : Creatable
 
   return <SelectContainer
+    id="private-for-select"
     components={{ Option }}
     placeholder="Select or add..."
     options={options}

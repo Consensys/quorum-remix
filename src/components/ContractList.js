@@ -9,7 +9,7 @@ export function ContractList () {
   useEffect(() => {
   }, [])
 
-  return <div style={formContainerStyle}>
+  return <div id="contract-list" style={formContainerStyle}>
     <div>Deployed Contracts:</div>
     {deployedAddresses.length === 0 && <div>None</div>}
     {deployedAddresses.map((address) => <Contract key={address} address={address}/>)}

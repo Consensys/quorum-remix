@@ -11,7 +11,7 @@ export const Constructor = ({ method, onDeploy, onExisting, disabled }) => {
 
   const [existingAddress, setExistingAddress] = useState('')
 
-  return <div>
+  return <div id="deploy-container">
     <Method key={'constructor'}
             disabled={disabled}
             method={method}
@@ -21,12 +21,14 @@ export const Constructor = ({ method, onDeploy, onExisting, disabled }) => {
     <div style={containerStyle} className="btn-group-sm">
       <button
         style={buttonStyle}
+        id="existing-button"
         className="btn btn-sm btn-info"
         disabled={disabled || existingAddress === ''}
         onClick={() => onExisting(existingAddress)}>
         At Address
       </button>
       <input placeholder="Existing contract address"
+             id="existing-input"
              disabled={disabled}
              style={inputStyle}
              onChange={(e) => setExistingAddress(e.target.value)}
