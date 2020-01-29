@@ -94,7 +94,7 @@ export function Network () {
       </div>
       :
       <div style={txMetaRowRightStyle}>
-        <div style={statusStyle(status)}>{status}</div>
+        <div id="connection-status" style={statusStyle(status)}>{status}</div>
         <i style={iconStyle} className="fa fa-refresh"
            onClick={() => onRefresh()}/>
         <i style={iconStyle} className="fa fa-pencil" onClick={() => onEdit()}/>

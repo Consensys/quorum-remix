@@ -82,7 +82,7 @@ module.exports = {
     .waitForElementVisible('.App', 5000)
     .setValue('#geth-endpoint', rpcUrl(NODE_ONE_HOST))
     .click('#network-form .fa-check')
-    .expect.element('#network-form').text.to.contain('Connected').before(5000)
+    .expect.element('#connection-status').text.to.contain('Connected').before(10000)
   },
   '03 Set privateFor': function (browser) {
     browser
@@ -142,7 +142,7 @@ module.exports = {
     .clearValue('#geth-endpoint')
     .setValue('#geth-endpoint', rpcUrl(NODE_TWO_HOST))
     .click('#network-form .fa-check')
-    .expect.element('#network-form').text.to.contain('Connected').before(5000)
+    .expect.element('#connection-status').text.to.contain('Connected').before(5000)
 
     browser
     .click('#existing-button')
@@ -164,7 +164,7 @@ module.exports = {
     .clearValue('#geth-endpoint')
     .setValue('#geth-endpoint', rpcUrl(NODE_THREE_HOST))
     .click('#network-form .fa-check')
-    .expect.element('#network-form').text.to.contain('Connected').before(5000)
+    .expect.element('#connection-status').text.to.contain('Connected').before(5000)
 
     browser
     .click('#existing-button')
