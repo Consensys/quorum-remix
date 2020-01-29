@@ -1,0 +1,42 @@
+name: Deploy Plugin
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Build plugin
+        run: |
+          yarn install
+          yarn build
+      - name: Commit build files to gh-pages branch
+        run: |
+          git switch gh-pages
+          mv build .build
+          rm -rf *
+          mv .build/* ./
+          echo "remix-plugin.goquorum.com" > CNAME
+          echo "Deployment of quorum-remix to remix-plugin.goquorum.com" > README.md
+          echo "" >> README.md
+          echo "Access through Remix at https://remix.ethereum.org" >> README.md
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git status
+          git commit -m "Deploy to prod from GitHub Actions"
+      - name: Push changes to gh-pages
+        uses: ad-m/github-push-action@master
+        with:
+          branch: 'gh-pages'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
