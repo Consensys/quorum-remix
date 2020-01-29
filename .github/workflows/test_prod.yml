@@ -16,7 +16,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
-      - name: Run Chrome and Firefox tests on https://remix.ethereum.org
+      # Need to test through remix-alpha until the next remix release
+      - name: Run Chrome and Firefox tests on https://remix-alpha.ethereum.org
         run: |
           yarn install
           yarn test_chrome_headless
@@ -25,7 +26,7 @@ jobs:
           RPC_USERNAME: ${{ secrets.KaleidoUsername }}
           RPC_PASSWORD: ${{ secrets.KaleidoPassword }}
           RPC_SCHEME: https
-          REMIX_URL: https://remix.ethereum.org
+          REMIX_URL: https://remix-alpha.ethereum.org
           NODE_ONE_HOST: u0a5aft4j3-u0bu939ak6-rpc.us0-aws.kaleido.io
           NODE_ONE_PUB_KEY: wj/d6GyPJpReu/xF+mecwR8qPAmZM73S+TzesU5y70Y=
           NODE_TWO_HOST: u0a5aft4j3-u0u5ulmm6k-rpc.us0-aws.kaleido.io
