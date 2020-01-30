@@ -21,8 +21,8 @@
     "web3": "^1.2.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts start",
+    "build": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "serve": "npx http-server -p 3000 build/",

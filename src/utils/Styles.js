@@ -154,15 +154,18 @@ export const footerStyle = {
   display: 'flex',
   width: '100%',
   justifyContent: 'space-between',
-  height: 18,
+  height: 22,
   marginTop: 12,
   fontSize: 12,
+  alignItems: 'flex-end',
+}
+
+export const logoLinkStyle = {
+  alignSelf: 'flex-start',
 }
 
 export const logoStyle = {
   height: 18,
-  marginBottom: 4,
-  alignSelf: 'flex-end',
 }
 
 export const errorContainerStyle = {
