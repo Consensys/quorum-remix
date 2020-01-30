@@ -5,7 +5,12 @@ import { Network } from './Network'
 import { TxMetadata } from './TxMetadata'
 import { Deploy } from './Deploy'
 import { ContractList } from './ContractList'
-import { appStyle, footerStyle, logoStyle } from '../utils/Styles'
+import {
+  appStyle,
+  footerStyle,
+  logoLinkStyle,
+  logoStyle,
+} from '../utils/Styles'
 import { Error } from './Error'
 import { useSelector } from 'react-redux'
 
@@ -29,9 +34,16 @@ function App() {
 }
 
 function Footer () {
-  return <div style={footerStyle}>
-    <div><a href={"https://medium.com/remix-ide/quorum-plugin-for-remix-ee232ebca64c"} rel="noopener noreferrer" target="_blank">Help</a> | v{process.env.REACT_APP_VERSION}</div>
-    <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
+  const gitHash = process.env.REACT_APP_GIT_SHA
+  return <div style={footerStyle} id="footer">
+    <a style={logoLinkStyle} href={"https://goquorum.com"} target="_black">
+      <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
+    </a>
+    <div>
+      <a href={"https://medium.com/remix-ide/quorum-plugin-for-remix-ee232ebca64c"} rel="noopener noreferrer" target="_blank">Help</a>
+      {' | '}
+      <a href={`https://github.com/jpmorganchase/quorum-remix/tree/${gitHash}`} target="_blank">Version</a>
+    </div>
   </div>
 }
 
