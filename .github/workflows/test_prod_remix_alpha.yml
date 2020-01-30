@@ -1,6 +1,9 @@
-name: Run Prod Tests on Remix Alpha (cron)
+name: Run Production Tests
 
 on:
+  push:
+    branches:
+      - gh-pages
   schedule:
     - cron: "58 13 * * *"
 
@@ -10,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          ref: master
       - name: Use Node.js 10.x
         uses: actions/setup-node@v1
         with:

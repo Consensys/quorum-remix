@@ -1,4 +1,4 @@
-name: Deploy Plugin
+name: Create Production Deployment PR
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout master
+        uses: actions/checkout@v2
       - name: Use Node.js 10.x
         uses: actions/setup-node@v1
         with:
@@ -20,23 +20,37 @@ jobs:
         run: |
           yarn install
           yarn build
-#      - name: Commit build files to gh-pages branch
-#        run: |
-#          git switch gh-pages
-#          mv build .build
-#          rm -rf *
-#          mv .build/* ./
-#          echo "remix-plugin.goquorum.com" > CNAME
-#          echo "Deployment of quorum-remix to remix-plugin.goquorum.com" > README.md
-#          echo "" >> README.md
-#          echo "Access through Remix at https://remix.ethereum.org" >> README.md
-#          git config --local user.email "action@github.com"
-#          git config --local user.name "GitHub Action"
-#          git add -A
-#          git status
-#          git commit -m "Deploy to prod from GitHub Actions"
-#      - name: Push changes to gh-pages
-#        uses: ad-m/github-push-action@master
-#        with:
-#          branch: 'gh-pages'
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
+          echo "Copying .github directory to temp folder so we can keep gh-pages' actions up to date"
+          cp -r .github ../.github
+          echo "Copying build directory to temp folder or it will be wiped out when we checkout gh-pages actions up to date"
+          mv build ../build
+          echo "Setting environment variable COMMIT_SHA to the shortened hash of the current commit: ${GITHUB_SHA::8}"
+          echo "::set-env name=COMMIT_SHA::${GITHUB_SHA::8}"
+      - name: Checkout gh-pages
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+      - name: Set up build files based on gh-pages for commit
+        run: |
+          rm -rf *
+          rm -rf .github
+          mv ../.github ./
+          mv ../build/* ./
+          echo "remix-plugin.goquorum.com" > CNAME
+          echo "Deployment of quorum-remix at commit $COMMIT_SHA to remix-plugin.goquorum.com" > README.md
+          echo "" >> README.md
+          echo "Access through Remix Alpha at https://remix-alpha.ethereum.org" >> README.md
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
+        with:
+          title: "[Prod Release] Merge to gh-pages"
+          commit-message: "Build of #${{ env.COMMIT_SHA }}"
+          body: |
+            This pull request will update with any new commits to the master branch. It is currently at ${{ env.COMMIT_SHA }}
+
+            When ready for release, merge this pull request to go live in production at remix-plugin.goquorum.com
+
+            You can delete the release/prod branch after merging.
+          base: gh-pages
+          branch: release/prod
+          token: ${{ secrets.GITHUB_TOKEN }}
