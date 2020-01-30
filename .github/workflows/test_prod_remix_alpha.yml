@@ -2,7 +2,7 @@ name: Run Prod Tests on Remix Alpha (cron)
 
 on:
   schedule:
-    - cron: "58 8 * * *"
+    - cron: "58 13 * * *"
 
 jobs:
   build:
