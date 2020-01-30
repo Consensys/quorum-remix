@@ -80,6 +80,8 @@ module.exports = {
   '02 Connect to Quorum node': function (browser) {
     browser
     .waitForElementVisible('.App', 5000)
+    .expect.element('#footer').text.to.contain('Version')
+    browser
     .setValue('#geth-endpoint', rpcUrl(NODE_ONE_HOST))
     .click('#network-form .fa-check')
     .expect.element('#connection-status').text.to.contain('Connected').before(10000)

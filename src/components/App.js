@@ -35,7 +35,7 @@ function App() {
 
 function Footer () {
   const gitHash = process.env.REACT_APP_GIT_SHA
-  return <div style={footerStyle}>
+  return <div style={footerStyle} id="footer">
     <a style={logoLinkStyle} href={"https://goquorum.com"} target="_black">
       <img style={logoStyle} src={'logo.png'} alt="Quorum Logo"/>
     </a>
