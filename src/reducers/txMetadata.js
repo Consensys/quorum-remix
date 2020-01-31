@@ -3,10 +3,17 @@ const initialState = {
   gasPrice: '0',
   value: '0',
   valueDenomination: 'wei',
+  show: false,
 }
 
 export function txMetadataReducer (txMetadata = initialState, action) {
   switch (action.type) {
+    case 'SHOW_TX_METADATA':
+      return {
+        ...txMetadata,
+        show: action.payload
+      }
+
     case 'SELECT_ACCOUNT':
       return {
         ...txMetadata,

@@ -3,7 +3,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import React from 'react'
 
 
-export const InputTooltip = ({ text, enabled, children }) => {
+export const InputTooltip = ({ text, enabled=true, children }) => {
   if(!enabled) {
     return children
   }
