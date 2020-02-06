@@ -1,3 +1,3 @@
-Deployment of quorum-remix at commit ddfd893c to remix-plugin.goquorum.com
+Deployment of quorum-remix at commit a32b9a9e to remix-plugin.goquorum.com
 
-Access through Remix Alpha at https://remix-alpha.ethereum.org
+Access through Remix at https://remix.ethereum.org

@@ -39,7 +39,7 @@ jobs:
           echo "remix-plugin.goquorum.com" > CNAME
           echo "Deployment of quorum-remix at commit $COMMIT_SHA to remix-plugin.goquorum.com" > README.md
           echo "" >> README.md
-          echo "Access through Remix Alpha at https://remix-alpha.ethereum.org" >> README.md
+          echo "Access through Remix at https://remix.ethereum.org" >> README.md
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v2
         with:
