@@ -5,7 +5,7 @@ on:
     branches:
       - gh-pages
   schedule:
-    - cron: "05 14 * * *"
+    - cron: "04 00 * * *"
 
 jobs:
   build:
@@ -36,3 +36,9 @@ jobs:
           NODE_TWO_PUB_KEY: Cr4orZhLtEKXSu6XQVvfTDpTUTvXYVnPHuym+r92skk=
           NODE_THREE_HOST: u0a5aft4j3-u0sog5yz3u-rpc.us0-aws.kaleido.io
           NODE_THREE_PUB_KEY: MzL4UtMSfRm0dUG+X08cYj39/Sa5QFFBVWuc42YZkwg=
+      - name: Make reports/screenshots available
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: reports
+          path: reports
