@@ -31,8 +31,8 @@ module.exports = {
       launch_url: 'http://remix-dev.goquorum.com',
 
       screenshots: {
-        enabled: false,
-        path: 'screens',
+        enabled: true,
+        path: 'reports',
         on_failure: true
       },
 
