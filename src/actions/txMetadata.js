@@ -1,3 +1,10 @@
+export function showTxMetadata (show) {
+  return {
+    type: 'SHOW_TX_METADATA',
+    payload: show
+  }
+}
+
 export function updatePrivateFor (selection) {
   return {
     type: 'UPDATE_PRIVATE_FOR',

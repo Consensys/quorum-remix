@@ -88,7 +88,25 @@ module.exports = {
     .click('#network-form .fa-check')
     .expect.element('#connection-status').text.to.contain('Connected').before(10000)
   },
-  '04 Set privateFor': function (browser) {
+  '04 Toggle transaction metadata': function (browser) {
+    browser.expect.element('#metadata-collapsed').to.be.visible
+    browser.expect.element('#gas-price-input').to.be.not.present
+    browser.expect.element('#gas-limit-input').to.be.not.present
+    browser.expect.element('#value-input').to.be.not.present
+    browser.expect.element('#value-denomination-select').to.be.not.present
+    browser.click('#metadata-collapsed')
+      .expect.element('#metadata-collapsed').to.be.not.present.before(500)
+
+    browser.expect.element('#gas-price-input').to.be.visible
+    browser.expect.element('#gas-limit-input').to.be.visible
+    browser.expect.element('#value-input').to.be.visible
+    browser.expect.element('#value-denomination-select').to.be.visible
+
+    browser.click('#metadata-header')
+      .expect.element('#metadata-collapsed').to.be.visible.before(500)
+    browser.expect.element('#gas-price-input').to.be.not.present
+  },
+  '05 Set privateFor': function (browser) {
     browser
     .setValue('#private-for-select input', 'shouldFail')
     .sendKeys('#private-for-select input', browser.Keys.ENTER)
@@ -107,7 +125,7 @@ module.exports = {
     browser.expect.element('#private-for-select').text.to.contain(NODE_THREE_PUB_KEY).before(5000)
     browser.click('#private-for-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
   },
-  '05 Deploy a contract': function (browser) {
+  '06 Deploy a contract': function (browser) {
     browser
     .useXpath()
     .waitForElementVisible("//button[contains(text(),'Deploy') and not(@disabled)]", 5000)
@@ -126,7 +144,7 @@ module.exports = {
     browser.expect.element('.deployed-contract').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
     browser.expect.element('.deployed-contract').text.to.not.contain(NODE_THREE_PUB_KEY).before(5000)
   },
-  '06 Interact with contract': function (browser) {
+  '07 Interact with contract': function (browser) {
     browser
     .setValue('div[data-method="store"] input', '123')
     .click('div[data-method="store"] button')
@@ -136,7 +154,7 @@ module.exports = {
     .click('div[data-method="retreive"] button')
     .expect.element('div[data-method="retreive"]').text.to.contain('123').before(5000)
   },
-  '07 Interact with contract from node 2': function (browser) {
+  '08 Interact with contract from node 2': function (browser) {
     browser.setValue('#existing-input', ADDRESS)
     .click('.deployed-contract .fa-close')
 
@@ -162,7 +180,7 @@ module.exports = {
     .expect.element('div[data-method="store"]').text.to.contain('Success').before(5000)
 
   },
-  '08 Fail to interact with contract from node 3': function (browser) {
+  '09 Fail to interact with contract from node 3': function (browser) {
     browser.click('.deployed-contract .fa-close')
     .click('#network-form .fa-pencil')
     .clearValue('#geth-endpoint')
