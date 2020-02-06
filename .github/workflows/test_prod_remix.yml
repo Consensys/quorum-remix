@@ -1,0 +1,44 @@
+name: Run Production Tests
+
+on:
+  push:
+    branches:
+      - gh-pages
+  schedule:
+    - cron: "04 00 * * *"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Use Node.js 10.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 10.x
+      - name: Run Chrome and Firefox tests on https://remix.ethereum.org
+        run: |
+          yarn install
+          yarn test_chrome_headless
+          yarn test_firefox_headless
+        env:
+          RPC_USERNAME: ${{ secrets.KaleidoUsername }}
+          RPC_PASSWORD: ${{ secrets.KaleidoPassword }}
+          RPC_SCHEME: https
+          REMIX_URL: https://remix.ethereum.org
+          NODE_ONE_HOST: u0a5aft4j3-u0bu939ak6-rpc.us0-aws.kaleido.io
+          NODE_ONE_PUB_KEY: wj/d6GyPJpReu/xF+mecwR8qPAmZM73S+TzesU5y70Y=
+          NODE_TWO_HOST: u0a5aft4j3-u0u5ulmm6k-rpc.us0-aws.kaleido.io
+          NODE_TWO_PUB_KEY: Cr4orZhLtEKXSu6XQVvfTDpTUTvXYVnPHuym+r92skk=
+          NODE_THREE_HOST: u0a5aft4j3-u0sog5yz3u-rpc.us0-aws.kaleido.io
+          NODE_THREE_PUB_KEY: MzL4UtMSfRm0dUG+X08cYj39/Sa5QFFBVWuc42YZkwg=
+      - name: Make reports/screenshots available
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: reports
+          path: reports
