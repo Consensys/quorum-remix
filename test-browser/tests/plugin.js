@@ -94,7 +94,7 @@ module.exports = {
     browser.expect.element('#gas-limit-input').to.be.not.present
     browser.expect.element('#value-input').to.be.not.present
     browser.expect.element('#value-denomination-select').to.be.not.present
-    browser.click('#metadata-caret')
+    browser.click('#metadata-collapsed')
       .expect.element('#metadata-collapsed').to.be.not.present.before(500)
 
     browser.expect.element('#gas-price-input').to.be.visible
@@ -102,7 +102,7 @@ module.exports = {
     browser.expect.element('#value-input').to.be.visible
     browser.expect.element('#value-denomination-select').to.be.visible
 
-    browser.click('#metadata-caret')
+    browser.click('#metadata-header')
       .expect.element('#metadata-collapsed').to.be.visible.before(500)
     browser.expect.element('#gas-price-input').to.be.not.present
   },

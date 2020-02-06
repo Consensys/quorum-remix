@@ -5,8 +5,9 @@ import {
   headerStyle,
   iconStyle,
   inlineInputStyle,
-  labelStyle, reactSelectStyle,
-  txMetaRowStyle
+  labelStyle,
+  reactSelectStyle,
+  txMetaRowStyle,
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,7 +17,7 @@ import {
   changeValue,
   changeValueDenomination,
   selectAccount,
-  showTxMetadata
+  showTxMetadata,
 } from '../actions'
 import { InputTooltip } from './InputTooltip'
 import { PrivateFor } from './PrivateFor'
@@ -88,23 +89,34 @@ export function TxMetadata () {
   }
 
   function collapsedMetadata () {
-    return <div id="metadata-collapsed" style={{ ...ellipsisStyle, marginLeft: 28 }}>
+    return <div id="metadata-collapsed"
+                style={{ ...ellipsisStyle, marginLeft: 28, cursor: 'pointer' }}
+                onClick={(e) => dispatch(showTxMetadata(!show))}>
       Gas Price: {gasPrice}, Gas Limit: {gasLimit}, Value: {value} {valueDenomination}
     </div>
   }
 
-  const renderHeader = () => <div style={{ ...headerStyle, }}>
-    <i style={{ ...iconStyle, minWidth: 20, paddingLeft: 2 }} title="Expand Transaction Metadata"
-       id='metadata-caret'
-       className={`fa fa-caret-${show ? 'down' : 'right'} methCaret`}
-       onClick={(e) => dispatch(showTxMetadata(!show))}/>
-    <div style={{ ...labelStyle, marginTop: 1 }}>
-      Transaction Metadata
+  const renderHeader = () => (
+    <div id="metadata-header"
+      style={{ ...headerStyle, cursor: 'pointer' }}
+      onClick={(e) => dispatch(showTxMetadata(!show))}>
+      <i style={{ ...iconStyle, minWidth: 20, paddingLeft: 2 }}
+         title="Expand Transaction Metadata"
+         id='metadata-caret'
+         className={`fa fa-caret-${show ? 'down' : 'right'} methCaret`}
+      />
+      <div style={{ ...labelStyle, marginTop: 1 }}>
+        Transaction Metadata
+      </div>
+      <div style={{
+        flex: 1,
+        borderTop: '1px solid #ccc',
+        marginTop: 2,
+        marginLeft: 8,
+      }}>
+      </div>
     </div>
-    <div style={{ flex: 1, borderTop: '1px solid #ccc', marginTop: 2, marginLeft: 8 }}>
-    </div>
-
-  </div>
+  )
 
   return <div style={formContainerStyle}>
     <div style={txMetaRowStyle}>
