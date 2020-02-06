@@ -27,6 +27,9 @@ let ADDRESS = 'not set'
 
 module.exports = {
   before: function (browser, done) {
+    done()
+  },
+  '01 Setup Remix': function (browser) {
     browser
     .url(URL)
     .pause(2000)
@@ -48,9 +51,8 @@ module.exports = {
     .clickLaunchIcon('solidity')
     .pause(500)
     .click('#autoCompile')
-    .perform(() => done())
   },
-  '01 Install Quorum plugin': function (browser) {
+  '02 Install Quorum plugin': function (browser) {
     browser
     .waitForElementVisible('#icon-panel', 10000)
     .click('#icon-panel div[plugin="pluginManager"]')
@@ -77,7 +79,7 @@ module.exports = {
       browser.frame(frame.value)
     }).pause(500)
   },
-  '02 Connect to Quorum node': function (browser) {
+  '03 Connect to Quorum node': function (browser) {
     browser
     .waitForElementVisible('.App', 5000)
     .expect.element('#footer').text.to.contain('Version')
@@ -86,7 +88,7 @@ module.exports = {
     .click('#network-form .fa-check')
     .expect.element('#connection-status').text.to.contain('Connected').before(10000)
   },
-  '03 Set privateFor': function (browser) {
+  '04 Set privateFor': function (browser) {
     browser
     .setValue('#private-for-select input', 'shouldFail')
     .sendKeys('#private-for-select input', browser.Keys.ENTER)
@@ -105,7 +107,7 @@ module.exports = {
     browser.expect.element('#private-for-select').text.to.contain(NODE_THREE_PUB_KEY).before(5000)
     browser.click('#private-for-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
   },
-  '04 Deploy a contract': function (browser) {
+  '05 Deploy a contract': function (browser) {
     browser
     .useXpath()
     .waitForElementVisible("//button[contains(text(),'Deploy') and not(@disabled)]", 5000)
@@ -124,7 +126,7 @@ module.exports = {
     browser.expect.element('.deployed-contract').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
     browser.expect.element('.deployed-contract').text.to.not.contain(NODE_THREE_PUB_KEY).before(5000)
   },
-  '05 Interact with contract': function (browser) {
+  '06 Interact with contract': function (browser) {
     browser
     .setValue('div[data-method="store"] input', '123')
     .click('div[data-method="store"] button')
@@ -134,7 +136,7 @@ module.exports = {
     .click('div[data-method="retreive"] button')
     .expect.element('div[data-method="retreive"]').text.to.contain('123').before(5000)
   },
-  '06 Interact with contract from node 2': function (browser) {
+  '07 Interact with contract from node 2': function (browser) {
     browser.setValue('#existing-input', ADDRESS)
     .click('.deployed-contract .fa-close')
 
@@ -160,7 +162,7 @@ module.exports = {
     .expect.element('div[data-method="store"]').text.to.contain('Success').before(5000)
 
   },
-  '07 Fail to interact with contract from node 3': function (browser) {
+  '08 Fail to interact with contract from node 3': function (browser) {
     browser.click('.deployed-contract .fa-close')
     .click('#network-form .fa-pencil')
     .clearValue('#geth-endpoint')
