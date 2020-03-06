@@ -32,15 +32,10 @@ module.exports = {
   '01 Setup Remix': function (browser) {
     browser
     .url(URL)
-    .pause(2000)
+    .pause(4000)
     // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
-    .execute(function () {
-      const dialogButton = document.querySelector('#modal-footer-ok')
-      if(dialogButton) {
-        dialogButton.click()
-      }
-    })
-    browser.pause(1000)
+    .clickItemIfExists('#modal-footer-ok')
+    .pause(1000)
     .click('#icon-panel div[plugin="pluginManager"]')
     .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidity"] button')
     .pause(1000)
@@ -59,13 +54,10 @@ module.exports = {
     .scrollAndClick(
         '#pluginManager article[id="remixPluginManagerListItem_quorum"] button')
     // permission dialog
-    .waitForElementVisible('#modal-dialog', 5000)
-    // for some reason .click('#remember') isn't working
-    .execute(function () {
-      document.querySelector('#remember').click()
-    })
+    .pause(1000)
+    .clickItemIfExists('#remember')
     .pause(500)
-    .click('#modal-footer-ok')
+    .clickItemIfExists('#modal-footer-ok')
     // load a contract so that the compiler has a result
     .click('#icon-panel div[plugin="fileExplorers"]')
     .click('div[key="browser/1_Storage.sol"]')
