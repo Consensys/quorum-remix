@@ -10,6 +10,7 @@ export function networkReducer (network = initialState, action) {
   switch (action.type) {
     case 'SET_NETWORK':
       localStorage.network = JSON.stringify(action.payload)
+      console.log(localStorage.network)
       return action.payload
 
     case 'EDIT_NETWORK':

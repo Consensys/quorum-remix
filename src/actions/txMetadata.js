@@ -12,6 +12,15 @@ export function updatePrivateFor (selection) {
   }
 }
 
+export function updatePrivateFrom (selection) {
+  console.log('updateprivatefrom')
+  console.log(selection.value)
+  return {
+    type: 'UPDATE_PRIVATE_FROM',
+    payload: selection.value
+  }
+}
+
 export function selectAccount (account) {
   return { type: 'SELECT_ACCOUNT', payload: account }
 }

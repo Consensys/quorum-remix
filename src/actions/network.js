@@ -1,5 +1,5 @@
-import { getAccounts, getTesseraParties, testUrls, updateWeb3Url } from '../api'
-import { setTesseraOptions } from './tessera'
+import { getAccounts, getTesseraParties, getTesseraKeys, testUrls, updateWeb3Url } from '../api'
+import { setTesseraParties, setTesseraKeys } from './tessera'
 import { setError } from './error'
 import { resetTransactionResults } from './contracts'
 
@@ -32,6 +32,9 @@ function setNetwork (endpoint, tesseraEndpoint, accounts, status, editing) {
  * @returns thunk middleware dispatch function
  */
 export function connectToNetwork (endpoint, tesseraEndpoint) {
+  console.log('connecting')
+  console.log(endpoint)
+  console.log(tesseraEndpoint)
   return async dispatch => {
     dispatch({ type: 'SET_NETWORK_CONNECTING' })
     let accounts = [], status = 'Disconnected', editing = true, error = ''
@@ -41,8 +44,10 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
         status = 'Connected'
         editing = false
         accounts = await getAccounts()
-        const options = await getTesseraParties()
-        dispatch(setTesseraOptions(options))
+        const parties = await getTesseraParties()
+        dispatch(setTesseraParties(parties))
+        const keys = await getTesseraKeys()
+        dispatch(setTesseraKeys(keys))
       } else {
         error = 'Please connect to a quorum node'
       }
@@ -69,21 +74,26 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
  * @returns thunk middleware dispatch function
  */
 export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
+  console.log(`save ${tesseraEndpoint}`)
   return async dispatch => {
     try {
       // TODO clearing tessera endpoint every time since we are hiding that field for now. Delete this line later
-      tesseraEndpoint = ''
+      //tesseraEndpoint = ''
 
       if (tesseraEndpoint.endsWith('/')) {
         tesseraEndpoint = tesseraEndpoint.substring(0,
           tesseraEndpoint.length - 1)
       }
+      console.log(`tesseraEnd ${tesseraEndpoint}`)
+      console.log(`save endpoint ${endpoint}`)
 
       await testUrls(endpoint, tesseraEndpoint)
 
+      console.log('hiiiiiii')
       // helper to automatically find partyinfo endpoint when adding a known local node
       if(endpoint.startsWith('http://localhost:2200')) {
         tesseraEndpoint = await getLocalPartyInfoIfAvailable(endpoint)
+        console.log(`afterget ${tesseraEndpoint}`)
       }
 
       dispatch(connectToNetwork(endpoint, tesseraEndpoint))
@@ -100,7 +110,7 @@ async function getLocalPartyInfoIfAvailable (endpoint) {
     const {port} = new URL(endpoint)
     // 7nodes default urls are localhost:2200X and localhost:900(X+1)
     const lastDigitIncremented = (port % 10) + 1
-    const likelyTesseraEndpoint = `http://localhost:900${lastDigitIncremented}/partyinfo`
+    const likelyTesseraEndpoint = `http://localhost:908${lastDigitIncremented}`
     await testUrls(endpoint, likelyTesseraEndpoint)
     console.log("Using known quorum-examples partyinfo endpoint found at", likelyTesseraEndpoint)
     return likelyTesseraEndpoint
@@ -108,4 +118,3 @@ async function getLocalPartyInfoIfAvailable (endpoint) {
     return ''
   }
 }
-

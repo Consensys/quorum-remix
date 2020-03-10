@@ -21,6 +21,7 @@ import {
 } from '../actions'
 import { InputTooltip } from './InputTooltip'
 import { PrivateFor } from './PrivateFor'
+import { PrivateFrom } from './PrivateFrom'
 
 export function TxMetadata () {
   const state = useSelector(state => state)
@@ -135,6 +136,10 @@ export function TxMetadata () {
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Private for</div>
       <div style={reactSelectStyle}><PrivateFor/></div>
+    </div>
+    <div style={txMetaRowStyle}>
+      <div style={labelStyle}>Private from</div>
+      <div style={reactSelectStyle}><PrivateFrom/></div>
     </div>
     {renderHeader()}
     {show ? expandedMetadata() : collapsedMetadata()}

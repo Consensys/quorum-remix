@@ -3,9 +3,9 @@ import { components } from 'react-select/dist/react-select.browser.esm'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
   addPublicKey,
-  removePublicParty,
+  removePublicKey,
   setError,
-  updatePrivateFor
+  updatePrivateFrom
 } from '../actions'
 import {
   iconStyle,
@@ -17,14 +17,14 @@ import Creatable from 'react-select/creatable/dist/react-select.esm'
 import Select from 'react-select'
 import isBase64 from 'validator/lib/isBase64'
 
-export function PrivateFor () {
+export function PrivateFrom () {
   const dispatch = useDispatch()
 
-  const privateFor = useSelector(state => state.txMetadata.privateFor)
+  const privateFrom = useSelector(state => state.txMetadata.privateFrom)
   const keysFromUser =
-    useSelector(state => state.tessera.partiesFromUser, shallowEqual)
+    useSelector(state => state.tessera.keysFromUser, shallowEqual)
   const keysFromServer =
-    useSelector(state => state.tessera.partiesFromServer, shallowEqual)
+    useSelector(state => state.tessera.keysFromServer, shallowEqual)
 
   const isFromServer = keysFromServer.length > 0
 
@@ -32,21 +32,20 @@ export function PrivateFor () {
   // If a key is not in the list, the transaction will be rejected anyway.
   const options = isFromServer ? keysFromServer : keysFromUser
   const selectedOptions = options.filter(
-    (option) => privateFor && privateFor.includes(option.value))
+    (option) => privateFrom && privateFrom.includes(option.value))
 
   // Don't allow creation of options if we're using keys from the server
   const SelectContainer = isFromServer ? Select : Creatable
 
   return <SelectContainer
-    id="private-for-select"
+    id="private-from-select"
     components={{ Option }}
     placeholder="Select or add..."
     options={options}
     value={selectedOptions}
     closeMenuOnSelect={true}
-    isMulti
     autosize="false"
-    onChange={(selection) => dispatch(updatePrivateFor(selection))}
+    onChange={(selection) => dispatch(updatePrivateFrom(selection))}
     formatCreateLabel={(value) => `Add '${value}'`}
     onCreateOption={(inputValue) => {
 
@@ -65,7 +64,7 @@ export function PrivateFor () {
         userCreated: true
       }
       dispatch(addPublicKey(option))
-      dispatch(updatePrivateFor([...selectedOptions, option]))
+      dispatch(updatePrivateFrom([...selectedOptions, option]))
     }}/>
 }
 
@@ -84,7 +83,7 @@ const Option = (props) => {
       </div>
       {option.userCreated &&
       <i style={iconStyle} className="fa fa-close"
-         onClick={() => dispatch(removePublicParty(option.value))}/>
+         onClick={() => dispatch(removePublicKey(option.value))}/>
       }
     </div>
   </components.Option>

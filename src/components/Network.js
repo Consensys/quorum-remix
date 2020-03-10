@@ -46,7 +46,9 @@ export function Network () {
   }
 
   const onRefresh = () => {
-    dispatch(connectToNetwork(endpoint, tesseraEndpoint))
+    console.log('refresh')
+    console.log(tesseraEndpoint)
+    dispatch(connectToNetwork(endpoint, tesseraEndpointInput))
   }
 
   return <form id="network-form" style={networkStyle}
@@ -71,7 +73,7 @@ export function Network () {
                e.target.value)}/>
       </InputTooltip>
     </div>
-    <div style={{...txMetaRowStyle, display: 'none'}}>
+    <div style={txMetaRowStyle}>
       <div style={labelStyle}>Tessera</div>
       <InputTooltip
         enabled={editing}
@@ -79,8 +81,8 @@ export function Network () {
         <input className="form-control"
                id="tessera-endpoint"
                type="text"
+               disabled={!editing}
                placeholder="(Optional)"
-               disabled={true}
                value={tesseraEndpointInput}
                onChange={(e) => setTesseraEndpointInput(
                e.target.value)}/>

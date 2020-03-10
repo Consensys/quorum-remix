@@ -5,11 +5,14 @@ import axios from 'axios'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-let web3, tessera
+let web3, tesseraKeys, tesseraParties
 
 export async function updateWeb3Url (endpoint, tesseraEndpoint) {
+  console.log('update')
+  console.log(tesseraEndpoint)
   web3 = createWeb3(endpoint)
-  tessera = tesseraEndpoint
+  tesseraKeys = `${tesseraEndpoint}/keys`
+  tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
   await testUrls(endpoint, tesseraEndpoint)
 }
 
@@ -53,16 +56,32 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
         `Could not connect to ${rpcEndpoint}: ${e.message}. This could be: a. geth is not running at this address, b. the port is not accessible, or c. CORS settings on geth do not allow this url (check the developer console for CORS errors)`)
     }
   }
+  //const tesseraKeys = `${tesseraEndpoint}/keys`
+  //const tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
+  console.log(`tesseraendpoint ${tesseraEndpoint}`)
   if (tesseraEndpoint !== '') {
+    console.log(`tesskeys ${tesseraKeys}`)
+    console.log(`tessparites ${tesseraParties}`)
     try {
-      await axios.get(`${tesseraEndpoint}`)
+      await axios.get(`${tesseraKeys}`)
     } catch (e) {
       if (e.response) {
         throw new Error(
-          `Error response from ${tesseraEndpoint}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+          `Error response from ${tesseraKeys}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
       } else {
         throw new Error(
-          `Could not connect to ${tesseraEndpoint}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
+          `Could not connect to ${tesseraKeys}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
+      }
+    }
+    try {
+      await axios.get(`${tesseraParties}`)
+    } catch (e) {
+      if (e.response) {
+        throw new Error(
+          `Error response from ${tesseraParties}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
+      } else {
+        throw new Error(
+          `Could not connect to ${tesseraParties}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
       }
     }
   }
@@ -98,10 +117,21 @@ export async function getAccounts () {
 }
 
 export async function getTesseraParties () {
-  if (!tessera) {
+  console.log(`getparties ${tesseraParties}`)
+  if (!tesseraParties) {
     return []
   }
-  const response = await axios.get(`${tessera}`)
+  const response = await axios.get(`${tesseraParties}`)
+  return response.data.keys
+  .map(party => formatAsSelectOption(party))
+}
+
+export async function getTesseraKeys () {
+  console.log(`getparties ${tesseraKeys}`)
+  if (!tesseraKeys) {
+    return []
+  }
+  const response = await axios.get(`${tesseraKeys}`)
   return response.data.keys
   .map(party => formatAsSelectOption(party))
 }

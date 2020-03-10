@@ -1,3 +1,26 @@
+export function addPublicParty (option) {
+  return {
+    type: 'ADD_PUBLIC_PARTY',
+    payload: option,
+  }
+}
+
+export function removePublicParty (key) {
+  return {
+    type: 'REMOVE_PUBLIC_PARTY',
+    payload: key,
+  }
+}
+
+export function setTesseraParties (parties) {
+  console.log('tessparties')
+  console.log(parties)
+  return {
+    type: 'SET_TESSERA_PARTIES',
+    payload: parties,
+  }
+}
+
 export function addPublicKey (option) {
   return {
     type: 'ADD_PUBLIC_KEY',
@@ -12,9 +35,11 @@ export function removePublicKey (key) {
   }
 }
 
-export function setTesseraOptions (options) {
+export function setTesseraKeys (keys) {
+  console.log('tesskeys')
+  console.log(keys)
   return {
-    type: 'SET_TESSERA_OPTIONS',
-    payload: options,
+    type: 'SET_TESSERA_KEYS',
+    payload: keys,
   }
 }
