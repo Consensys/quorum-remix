@@ -13,11 +13,9 @@ export function updatePrivateFor (selection) {
 }
 
 export function updatePrivateFrom (selection) {
-  console.log('updateprivatefrom')
-  console.log(selection.value)
   return {
     type: 'UPDATE_PRIVATE_FROM',
-    payload: selection.value
+    payload: selection && selection.map((option) => option.value)
   }
 }
 

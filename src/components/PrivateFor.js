@@ -2,7 +2,7 @@ import React from 'react'
 import { components } from 'react-select/dist/react-select.browser.esm'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
-  addPublicKey,
+  addPublicParty,
   removePublicParty,
   setError,
   updatePrivateFor
@@ -64,7 +64,7 @@ export function PrivateFor () {
         value: inputValue,
         userCreated: true
       }
-      dispatch(addPublicKey(option))
+      dispatch(addPublicParty(option))
       dispatch(updatePrivateFor([...selectedOptions, option]))
     }}/>
 }

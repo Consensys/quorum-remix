@@ -16,7 +16,13 @@ export async function updateWeb3Url (endpoint, tesseraEndpoint) {
   await testUrls(endpoint, tesseraEndpoint)
 }
 
-export async function testUrls (rpcEndpoint, tesseraEndpoint) {
+export async function updateTesseraUrl(endpoint, tesseraEndpoint) {
+  tesseraKeys = `${tesseraEndpoint}/keys`
+  tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
+  await testUrls(endpoint, tesseraEndpoint)
+}
+
+async function testUrls (rpcEndpoint, tesseraEndpoint) {
   if (!rpcEndpoint) {
     throw new Error('RPC url must not be blank.')
   }
@@ -56,12 +62,8 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
         `Could not connect to ${rpcEndpoint}: ${e.message}. This could be: a. geth is not running at this address, b. the port is not accessible, or c. CORS settings on geth do not allow this url (check the developer console for CORS errors)`)
     }
   }
-  //const tesseraKeys = `${tesseraEndpoint}/keys`
-  //const tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
-  console.log(`tesseraendpoint ${tesseraEndpoint}`)
+
   if (tesseraEndpoint !== '') {
-    console.log(`tesskeys ${tesseraKeys}`)
-    console.log(`tessparites ${tesseraParties}`)
     try {
       await axios.get(`${tesseraKeys}`)
     } catch (e) {
@@ -117,7 +119,6 @@ export async function getAccounts () {
 }
 
 export async function getTesseraParties () {
-  console.log(`getparties ${tesseraParties}`)
   if (!tesseraParties) {
     return []
   }
@@ -127,7 +128,6 @@ export async function getTesseraParties () {
 }
 
 export async function getTesseraKeys () {
-  console.log(`getparties ${tesseraKeys}`)
   if (!tesseraKeys) {
     return []
   }

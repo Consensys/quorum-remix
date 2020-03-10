@@ -13,8 +13,6 @@ export function removePublicParty (key) {
 }
 
 export function setTesseraParties (parties) {
-  console.log('tessparties')
-  console.log(parties)
   return {
     type: 'SET_TESSERA_PARTIES',
     payload: parties,
@@ -36,8 +34,6 @@ export function removePublicKey (key) {
 }
 
 export function setTesseraKeys (keys) {
-  console.log('tesskeys')
-  console.log(keys)
   return {
     type: 'SET_TESSERA_KEYS',
     payload: keys,

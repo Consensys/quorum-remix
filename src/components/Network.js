@@ -46,8 +46,6 @@ export function Network () {
   }
 
   const onRefresh = () => {
-    console.log('refresh')
-    console.log(tesseraEndpoint)
     dispatch(connectToNetwork(endpoint, tesseraEndpointInput))
   }
 
@@ -77,7 +75,7 @@ export function Network () {
       <div style={labelStyle}>Tessera</div>
       <InputTooltip
         enabled={editing}
-        text="This should be the url for your tessera keys endpoint. It should include http(s), host/ip, port, and path. For example: http://localhost:9081/partyInfo/keys">
+        text="This should be the url for your tessera endpoint. It should include http(s), host/ip, and port. For example: http://localhost:9081">
         <input className="form-control"
                id="tessera-endpoint"
                type="text"
