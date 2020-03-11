@@ -23,13 +23,6 @@ export function changeGasPrice (value) {
   }
 }
 
-export function changeGasLimit (value) {
-  return {
-    type: 'CHANGE_GAS_LIMIT',
-    payload: value
-  }
-}
-
 export function changeValue (value) {
   return { type: 'CHANGE_VALUE', payload: value }
 }

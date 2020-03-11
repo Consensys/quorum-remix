@@ -1,5 +1,4 @@
 const initialState = {
-  gasLimit: '3000000',
   gasPrice: '0',
   value: '0',
   valueDenomination: 'wei',
@@ -24,12 +23,6 @@ export function txMetadataReducer (txMetadata = initialState, action) {
       return {
         ...txMetadata,
         gasPrice: action.payload
-      }
-
-    case 'CHANGE_GAS_LIMIT':
-      return {
-        ...txMetadata,
-        gasLimit: action.payload
       }
 
     case 'CHANGE_VALUE':
