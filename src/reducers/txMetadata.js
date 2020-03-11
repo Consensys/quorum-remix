@@ -54,9 +54,7 @@ export function txMetadataReducer (txMetadata = initialState, action) {
       }
 
       case 'UPDATE_PRIVATE_FROM':
-        // empty [] privateFor is different than undefined. Disallow [] for now
-        const privateFrom = action.payload && action.payload.length > 0
-          ? action.payload : undefined
+        const privateFrom = action.payload
         return {
           ...txMetadata,
           privateFrom,

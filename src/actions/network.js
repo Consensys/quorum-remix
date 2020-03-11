@@ -46,6 +46,9 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
           dispatch(setTesseraParties(parties))
           const keys = await getTesseraKeys()
           dispatch(setTesseraKeys(keys))
+        } else {
+          dispatch(setTesseraParties([]))
+          dispatch(setTesseraKeys([]))
         }
       } else {
         error = 'Please connect to a quorum node'
@@ -73,7 +76,6 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
  * @returns thunk middleware dispatch function
  */
 export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
-  console.log(`save ${tesseraEndpoint}`)
   return async dispatch => {
     try {
 

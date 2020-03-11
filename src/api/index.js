@@ -8,8 +8,6 @@ axios.defaults.headers.post['Content-Type'] = 'application/json'
 let web3, tesseraKeys, tesseraParties
 
 export async function updateWeb3Url (endpoint, tesseraEndpoint) {
-  console.log('update')
-  console.log(tesseraEndpoint)
   web3 = createWeb3(endpoint)
   tesseraKeys = `${tesseraEndpoint}/keys`
   tesseraParties = `${tesseraEndpoint}/partyinfo/keys`

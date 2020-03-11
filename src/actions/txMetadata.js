@@ -15,7 +15,7 @@ export function updatePrivateFor (selection) {
 export function updatePrivateFrom (selection) {
   return {
     type: 'UPDATE_PRIVATE_FROM',
-    payload: selection && selection.map((option) => option.value)
+    payload: selection && selection.value
   }
 }
 

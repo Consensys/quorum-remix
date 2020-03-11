@@ -20,7 +20,7 @@ import isBase64 from 'validator/lib/isBase64'
 export function PrivateFrom () {
   const dispatch = useDispatch()
 
-  const privateFrom = useSelector(state => state.txMetadata.privateFrom)
+  const privateFrom = [useSelector(state => state.txMetadata.privateFrom)]
   const keysFromUser =
     useSelector(state => state.tessera.keysFromUser, shallowEqual)
   const keysFromServer =
@@ -33,8 +33,7 @@ export function PrivateFrom () {
   const options = isFromServer ? keysFromServer : keysFromUser
   const selectedOptions = options.filter(
     (option) => privateFrom && privateFrom.includes(option.value))
-    console.log('options')
-  console.log(options)
+
 
   // Don't allow creation of options if we're using keys from the server
   const SelectContainer = isFromServer ? Select : Creatable
@@ -47,7 +46,7 @@ export function PrivateFrom () {
     value={selectedOptions}
     closeMenuOnSelect={true}
     autosize="false"
-    onChange={(selection) => dispatch(updatePrivateFrom([selection]))}
+    onChange={(selection) => dispatch(updatePrivateFrom(selection))}
     formatCreateLabel={(value) => `Add '${value}'`}
     onCreateOption={(inputValue) => {
 
