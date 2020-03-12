@@ -8,6 +8,7 @@ import {
   labelStyle,
   reactSelectStyle,
   txMetaRowStyle,
+  largeInlineInputStyle,
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
 import { useDispatch, useSelector } from 'react-redux'
@@ -68,8 +69,8 @@ export function TxMetadata () {
         <div style={labelStyle}>Gas limit</div>
         <InputTooltip
           text="Leave field empty to estimate Gas Limit">
-          <input style={inlineInputStyle} className="form-control" type="text" value={gasLimit}
-                id="gas-limit-input"
+          <input style={largeInlineInputStyle} className="form-control" type="text" value={gasLimit}
+                id="gas-limit-input" placeholder="Estimate Gas Limit"
                 onChange={(e) => dispatch(changeGasLimit(e.target.value))}/>
         </InputTooltip>
       </div>
