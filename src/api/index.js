@@ -131,7 +131,7 @@ export async function deploy (contract, params, txMetadata) {
     data: bytecode,
     arguments: orderedParams,
   })
-  const gas = await deployableContract.estimateGas()
+  const gas = txMetadata.gasLimit !== '' ? parseInt(txMetadata.gasLimit, 10) : await deployableContract.estimateGas()
 
   const tx = {
     from: txMetadata.account,
@@ -148,7 +148,7 @@ export async function deploy (contract, params, txMetadata) {
 
 export async function contractMethod (txMetadata, params, method, privateFor,
   selectedPrivateFor, contract) {
-  const { account, gasPrice, value, valueDenomination } = txMetadata
+  const { account, gasLimit, gasPrice, value, valueDenomination } = txMetadata
   var _params = Object.values(params)
   var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
   var methodSig = method.name + '(' + _sig_params + ')'
@@ -157,7 +157,7 @@ export async function contractMethod (txMetadata, params, method, privateFor,
 
   let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
   let web3Method = web3Contract.methods[method.name](..._params)
-  const gas = await web3Method.estimateGas()
+  const gas = gasLimit !== '' ? parseInt(gasLimit, 10) : await web3Method.estimateGas()
 
   var methodArgs = {
     from: account,

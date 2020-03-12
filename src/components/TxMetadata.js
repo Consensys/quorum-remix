@@ -12,6 +12,7 @@ import {
 import copy from 'copy-to-clipboard'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  changeGasLimit,
   changeGasPrice,
   changeValue,
   changeValueDenomination,
@@ -28,6 +29,7 @@ export function TxMetadata () {
     network: { accounts = [] },
     txMetadata: {
       account,
+      gasLimit,
       gasPrice,
       value,
       valueDenomination,
@@ -63,6 +65,15 @@ export function TxMetadata () {
         </InputTooltip>
       </div>
       <div style={txMetaRowStyle}>
+        <div style={labelStyle}>Gas limit</div>
+        <InputTooltip
+          text="Leave field empty to estimate Gas Limit">
+          <input style={inlineInputStyle} className="form-control" type="text" value={gasLimit}
+                id="gas-limit-input"
+                onChange={(e) => dispatch(changeGasLimit(e.target.value))}/>
+        </InputTooltip>
+      </div>
+      <div style={txMetaRowStyle}>
         <div style={labelStyle}>Value</div>
         <input style={inlineInputStyle} className="form-control" type="text" value={value}
                id="value-input"
@@ -84,7 +95,7 @@ export function TxMetadata () {
     return <div id="metadata-collapsed"
                 style={{ ...ellipsisStyle, marginLeft: 28, cursor: 'pointer' }}
                 onClick={(e) => dispatch(showTxMetadata(!show))}>
-      Gas Price: {gasPrice}, Value: {value} {valueDenomination}
+      Gas Price: {gasPrice}, Gas Limit: {gasLimit}, Value: {value} {valueDenomination}
     </div>
   }
 
