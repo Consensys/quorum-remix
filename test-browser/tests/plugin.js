@@ -32,7 +32,7 @@ module.exports = {
   '01 Setup Remix': function (browser) {
     browser
     .url(URL)
-    .pause(4000)
+    .waitForElementVisible('#icon-panel', 10000)
     // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
     .clickItemIfExists('#modal-footer-ok')
     .pause(1000)
@@ -49,7 +49,6 @@ module.exports = {
   },
   '02 Install Quorum plugin': function (browser) {
     browser
-    .waitForElementVisible('#icon-panel', 10000)
     .click('#icon-panel div[plugin="pluginManager"]')
     .scrollAndClick(
         '#pluginManager article[id="remixPluginManagerListItem_quorum"] button')
