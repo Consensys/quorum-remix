@@ -31,21 +31,8 @@ export function deployedReducer (deployed = initialState, action) {
         deployedContracts: newDeployedContracts
       }
 
-    case 'SET_CONTRACT_LOADING':
-      const toContract = deployed.deployedContracts[action.payload.address]
-      return {
-        ...deployed,
-        deployedContracts: {
-          ...deployed.deployedContracts,
-          [action.payload.address]: {
-            ...toContract,
-            loading: action.payload.loading,
-          }
-        }
-      }
-
-    case 'METHOD_CALL_SUCCESS':
-      const { address, methodSignature, result } = action.payload
+    case 'METHOD_CALL_STATE':
+      const { address, methodSignature, state } = action.payload
       const deployedContract = deployed.deployedContracts[address]
       return {
         ...deployed,
@@ -53,10 +40,10 @@ export function deployedReducer (deployed = initialState, action) {
           ...deployed.deployedContracts,
           [address]: {
             ...deployedContract,
-            results: {
-              ...deployedContract.results,
-              [methodSignature]: result,
-            }
+            [methodSignature]: {
+              ...deployedContract[methodSignature],
+              ...state, // this allows us to set state.loading to true without overwriting state.result
+            },
           }
         }
       }

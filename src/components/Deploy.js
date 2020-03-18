@@ -33,7 +33,7 @@ export function Deploy() {
     </select>
     {contracts[selectedContract] &&
     <Constructor
-      disabled={deploying}
+      loading={deploying}
       onDeploy={params => dispatch(
         deployContract(params, contracts[selectedContract], txMetadata))}
       onExisting={(address) => {

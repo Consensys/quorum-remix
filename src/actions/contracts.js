@@ -16,23 +16,28 @@ export function fetchCompilationSuccess (result) {
   }
 }
 
-export function setContractLoading (address, loading) {
+export function setMethodLoading (address, method, loading) {
   return {
-    type: 'SET_CONTRACT_LOADING',
+    type: 'METHOD_CALL_STATE',
     payload: {
       address,
-      loading: loading
+      methodSignature: getMethodSignature(method),
+      state: {
+        loading,
+      },
     }
   }
 }
 
-export function methodCallSuccess (address, method, res) {
+export function methodCallSuccess (address, method, result) {
   return {
-    type: 'METHOD_CALL_SUCCESS',
+    type: 'METHOD_CALL_STATE',
     payload: {
       address,
       methodSignature: getMethodSignature(method),
-      result: res,
+      state: {
+        result,
+      },
     }
   }
 }
@@ -84,7 +89,7 @@ export function fetchCompilationResult (client) {
 export function doMethodCall (contract, method, params, txMetadata, privateFor,
   selectedPrivateFor) {
   return async dispatch => {
-    dispatch(setContractLoading(contract.address, true))
+    dispatch(setMethodLoading(contract.address, method, true))
     try {
       const __ret = await contractMethod(txMetadata, params, method, privateFor,
         selectedPrivateFor, contract)
@@ -95,7 +100,7 @@ export function doMethodCall (contract, method, params, txMetadata, privateFor,
       console.error('Error calling contract method', e)
       dispatch(setError(e.message))
     }
-    dispatch(setContractLoading(contract.address, false))
+    dispatch(setMethodLoading(contract.address, method, false))
   }
 }
 

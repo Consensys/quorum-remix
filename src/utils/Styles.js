@@ -23,12 +23,14 @@ export const formContainerStyle = {
 export const containerStyle = {
   display: 'flex',
   marginTop: 8,
+  alignItems: 'center'
 }
 
 export const buttonStyle = {
   margin: 0,
   minWidth: 100,
   width: 100,
+  height: 32,
   wordBreak: 'inherit',
   borderRadius: 3,
   borderTopRightRadius: 0,
@@ -47,6 +49,7 @@ export const inputStyle = {
   borderBottomLeftRadius: 0,
   borderLeft: 0,
   flexGrow: 1,
+  height: 32,
 }
 
 export const contractStyle = {
