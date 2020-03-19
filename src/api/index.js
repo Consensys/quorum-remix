@@ -113,7 +113,6 @@ function formatAsSelectOption (party) {
   }
 }
 
-
 export async function deploy (contract, params, txMetadata) {
   let abi = contract.abi
   const constructor = getConstructor(abi)
@@ -126,19 +125,23 @@ export async function deploy (contract, params, txMetadata) {
     }
     return value
   })
-  const tx = {
-    from: txMetadata.account,
-    gasPrice: txMetadata.gasPrice,
-    gas: txMetadata.gasLimit,
-    value: Web3.utils.toWei(txMetadata.value, txMetadata.valueDenomination),
-    privateFrom: txMetadata.privateFrom,
-    privateFor: txMetadata.privateFor
-  }
+
   const web3Contract = new web3.eth.Contract(abi)
   const deployableContract = await web3Contract.deploy({
     data: bytecode,
     arguments: orderedParams,
   })
+  const gas = txMetadata.gasLimit !== '' ? parseInt(txMetadata.gasLimit, 10) : await deployableContract.estimateGas()
+
+  const tx = {
+    from: txMetadata.account,
+    gasPrice: txMetadata.gasPrice,
+    gas: gas,
+    value: Web3.utils.toWei(txMetadata.value, txMetadata.valueDenomination),
+    privateFrom: txMetadata.privateFrom,
+    privateFor: txMetadata.privateFor
+  }
+
   const response = await deployableContract.send(tx)
   return response
 }
@@ -149,20 +152,22 @@ export async function contractMethod (txMetadata, params, method, privateFor,
   var _params = Object.values(params)
   var _sig_params = _params.map((value) => JSON.stringify(value)).join(', ')
   var methodSig = method.name + '(' + _sig_params + ')'
+
+  await verifyContract(contract.address)
+
+  let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
+  let web3Method = web3Contract.methods[method.name](..._params)
+  const gas = gasLimit !== '' ? parseInt(gasLimit, 10) : await web3Method.estimateGas()
+
   var methodArgs = {
     from: account,
-    gas: gasLimit,
+    gas: gas,
     gasPrice,
     value: Web3.utils.toWei(value, valueDenomination),
     args: _params,
     privateFor: privateFor && selectedPrivateFor.filter(
       ({ enabled }) => enabled).map(({ key }) => key)
   }
-
-  await verifyContract(contract.address)
-
-  let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
-  let web3Method = web3Contract.methods[method.name](..._params)
   let callOrSend = method.constant ? 'call' : 'send'
   const res = await web3Method[callOrSend](methodArgs)
   return { methodSig, methodArgs, res }

@@ -143,6 +143,11 @@ export const inlineInputStyle = {
   marginRight: 4,
 }
 
+export const largeInlineInputStyle = {
+  maxWidth: 184,
+  marginRight: 4,
+}
+
 export const checkboxLabelStyle = {
   display: 'block',
   whiteSpace: 'nowrap',
@@ -222,4 +227,3 @@ export const statusStyle = (status) => {
     marginRight: 8,
   }
 }
-

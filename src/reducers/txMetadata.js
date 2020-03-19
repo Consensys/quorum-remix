@@ -1,5 +1,5 @@
 const initialState = {
-  gasLimit: '3000000',
+  gasLimit: '',
   gasPrice: '0',
   value: '0',
   valueDenomination: 'wei',
