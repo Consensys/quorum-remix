@@ -20,13 +20,13 @@ export function Contract ({ address }) {
     state => state.deployed.deployedContracts)
 
   const contract = deployedContracts[address]
-  const { expanded = false, contractName, privateFor, loading } = contract
+  const { expanded = false, contractName, privateFor } = contract
 
   const [selectedPrivateFor, setSelectedPrivateFor] = React.useState(
     privateFor && privateFor.map(key => { return { enabled: true, key }}))
 
-  const getResultForMethod = (method) => {
-    return contract.results && contract.results[getMethodSignature(method)]
+  const getStateForMethod = (method) => {
+    return contract[getMethodSignature(method)] || { loading: false }
   }
 
   const copyAddress = async () => {
@@ -79,16 +79,18 @@ export function Contract ({ address }) {
       contract.abi.filter(
         (method) => method.type === 'function')
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map((method) => (
-        <Method key={method.name}
-                disabled={loading}
-                method={method}
-                result={getResultForMethod(method)}
-                onSubmit={(inputValues) => dispatch(
-                  doMethodCall(contract, method,
-                    inputValues, txMetadata, privateFor, selectedPrivateFor))}
+      .map((method) => {
+        let stateForMethod = getStateForMethod(method)
+        return <Method
+          key={method.name}
+          loading={stateForMethod.loading}
+          method={method}
+          result={stateForMethod.result}
+          onSubmit={(inputValues) => dispatch(
+            doMethodCall(contract, method,
+              inputValues, txMetadata, privateFor, selectedPrivateFor))}
         />
-      ))
+      })
     }
   </div>
 

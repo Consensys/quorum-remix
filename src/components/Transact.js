@@ -7,8 +7,9 @@ import {
   iconStyle,
   inputStyle
 } from '../utils/Styles'
+import { LoadingSmall } from './LoadingSmall'
 
-export const Method = ({ method, onSubmit, result, disabled }) => {
+export const Method = ({ method, onSubmit, result, loading }) => {
 
   const [expanded, setExpanded] = useState(false)
   const [inputValues, setInputValues] = useState({});
@@ -58,14 +59,14 @@ export const Method = ({ method, onSubmit, result, disabled }) => {
       </div>
       {method.inputs.map((input) =>
         <TransactionInput
-          disabled={disabled}
+          disabled={loading}
           key={methodName + input.name}
           onChange={onInputChange}
           value={inputValues[input.name]}
           input={input}/>
       )}
       <button
-        disabled={disabled}
+        disabled={loading}
         onClick={submit}
         style={{ marginTop: 8, alignSelf: 'flex-end' }}
         className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
@@ -75,23 +76,25 @@ export const Method = ({ method, onSubmit, result, disabled }) => {
   }
 
   function collapsedView () {
+    let hasParams = method.inputs.length > 0
     return <div style={containerStyle}>
       <button
-        disabled={disabled}
+        disabled={loading}
         onClick={submit}
         style={buttonStyle}
         className={`btn btn-sm btn-${method.constant ? 'info' : 'warning'}`}>
         {methodName}
       </button>
-      {method.inputs.length > 0 &&
+      {hasParams  &&
       <input placeholder={method.inputs.map((input) => `${input.type} ${input.name}`).join(', ')}
-             disabled={disabled}
+             disabled={loading}
              style={inputStyle}
              onChange={(e) => onSingleLineInputChange(e.target.value)}
              value={singleLineInput}
              type="text"/>}
-      { method.inputs.length > 0 && <i style={iconStyle} title="Deploy" className="fa fa-caret-down methCaret"
-         onClick={(e) => onCaretClick(e, true)}/>}
+      { (!loading && hasParams) && <i style={iconStyle} title="Deploy" className="fa fa-caret-down methCaret"
+                                      onClick={(e) => onCaretClick(e, true)}/>}
+      <LoadingSmall style={{marginLeft: 7, marginRight: 7}} visible={loading}/>
     </div>
   }
 
