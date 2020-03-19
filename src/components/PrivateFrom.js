@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom';
 import { components } from 'react-select/dist/react-select.browser.esm'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
@@ -17,33 +18,17 @@ import Creatable from 'react-select/creatable/dist/react-select.esm'
 import Select from 'react-select'
 import isBase64 from 'validator/lib/isBase64'
 
-export function PrivateFrom () {
+function Stuff (props) {
   const dispatch = useDispatch()
 
-  const privateFrom = [useSelector(state => state.txMetadata.privateFrom)]
-  const keysFromUser =
-    useSelector(state => state.tessera.keysFromUser, shallowEqual)
-  const keysFromServer =
-    useSelector(state => state.tessera.keysFromServer, shallowEqual)
-
-  const isFromServer = keysFromServer.length > 0
-
-  // don't allow user-added keys when using keys retrieved from the server.
-  // If a key is not in the list, the transaction will be rejected anyway.
-  const options = isFromServer ? keysFromServer : keysFromUser
-  const selectedOptions = options.filter(
-    (option) => privateFrom && privateFrom.includes(option.value))
-
-
-  // Don't allow creation of options if we're using keys from the server
-  const SelectContainer = isFromServer ? Select : Creatable
+  const SelectContainer = props.isFromServer ? Select : Creatable
 
   return <SelectContainer
     id="private-from-select"
     components={{ Option }}
     placeholder="Select or add..."
-    options={options}
-    value={selectedOptions}
+    options={props.options}
+    value={props.selectedOptions}
     closeMenuOnSelect={true}
     autosize="false"
     onChange={(selection) => dispatch(updatePrivateFrom(selection))}
@@ -65,8 +50,34 @@ export function PrivateFrom () {
         userCreated: true
       }
       dispatch(addPublicKey(option))
-      dispatch(updatePrivateFrom([...selectedOptions, option]))
+      dispatch(updatePrivateFrom([...props.selectedOptions, option]))
     }}/>
+}
+
+export function PrivateFrom () {
+  const dispatch = useDispatch()
+
+  const privateFrom = [useSelector(state => state.txMetadata.privateFrom)]
+  const keysFromUser =
+    useSelector(state => state.tessera.keysFromUser, shallowEqual)
+  const keysFromServer =
+    useSelector(state => state.tessera.keysFromServer, shallowEqual)
+
+  const isFromServer = keysFromServer.length > 0
+
+  // don't allow user-added keys when using keys retrieved from the server.
+  // If a key is not in the list, the transaction will be rejected anyway.
+  const options = isFromServer ? keysFromServer : keysFromUser
+  const selectedOptions = options.filter(
+    (option) => privateFrom && privateFrom.includes(option.value))
+
+    return (<div>
+    <Stuff
+    options={options}
+    selectedOptions={selectedOptions}
+    isFromServer={isFromServer} />
+    </div>
+  )
 }
 
 // custom react-select option to allow deleting of user-added keys
