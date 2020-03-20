@@ -75,7 +75,7 @@ export function Network () {
       <div style={labelStyle}>Tessera</div>
       <InputTooltip
         enabled={editing}
-        text="This should be the url for your tessera endpoint. It should include http(s), host/ip, and port. For example: http://localhost:9081">
+        text="This should be the url for your tessera 3rd party endpoint. It should include http(s), host/ip, and port. For example: http://localhost:9081">
         <input className="form-control"
                id="tessera-endpoint"
                type="text"

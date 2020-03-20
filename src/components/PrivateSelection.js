@@ -46,7 +46,7 @@ export function PrivateSelection (props) {
     </components.Option>
   }
 
-  const SelectContainer = props.isFromServer ? Select : Creatable
+  const SelectContainer = isFromServer ? Select : Creatable
 
   return <SelectContainer
     id={props.containerId}
@@ -76,6 +76,7 @@ export function PrivateSelection (props) {
         userCreated: true
       }
       props.onAdd(option)
-      props.onUpdate([...selectedOptions, option])
+      const options = props.isMulti ? [...selectedOptions, option] : option
+      props.onUpdate(options)
     }}/>
 }
