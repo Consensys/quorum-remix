@@ -14,13 +14,7 @@ export async function updateWeb3Url (endpoint, tesseraEndpoint) {
   await testUrls(endpoint, tesseraEndpoint)
 }
 
-export async function updateTesseraUrl(endpoint, tesseraEndpoint) {
-  tesseraKeys = `${tesseraEndpoint}/keys`
-  tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
-  await testUrls(endpoint, tesseraEndpoint)
-}
-
-async function testUrls (rpcEndpoint, tesseraEndpoint) {
+export async function testUrls (rpcEndpoint, tesseraEndpoint) {
   if (!rpcEndpoint) {
     throw new Error('RPC url must not be blank.')
   }
@@ -63,7 +57,7 @@ async function testUrls (rpcEndpoint, tesseraEndpoint) {
 
   if (tesseraEndpoint !== '') {
     try {
-      await axios.get(`${tesseraKeys}`)
+      await axios.get(`${tesseraEndpoint}/keys`)
     } catch (e) {
       if (e.response) {
         throw new Error(
@@ -74,7 +68,7 @@ async function testUrls (rpcEndpoint, tesseraEndpoint) {
       }
     }
     try {
-      await axios.get(`${tesseraParties}`)
+      await axios.get(`${tesseraEndpoint}/partyinfo/keys`)
     } catch (e) {
       if (e.response) {
         throw new Error(
