@@ -128,7 +128,7 @@ module.exports = {
     .setValue('#private-from-select input', NODE_ONE_PUB_KEY)
     .sendKeys('#private-from-select input', browser.Keys.ENTER)
     browser.expect.element('#private-from-select').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
-    browser.click('#private-from-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
+    //browser.click('#private-for-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
   },
   '07 Deploy a contract': function (browser) {
     browser

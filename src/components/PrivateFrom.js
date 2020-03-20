@@ -19,7 +19,7 @@ export function PrivateFrom () {
 
   return <div>
     <PrivateSelection
-        containerId={'private-from-select'}
+        containerId={"private-from-select"}
         privateKey={privateFrom}
         userKeys={keysFromUser}
         serverKeys={keysFromServer}
