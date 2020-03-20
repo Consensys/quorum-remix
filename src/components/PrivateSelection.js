@@ -16,6 +16,7 @@ export function PrivateSelection (props) {
   const keysFromUser = props.userKeys
   const keysFromServer = props.serverKeys
   const privateKey = props.privateKey
+  const remove = props.onRemove
 
   const isFromServer = keysFromServer.length > 0
 
@@ -25,6 +26,25 @@ export function PrivateSelection (props) {
   const selectedOptions = options.filter(
     (option) => privateKey && privateKey.includes(option.value))
   const dispatch = useDispatch()
+
+  // custom react-select option to allow deleting of user-added keys
+  const Option = (props) => {
+    const option = props.data
+
+    return <components.Option {...props}>
+      <div style={optionStyle}>
+        <div style={optionLabelContainerStyle}>
+          <div style={optionLabelStyle}>
+            {option.label}
+          </div>
+        </div>
+        {option.userCreated &&
+        <i style={iconStyle} className="fa fa-close"
+           onClick={() => remove(option.value)}/>
+        }
+      </div>
+    </components.Option>
+  }
 
   const SelectContainer = props.isFromServer ? Select : Creatable
 
@@ -58,23 +78,4 @@ export function PrivateSelection (props) {
       props.onAdd(option)
       props.onUpdate([...selectedOptions, option])
     }}/>
-}
-
-// custom react-select option to allow deleting of user-added keys
-const Option = (props) => {
-  const option = props.data
-
-  return <components.Option {...props}>
-    <div style={optionStyle}>
-      <div style={optionLabelContainerStyle}>
-        <div style={optionLabelStyle}>
-          {option.label}
-        </div>
-      </div>
-      {option.userCreated &&
-      <i style={iconStyle} className="fa fa-close"
-         onClick={() => props.onRemove(option.value)}/>
-      }
-    </div>
-  </components.Option>
 }
