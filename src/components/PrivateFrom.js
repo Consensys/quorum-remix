@@ -1,58 +1,12 @@
 import React from 'react'
-import ReactDOM from 'react-dom';
-import { components } from 'react-select/dist/react-select.browser.esm'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import {
+  updatePrivateFrom,
   addPublicKey,
   removePublicKey,
-  setError,
-  updatePrivateFrom
 } from '../actions'
-import {
-  iconStyle,
-  optionLabelContainerStyle,
-  optionLabelStyle,
-  optionStyle
-} from '../utils/Styles'
-import Creatable from 'react-select/creatable/dist/react-select.esm'
-import Select from 'react-select'
-import isBase64 from 'validator/lib/isBase64'
+import { PrivateSelection } from './PrivateSelection'
 
-function Stuff (props) {
-  const dispatch = useDispatch()
-
-  const SelectContainer = props.isFromServer ? Select : Creatable
-
-  return <SelectContainer
-    id="private-from-select"
-    components={{ Option }}
-    placeholder="Select or add..."
-    options={props.options}
-    value={props.selectedOptions}
-    closeMenuOnSelect={true}
-    autosize="false"
-    onChange={(selection) => dispatch(updatePrivateFrom(selection))}
-    formatCreateLabel={(value) => `Add '${value}'`}
-    onCreateOption={(inputValue) => {
-
-      if(inputValue.length !== 44) {
-        dispatch(setError(`Public key length must equal 44: (actual: ${inputValue.length}) ${inputValue}`))
-        return;
-      }
-      if(!isBase64(inputValue)) {
-        dispatch(setError(`Public key must be a valid base64 string: ${inputValue}`))
-        return;
-      }
-
-      const option = {
-        label: inputValue,
-        value: inputValue,
-        userCreated: true
-      }
-      dispatch(addPublicKey(option))
-      dispatch(updatePrivateFrom([...props.selectedOptions, option]))
-    }}/>
-}
 
 export function PrivateFrom () {
   const dispatch = useDispatch()
@@ -63,40 +17,14 @@ export function PrivateFrom () {
   const keysFromServer =
     useSelector(state => state.tessera.keysFromServer, shallowEqual)
 
-  const isFromServer = keysFromServer.length > 0
-
-  // don't allow user-added keys when using keys retrieved from the server.
-  // If a key is not in the list, the transaction will be rejected anyway.
-  const options = isFromServer ? keysFromServer : keysFromUser
-  const selectedOptions = options.filter(
-    (option) => privateFrom && privateFrom.includes(option.value))
-
-    return (<div>
-    <Stuff
-    options={options}
-    selectedOptions={selectedOptions}
-    isFromServer={isFromServer} />
+  return <div>
+    <PrivateSelection
+        privateKey={privateFrom}
+        userKeys={keysFromUser}
+        serverKeys={keysFromServer}
+        isMulti={false}
+        onUpdate={(selection) => dispatch(updatePrivateFrom(selection))}
+        onAdd ={(option) => dispatch(addPublicKey(option))}
+        onRemove = {(option) => dispatch(removePublicKey(option))}/>
     </div>
-  )
-}
-
-// custom react-select option to allow deleting of user-added keys
-const Option = (props) => {
-  const dispatch = useDispatch()
-
-  const option = props.data
-
-  return <components.Option {...props}>
-    <div style={optionStyle}>
-      <div style={optionLabelContainerStyle}>
-        <div style={optionLabelStyle}>
-          {option.label}
-        </div>
-      </div>
-      {option.userCreated &&
-      <i style={iconStyle} className="fa fa-close"
-         onClick={() => dispatch(removePublicKey(option.value))}/>
-      }
-    </div>
-  </components.Option>
 }
