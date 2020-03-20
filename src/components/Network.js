@@ -46,7 +46,7 @@ export function Network () {
   }
 
   const onRefresh = () => {
-    dispatch(connectToNetwork(endpoint, tesseraEndpoint))
+    dispatch(connectToNetwork(endpoint, tesseraEndpointInput))
   }
 
   return <form id="network-form" style={networkStyle}
@@ -71,16 +71,16 @@ export function Network () {
                e.target.value)}/>
       </InputTooltip>
     </div>
-    <div style={{...txMetaRowStyle, display: 'none'}}>
+    <div style={txMetaRowStyle}>
       <div style={labelStyle}>Tessera</div>
       <InputTooltip
         enabled={editing}
-        text="This should be the url for your tessera keys endpoint. It should include http(s), host/ip, port, and path. For example: http://localhost:9081/partyInfo/keys">
+        text="This should be the url for your tessera 3rd party endpoint. It should include http(s), host/ip, and port. For example: http://localhost:9081">
         <input className="form-control"
                id="tessera-endpoint"
                type="text"
+               disabled={!editing}
                placeholder="(Optional)"
-               disabled={true}
                value={tesseraEndpointInput}
                onChange={(e) => setTesseraEndpointInput(
                e.target.value)}/>

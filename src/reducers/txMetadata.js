@@ -53,6 +53,13 @@ export function txMetadataReducer (txMetadata = initialState, action) {
         privateFor,
       }
 
+      case 'UPDATE_PRIVATE_FROM':
+        const privateFrom = action.payload
+        return {
+          ...txMetadata,
+          privateFrom,
+        }
+
     default:
       return txMetadata
   }
