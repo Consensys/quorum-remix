@@ -18,6 +18,7 @@ export function PrivateFor () {
 
   return <div>
       <PrivateSelection
+          containerId={'private-for-select'}
           privateKey={privateFor}
           userKeys={keysFromUser}
           serverKeys={keysFromServer}

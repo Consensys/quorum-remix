@@ -49,7 +49,7 @@ export function PrivateSelection (props) {
   const SelectContainer = props.isFromServer ? Select : Creatable
 
   return <SelectContainer
-    id="private-from-select"
+    id={props.id}
     components={{ Option }}
     placeholder="Select or add..."
     options={options}
