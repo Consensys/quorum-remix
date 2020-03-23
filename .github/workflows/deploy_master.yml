@@ -21,9 +21,9 @@ jobs:
           yarn install
           yarn build
           echo "Copying .github directory to temp folder so we can keep gh-pages' actions up to date"
-          cp -r .github ../.github
-          echo "Copying build directory to temp folder or it will be wiped out when we checkout gh-pages actions up to date"
           mv build ../build
+          cp -r .github test-browser package.json nightwatch.conf.js ../build/
+          echo "Copying build directory to temp folder or it will be wiped out when we checkout gh-pages"
           echo "Setting environment variable COMMIT_SHA to the shortened hash of the current commit: ${GITHUB_SHA::8}"
           echo "::set-env name=COMMIT_SHA::${GITHUB_SHA::8}"
       - name: Checkout gh-pages
@@ -34,7 +34,7 @@ jobs:
         run: |
           rm -rf *
           rm -rf .github
-          mv ../.github ./
+          mv ../build/.github ./.github
           mv ../build/* ./
           echo "remix-plugin.goquorum.com" > CNAME
           echo "Deployment of quorum-remix at commit $COMMIT_SHA to remix-plugin.goquorum.com" > README.md

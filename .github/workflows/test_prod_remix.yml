@@ -5,7 +5,7 @@ on:
     branches:
       - gh-pages
   schedule:
-    - cron: "04 00 * * *"
+    - cron: "00 13 * * *"
 
 jobs:
   build:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: master
+          ref: gh-pages
       - name: Use Node.js 10.x
         uses: actions/setup-node@v1
         with:
