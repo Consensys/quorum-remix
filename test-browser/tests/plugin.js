@@ -32,15 +32,10 @@ module.exports = {
   '01 Setup Remix': function (browser) {
     browser
     .url(URL)
-    .pause(2000)
+    .waitForElementVisible('#icon-panel', 10000)
     // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
-    .execute(function () {
-      const dialogButton = document.querySelector('#modal-footer-ok')
-      if(dialogButton) {
-        dialogButton.click()
-      }
-    })
-    browser.pause(1000)
+    .clickItemIfExists('#modal-footer-ok')
+    .pause(1000)
     .click('#icon-panel div[plugin="pluginManager"]')
     .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidity"] button')
     .pause(1000)
@@ -54,18 +49,14 @@ module.exports = {
   },
   '02 Install Quorum plugin': function (browser) {
     browser
-    .waitForElementVisible('#icon-panel', 10000)
     .click('#icon-panel div[plugin="pluginManager"]')
     .scrollAndClick(
         '#pluginManager article[id="remixPluginManagerListItem_quorum"] button')
     // permission dialog
-    .waitForElementVisible('#modal-dialog', 5000)
-    // for some reason .click('#remember') isn't working
-    .execute(function () {
-      document.querySelector('#remember').click()
-    })
+    .pause(1000)
+    .clickItemIfExists('#remember')
     .pause(500)
-    .click('#modal-footer-ok')
+    .clickItemIfExists('#modal-footer-ok')
     // load a contract so that the compiler has a result
     .click('#icon-panel div[plugin="fileExplorers"]')
     .click('div[key="browser/1_Storage.sol"]')
@@ -125,7 +116,19 @@ module.exports = {
     browser.expect.element('#private-for-select').text.to.contain(NODE_THREE_PUB_KEY).before(5000)
     browser.click('#private-for-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
   },
-  '06 Deploy a contract': function (browser) {
+  '06 Set privateFrom': function (browser) {
+    browser
+    .setValue('#private-from-select input', 'shouldFail')
+    .sendKeys('#private-from-select input', browser.Keys.ENTER)
+    .waitForElementVisible('#error-container', 5000)
+    .expect.element('#error-container').text.to.contain('Public key length must equal 44').before(5000)
+    browser
+    .click('#error-container .fa-close')
+    .setValue('#private-from-select input', NODE_ONE_PUB_KEY)
+    .sendKeys('#private-from-select input', browser.Keys.ENTER)
+    browser.expect.element('#private-from-select').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+  },
+  '07 Deploy a contract': function (browser) {
     browser
     .useXpath()
     .waitForElementVisible("//button[contains(text(),'Deploy') and not(@disabled)]", 5000)
@@ -144,7 +147,7 @@ module.exports = {
     browser.expect.element('.deployed-contract').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
     browser.expect.element('.deployed-contract').text.to.not.contain(NODE_THREE_PUB_KEY).before(5000)
   },
-  '07 Interact with contract': function (browser) {
+  '08 Interact with contract': function (browser) {
     browser
     .setValue('div[data-method="store"] input', '123')
     .click('div[data-method="store"] button')
@@ -154,7 +157,7 @@ module.exports = {
     .click('div[data-method="retreive"] button')
     .expect.element('div[data-method="retreive"]').text.to.contain('123').before(5000)
   },
-  '08 Interact with contract from node 2': function (browser) {
+  '09 Interact with contract from node 2': function (browser) {
     browser.setValue('#existing-input', ADDRESS)
     .click('.deployed-contract .fa-close')
 
@@ -180,7 +183,7 @@ module.exports = {
     .expect.element('div[data-method="store"]').text.to.contain('Success').before(5000)
 
   },
-  '09 Fail to interact with contract from node 3': function (browser) {
+  '10 Fail to interact with contract from node 3': function (browser) {
     browser.click('.deployed-contract .fa-close')
     .click('#network-form .fa-pencil')
     .clearValue('#geth-endpoint')
