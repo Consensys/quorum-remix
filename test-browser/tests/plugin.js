@@ -45,7 +45,7 @@ module.exports = {
     .scrollAndClick('#icon-panel div[plugin="fileExplorers"]')
     .clickLaunchIcon('solidity')
     .pause(500)
-    .click('#autoCompile')
+    .clickItemIfExists('#autoCompile')
   },
   '02 Install Quorum plugin': function (browser) {
     browser
