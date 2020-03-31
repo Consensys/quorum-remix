@@ -87,6 +87,7 @@ export const Method = ({ method, onSubmit, result, loading }) => {
       </button>
       {hasParams  &&
       <input placeholder={method.inputs.map((input) => `${input.type} ${input.name}`).join(', ')}
+             className="form-control"
              disabled={loading}
              style={inputStyle}
              onChange={(e) => onSingleLineInputChange(e.target.value)}
@@ -141,6 +142,7 @@ export const TransactionInput = ({ input, onChange, value, disabled }) => {
       <div key={`${input.name}${index}`} className="input-group method-inputs"
            data-param={input.name}>
         <input type="text" data-param={input.name}
+               className="form-control"
                data-type={input.type}
                value={value}
                disabled={disabled}

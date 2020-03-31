@@ -3,6 +3,7 @@ import { Constructor } from './Constructor'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { addExistingContract, deployContract, selectContract } from '../actions'
 import { getConstructor } from '../utils/ContractUtils'
+import { bootstrapSelectStyle } from '../utils/Styles'
 
 export function Deploy() {
   const txMetadata = useSelector(state => state.txMetadata, shallowEqual)
@@ -22,12 +23,14 @@ export function Deploy() {
   }, [contracts])
 
 
-  return <div style={{width: '100%'}}>
+  return <div style={{ width: '100%' }}>
     <div>Compiled Contracts:</div>
-    <select className="form-control"
-            id="compiled-select"
-            defaultValue={selectedContract}
-            onChange={(e) => dispatch(selectContract(e.target.value))}>
+    <select
+      style={bootstrapSelectStyle}
+      className="form-control custom-select"
+      id="compiled-select"
+      defaultValue={selectedContract}
+      onChange={(e) => dispatch(selectContract(e.target.value))}>
       {Object.entries(contracts).map(
         ([name, data]) => <option key={name} value={name}>{name}</option>)}
     </select>

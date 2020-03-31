@@ -42,7 +42,6 @@ export const buttonStyle = {
 
 export const inputStyle = {
   border: '1px solid #dddddd',
-  fontSize: 10,
   padding: '.36em',
   borderRadius: 5,
   borderTopLeftRadius: 0,
@@ -189,6 +188,9 @@ export const errorStyle = {
   width: 0,
   flexGrow: 1,
 }
+export const bootstrapSelectStyle = {
+  paddingRight: '20px !important'
+}
 
 export const reactSelectStyle = {
   width: 0,
@@ -212,7 +214,8 @@ export const optionLabelStyle = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  color: '#222'
+  color: 'inherit',
+  fontSize: '10pt',
 }
 
 export const statusStyle = (status) => {
