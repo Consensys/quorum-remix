@@ -54,7 +54,7 @@ export function TxMetadata () {
     if (accounts.length > 0 && !accounts.includes(account)) {
       dispatch(selectAccount(accounts[0]))
     }
-  }, [accounts])
+  }, [accounts]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function expandedMetadata () {
     return <>

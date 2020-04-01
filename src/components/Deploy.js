@@ -20,7 +20,7 @@ export function Deploy() {
     if (!(selectedContract in contracts)) {
       dispatch(selectContract(Object.keys(contracts)[0]))
     }
-  }, [contracts])
+  }, [contracts]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
   return <div style={{ width: '100%' }}>
