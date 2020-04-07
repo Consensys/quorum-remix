@@ -12,11 +12,16 @@ const commands = [{
     return this.click('@metadataHeader')
   },
   setGasLimit: function (value) {
+    this.clearValue('@gasLimitInput')
     if(value === '') {
       // clearing/setting to empty string doesn't trigger onChange, type a space, then backspace
-      value = [' ', '\uE003']
+      this.setValue('@gasLimitInput', ' ')
+      this.api.pause(100)
+      this.sendKeys('@gasLimitInput', '\uE003')
+
+    } else {
+      this.setValue('@gasLimitInput', value)
     }
-    return this.clearValue('@gasLimitInput').setValue('@gasLimitInput', value)
   },
 }]
 
