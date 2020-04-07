@@ -5,13 +5,29 @@ import axios from 'axios'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-let web3, tesseraKeys, tesseraParties
+let web3, tessera
 
 export async function updateWeb3Url (endpoint, tesseraEndpoint) {
   web3 = createWeb3(endpoint)
-  tesseraKeys = `${tesseraEndpoint}/keys`
-  tesseraParties = `${tesseraEndpoint}/partyinfo/keys`
+  tessera = tesseraEndpoint
   await testUrls(endpoint, tesseraEndpoint)
+}
+
+function prepareForAxiosCall (url, path = '/') {
+  const parsed = new URL(url)
+  const username = parsed.username
+  const password = parsed.password
+  const config = {}
+  if (username) {
+    config.auth = {
+      username: username,
+      password: password
+    }
+  }
+  parsed.username = ''
+  parsed.password = ''
+  parsed.pathname = path
+  return [parsed.toString(), config]
 }
 
 export async function testUrls (rpcEndpoint, tesseraEndpoint) {
@@ -20,20 +36,9 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
   }
   try {
     if (rpcEndpoint.startsWith('http')) {
-      const parsed = new URL(rpcEndpoint)
-      const username = parsed.username
-      const password = parsed.password
-      const config = {}
-      parsed.username = ''
-      parsed.password = ''
-      if (username) {
-        config.auth = {
-          username: username,
-          password: password
-        }
-      }
+      const [url, config] = prepareForAxiosCall(rpcEndpoint)
       // test with axios because we get more detailed errors back than web3
-      await axios.post(parsed.toString(),
+      await axios.post(url,
         { 'jsonrpc': '2.0', 'method': 'eth_protocolVersion', 'params': [] },
         config)
     }
@@ -56,28 +61,8 @@ export async function testUrls (rpcEndpoint, tesseraEndpoint) {
   }
 
   if (tesseraEndpoint !== '') {
-    try {
-      await axios.get(`${tesseraEndpoint}/keys`)
-    } catch (e) {
-      if (e.response) {
-        throw new Error(
-          `Error response from ${tesseraKeys}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
-      } else {
-        throw new Error(
-          `Could not connect to ${tesseraKeys}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
-      }
-    }
-    try {
-      await axios.get(`${tesseraEndpoint}/partyinfo/keys`)
-    } catch (e) {
-      if (e.response) {
-        throw new Error(
-          `Error response from ${tesseraParties}: ${e.response.status} ${e.response.statusText} ${e.response.data}`)
-      } else {
-        throw new Error(
-          `Could not connect to ${tesseraParties}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
-      }
-    }
+    await getPrivateFromOptions(tesseraEndpoint)
+    await getPrivateForOptions(tesseraEndpoint)
   }
 }
 
@@ -110,22 +95,31 @@ export async function getAccounts () {
   return await web3.eth.getAccounts()
 }
 
-export async function getTesseraParties () {
-  if (!tesseraParties) {
-    return []
-  }
-  const response = await axios.get(`${tesseraParties}`)
-  return response.data.keys
-  .map(party => formatAsSelectOption(party))
+export async function getPrivateFromOptions (tesseraEndpoint = tessera) {
+  return getTesseraKeys(tesseraEndpoint, '/keys')
+}
+export async function getPrivateForOptions (tesseraEndpoint = tessera) {
+  return getTesseraKeys(tesseraEndpoint, '/partyinfo/keys')
 }
 
-export async function getTesseraKeys () {
-  if (!tesseraKeys) {
+export async function getTesseraKeys (tesseraEndpoint, path) {
+  if (!tesseraEndpoint) {
     return []
   }
-  const response = await axios.get(`${tesseraKeys}`)
-  return response.data.keys
-  .map(party => formatAsSelectOption(party))
+  const [url, config] = prepareForAxiosCall(tesseraEndpoint, path)
+  try {
+    const response = await axios.get(url, config)
+    return response.data.keys
+      .map(party => formatAsSelectOption(party))
+  } catch (e) {
+    if (e.response) {
+      throw new Error(
+        `Error response from ${url}: ${e.response.status} ${e.response.statusText}`)
+    } else {
+      throw new Error(
+        `Could not connect to ${url}: ${e.message}. This could be: a. tessera is not running at this address, b. the port is not accessible, or c. CORS settings on tessera do not allow this url (check the developer console for CORS errors)`)
+    }
+  }
 }
 
 function formatAsSelectOption (party) {
@@ -160,8 +154,11 @@ export async function deploy (contract, params, txMetadata) {
     gasPrice: txMetadata.gasPrice,
     gas: gas,
     value: Web3.utils.toWei(txMetadata.value, txMetadata.valueDenomination),
-    privateFrom: txMetadata.privateFrom,
-    privateFor: txMetadata.privateFor
+  }
+
+  if (txMetadata.privateTransaction) {
+    tx.privateFrom = txMetadata.privateFrom
+    tx.privateFor = txMetadata.privateFor
   }
 
   const response = await deployableContract.send(tx)

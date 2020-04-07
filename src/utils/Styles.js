@@ -134,6 +134,17 @@ export const labelStyle = {
   minWidth: 72,
 }
 
+export const checkboxStyle = {
+  marginLeft: 4,
+}
+
+export const checkboxLabelStyle = {
+  fontSize: 12,
+  whiteSpace: 'nowrap',
+  minWidth: 72,
+  padding: 12,
+}
+
 export const smallLabelStyle = {
   whiteSpace: 'nowrap',
   minWidth: 72,
@@ -150,7 +161,7 @@ export const largeInlineInputStyle = {
   marginRight: 4,
 }
 
-export const checkboxLabelStyle = {
+export const smallCheckboxLabelStyle = {
   display: 'block',
   whiteSpace: 'nowrap',
   overflow: 'hidden',

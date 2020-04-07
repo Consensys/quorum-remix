@@ -8,7 +8,7 @@ module.exports = {
   src_folders: ['test-browser/tests'],
 
   // See https://nightwatchjs.org/guide/working-with-page-objects/
-  page_objects_path: '',
+  page_objects_path: ['test-browser/pages'],
 
   output_folder: 'reports',
 

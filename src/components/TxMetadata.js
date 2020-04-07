@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import {
   bootstrapSelectStyle,
+  checkboxLabelStyle,
+  checkboxStyle,
   ellipsisStyle,
   formContainerStyle,
   headerStyle,
@@ -19,7 +21,7 @@ import {
   changeValue,
   changeValueDenomination,
   selectAccount,
-  showTxMetadata,
+  showTxMetadata, updatePrivateTransaction,
 } from '../actions'
 import { InputTooltip } from './InputTooltip'
 import { PrivateFor } from './PrivateFor'
@@ -37,6 +39,7 @@ export function TxMetadata () {
       value,
       valueDenomination,
       show,
+      privateTransaction,
     }
   } = state
 
@@ -141,14 +144,18 @@ export function TxMetadata () {
          className="fa fa-clipboard"
          onClick={(e) => copyAddress()}/>
     </div>
-    <div style={txMetaRowStyle}>
-      <div style={labelStyle}>Private for</div>
-      <div style={reactSelectStyle}><PrivateFor/></div>
+    <div id="private-checkbox-row" style={{...txMetaRowStyle, cursor: 'pointer'}} onClick={() => dispatch(updatePrivateTransaction(!privateTransaction))}>
+      <input id="private-checkbox" type="checkbox" style={checkboxStyle} className="form-check" checked={privateTransaction}/>
+      <div style={checkboxLabelStyle}>Private Transaction</div>
     </div>
-    <div style={txMetaRowStyle}>
+    {privateTransaction && (<div style={txMetaRowStyle}>
       <div style={labelStyle}>Private from</div>
       <div style={reactSelectStyle}><PrivateFrom/></div>
-    </div>
+    </div>)}
+    {privateTransaction && (<div style={txMetaRowStyle}>
+      <div style={labelStyle}>Private for</div>
+      <div style={reactSelectStyle}><PrivateFor/></div>
+    </div>)}
     {renderHeader()}
     {show ? expandedMetadata() : collapsedMetadata()}
   </div>

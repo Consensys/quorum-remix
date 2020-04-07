@@ -4,6 +4,9 @@ const initialState = {
   value: '0',
   valueDenomination: 'wei',
   show: false,
+  privateTransaction: false,
+  privateFor: undefined,
+  privateFrom: undefined,
 }
 
 export function txMetadataReducer (txMetadata = initialState, action) {
@@ -44,6 +47,12 @@ export function txMetadataReducer (txMetadata = initialState, action) {
         valueDenomination: action.payload
       }
 
+    case 'UPDATE_PRIVATE_TRANSACTION':
+      return {
+        ...txMetadata,
+        privateTransaction: action.payload,
+      }
+
     case 'UPDATE_PRIVATE_FOR':
       // empty [] privateFor is different than undefined. Disallow [] for now
       const privateFor = action.payload && action.payload.length > 0
@@ -53,12 +62,12 @@ export function txMetadataReducer (txMetadata = initialState, action) {
         privateFor,
       }
 
-      case 'UPDATE_PRIVATE_FROM':
-        const privateFrom = action.payload
-        return {
-          ...txMetadata,
-          privateFrom,
-        }
+    case 'UPDATE_PRIVATE_FROM':
+      const privateFrom = action.payload
+      return {
+        ...txMetadata,
+        privateFrom,
+      }
 
     default:
       return txMetadata

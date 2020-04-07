@@ -1,4 +1,10 @@
-import { getAccounts, getTesseraParties, getTesseraKeys, updateWeb3Url, testUrls } from '../api'
+import {
+  getAccounts,
+  updateWeb3Url,
+  testUrls,
+  getPrivateForOptions,
+  getPrivateFromOptions
+} from '../api'
 import { setTesseraParties, setTesseraKeys } from './tessera'
 import { setError } from './error'
 import { resetTransactionResults } from './contracts'
@@ -42,9 +48,9 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
         editing = false
         accounts = await getAccounts()
         if (tesseraEndpoint !== '') {
-          const parties = await getTesseraParties()
+          const parties = await getPrivateForOptions()
           dispatch(setTesseraParties(parties))
-          const keys = await getTesseraKeys()
+          const keys = await getPrivateFromOptions()
           dispatch(setTesseraKeys(keys))
         } else {
           dispatch(setTesseraParties([]))
@@ -78,11 +84,6 @@ export function connectToNetwork (endpoint, tesseraEndpoint) {
 export function saveNetwork (endpoint = '', tesseraEndpoint = '') {
   return async dispatch => {
     try {
-
-      if (tesseraEndpoint.endsWith('/')) {
-        tesseraEndpoint = tesseraEndpoint.substring(0,
-          tesseraEndpoint.length - 1)
-      }
 
       await testUrls(endpoint, tesseraEndpoint)
       dispatch(connectToNetwork(endpoint, tesseraEndpoint))
