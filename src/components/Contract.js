@@ -3,7 +3,6 @@ import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
 import {
   bodyStyle,
-  checkboxLabelStyle,
   contractStyle,
   ellipsisStyle,
   headerStyle,
