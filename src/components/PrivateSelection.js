@@ -40,7 +40,10 @@ export function PrivateSelection (props) {
         </div>
         {option.userCreated &&
         <i style={iconStyle} className="fa fa-close"
-           onClick={() => remove(option.value)}/>
+           onClick={(event) => {
+             event.stopPropagation()
+             remove(option.value)
+           }}/>
         }
       </div>
     </components.Option>

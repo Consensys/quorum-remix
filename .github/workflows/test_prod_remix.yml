@@ -31,10 +31,13 @@ jobs:
           RPC_SCHEME: https
           REMIX_URL: https://remix.ethereum.org
           NODE_ONE_HOST: u0a5aft4j3-u0bu939ak6-rpc.us0-aws.kaleido.io
+          NODE_ONE_TESSERA: u0a5aft4j3-u0bu939ak6-ptx.us0-aws.kaleido.io
           NODE_ONE_PUB_KEY: wj/d6GyPJpReu/xF+mecwR8qPAmZM73S+TzesU5y70Y=
           NODE_TWO_HOST: u0a5aft4j3-u0u5ulmm6k-rpc.us0-aws.kaleido.io
+          NODE_TWO_TESSERA: u0a5aft4j3-u0u5ulmm6k-ptx.us0-aws.kaleido.io
           NODE_TWO_PUB_KEY: Cr4orZhLtEKXSu6XQVvfTDpTUTvXYVnPHuym+r92skk=
           NODE_THREE_HOST: u0a5aft4j3-u0sog5yz3u-rpc.us0-aws.kaleido.io
+          NODE_THREE_TESSERA: u0a5aft4j3-u0sog5yz3u-ptx.us0-aws.kaleido.io
           NODE_THREE_PUB_KEY: MzL4UtMSfRm0dUG+X08cYj39/Sa5QFFBVWuc42YZkwg=
       - name: Make reports/screenshots available
         uses: actions/upload-artifact@v1

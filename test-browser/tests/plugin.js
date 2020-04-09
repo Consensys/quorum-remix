@@ -4,10 +4,13 @@ const PASSWORD = process.env.RPC_PASSWORD
 const RPC_SCHEME = process.env.RPC_SCHEME
 const URL = process.env.REMIX_URL
 const NODE_ONE_HOST = process.env.NODE_ONE_HOST
+const NODE_ONE_TESSERA = process.env.NODE_ONE_TESSERA
 const NODE_ONE_PUB_KEY = process.env.NODE_ONE_PUB_KEY
 const NODE_TWO_HOST = process.env.NODE_TWO_HOST
+const NODE_TWO_TESSERA = process.env.NODE_TWO_TESSERA
 const NODE_TWO_PUB_KEY = process.env.NODE_TWO_PUB_KEY
 const NODE_THREE_HOST = process.env.NODE_THREE_HOST
+const NODE_THREE_TESSERA = process.env.NODE_THREE_TESSERA
 const NODE_THREE_PUB_KEY = process.env.NODE_THREE_PUB_KEY
 
 if(!RPC_SCHEME) {
@@ -23,177 +26,232 @@ if(URL.indexOf('remix-dev.goquorum.com') > 0) {
   })
 }
 
-let ADDRESS = 'not set'
+let PUBLIC_ADDRESS = 'not set'
+let PRIVATE_SELF_ADDRESS = 'not set'
+let PRIVATE_ADDRESS = 'not set'
 
 module.exports = {
   before: function (browser, done) {
     done()
   },
-  '01 Setup Remix': function (browser) {
-    browser
-    .url(URL)
-    .waitForElementVisible('#icon-panel', 10000)
-    // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
-    .clickItemIfExists('#modal-footer-ok')
-    .pause(1000)
-    .click('#icon-panel div[plugin="pluginManager"]')
-    .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidity"] button')
-    .pause(1000)
-    .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_udapp"] button')
-    .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidityStaticAnalysis"] button')
-    .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_debugger"] button')
-    .scrollAndClick('#icon-panel div[plugin="fileExplorers"]')
-    .clickLaunchIcon('solidity')
-    .pause(500)
-    .clickItemIfExists('#autoCompile')
-  },
-  '02 Install Quorum plugin': function (browser) {
-    browser
-    .click('#icon-panel div[plugin="pluginManager"]')
-    .scrollAndClick(
-        '#pluginManager article[id="remixPluginManagerListItem_quorum"] button')
-    // permission dialog
-    .pause(1000)
-    .clickItemIfExists('#remember')
-    .pause(500)
-    .clickItemIfExists('#modal-footer-ok')
-    // load a contract so that the compiler has a result
-    .click('#icon-panel div[plugin="fileExplorers"]')
-    .click('div[key="browser/1_Storage.sol"]')
-    .clickLaunchIcon('quorum')
-    .pause(500)
-    // this will switch to the iframe for the remaining tests
-    // workaround for firefox (.frame('id') wasn't working)
-    // TODO once remix-plugin is merged, start using #plugin-quorum
-    // browser.element('css selector', '#plugin-quorum', (frame) => {
-    .element('css selector', '#plugins div iframe', (frame) => {
-      browser.frame(frame.value)
-    }).pause(500)
-  },
-  '03 Connect to Quorum node': function (browser) {
-    browser
-    .waitForElementVisible('.App', 5000)
-    .expect.element('#footer').text.to.contain('Version')
-    browser
-    .setValue('#geth-endpoint', rpcUrl(NODE_ONE_HOST))
-    .click('#network-form .fa-check')
-    .expect.element('#connection-status').text.to.contain('Connected').before(10000)
-  },
-  '04 Toggle transaction metadata': function (browser) {
-    browser.expect.element('#metadata-collapsed').to.be.visible
-    browser.expect.element('#gas-price-input').to.be.not.present
-    browser.expect.element('#gas-limit-input').to.be.not.present
-    browser.expect.element('#value-input').to.be.not.present
-    browser.expect.element('#value-denomination-select').to.be.not.present
-    browser.click('#metadata-collapsed')
-      .expect.element('#metadata-collapsed').to.be.not.present.before(500)
 
-    browser.expect.element('#gas-price-input').to.be.visible
-    browser.expect.element('#gas-limit-input').to.be.visible
-    browser.expect.element('#value-input').to.be.visible
-    browser.expect.element('#value-denomination-select').to.be.visible
+  'Setup Remix': function (browser) {
+    browser
+      .url(URL)
+      .waitForElementVisible('#icon-panel', 10000)
+      .setUpSolidityPlugins()
+  },
 
-    browser.click('#metadata-header')
-      .expect.element('#metadata-collapsed').to.be.visible.before(500)
-    browser.expect.element('#gas-price-input').to.be.not.present
+  'Install Quorum plugin': function (browser) {
+    browser.page.remix()
+      .activateQuorumPlugin()
+      .acceptPermissions()
+      .switchToPluginFrame()
+      .expect.element('@footer').text.to.contain('Version')
   },
-  '05 Set privateFor': function (browser) {
-    browser
-    .setValue('#private-for-select input', 'shouldFail')
-    .sendKeys('#private-for-select input', browser.Keys.ENTER)
-    .waitForElementVisible('#error-container', 5000)
-    .expect.element('#error-container').text.to.contain('Public key length must equal 44').before(5000)
-    browser
-    .click('#error-container .fa-close')
-    .setValue('#private-for-select input', NODE_ONE_PUB_KEY)
-    .sendKeys('#private-for-select input', browser.Keys.ENTER)
-    .setValue('#private-for-select input', NODE_TWO_PUB_KEY)
-    .sendKeys('#private-for-select input', browser.Keys.ENTER)
-    .setValue('#private-for-select input', NODE_THREE_PUB_KEY)
-    .sendKeys('#private-for-select input', browser.Keys.ENTER)
-    browser.expect.element('#private-for-select').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
-    browser.expect.element('#private-for-select').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
-    browser.expect.element('#private-for-select').text.to.contain(NODE_THREE_PUB_KEY).before(5000)
-    browser.click('#private-for-select div[class*="multiValue"]:nth-child(3) div:nth-child(2)')
+
+  'Connect to Quorum node': function (browser) {
+    browser.page.network()
+      .setQuorumEndpoint(rpcUrl(NODE_ONE_HOST))
+      .save()
+      .expect.element('@status').text.to.contain('Connected').before(10000)
   },
-  '06 Set privateFrom': function (browser) {
-    browser
-    .setValue('#private-from-select input', 'shouldFail')
-    .sendKeys('#private-from-select input', browser.Keys.ENTER)
-    .waitForElementVisible('#error-container', 5000)
-    .expect.element('#error-container').text.to.contain('Public key length must equal 44').before(5000)
-    browser
-    .click('#error-container .fa-close')
-    .setValue('#private-from-select input', NODE_ONE_PUB_KEY)
-    .sendKeys('#private-from-select input', browser.Keys.ENTER)
-    browser.expect.element('#private-from-select').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+
+  'Toggle transaction metadata': function (browser) {
+    const metadata = browser.page.metadata()
+    metadata.expect.element('@metadataCollapsed').to.be.visible
+    metadata.expect.element('@gasPriceInput').to.be.not.present
+    metadata.expect.element('@gasLimitInput').to.be.not.present
+    metadata.expect.element('@valueInput').to.be.not.present
+    metadata.expect.element('@valueDenomination').to.be.not.present
+
+    metadata.toggleMetadata()
+    metadata.expect.element('@metadataCollapsed').to.be.not.present.before(500)
+    metadata.expect.element('@gasPriceInput').to.be.visible
+    metadata.expect.element('@gasLimitInput').to.be.visible
+    metadata.expect.element('@valueInput').to.be.visible
+    metadata.expect.element('@valueDenomination').to.be.visible
   },
-  '07 Deploy a contract': function (browser) {
-    browser
-    .useXpath()
-    .waitForElementVisible("//button[contains(text(),'Deploy') and not(@disabled)]", 5000)
-    .click("//button[contains(text(),'Deploy')]")
-    .pause(500)
-    .useCss()
-    .waitForElementVisible(
-        '.deployed-contract .fa-caret-right', 5000)
-    .click('.deployed-contract .fa-caret-right')
-    .waitForElementVisible('div[data-method="store"]', 5000)
+
+  'Deploy public contract (and test estimate gas)': async function (browser) {
+    const metadata = browser.page.metadata()
+    const deploy = browser.page.deploy()
+    const contract = browser.page.contract()
+
+    metadata.setGasLimit('100000')
+    deploy.expect.element('@deployButton').to.be.enabled
+    deploy.deploy()
+    browser.expect.element('#error-container').text.to.contain('The contract code couldn\'t be stored, please check your gas limit.').before(5000)
+
+    metadata.setGasLimit('')
+    deploy.deploy()
+    contract.expect.element('@deployedContract').to.be.visible.before(5000)
+
     // save address for later
-    browser.getText('.deployed-contract .input-group-text', function(result) {
-      ADDRESS = result.value.replace("Storage(", "").replace(")", "")
-    })
-    browser.expect.element('.deployed-contract').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
-    browser.expect.element('.deployed-contract').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
-    browser.expect.element('.deployed-contract').text.to.not.contain(NODE_THREE_PUB_KEY).before(5000)
-  },
-  '08 Interact with contract': function (browser) {
-    browser
-    .setValue('div[data-method="store"] input', '123')
-    .click('div[data-method="store"] button')
-    .expect.element('div[data-method="store"]').text.to.contain('Success').before(5000)
+    PUBLIC_ADDRESS = await contract.getAddress()
 
-    browser
-    .click('div[data-method="retreive"] button')
-    .expect.element('div[data-method="retreive"]').text.to.contain('123').before(5000)
-  },
-  '09 Interact with contract from node 2': function (browser) {
-    browser.setValue('#existing-input', ADDRESS)
-    .click('.deployed-contract .fa-close')
+    contract.toggleExpand()
+      .waitForElementVisible('@methodContainerGet', 5000)
+    contract.expect.element('@deployedContract').text.to.not.contain(NODE_ONE_PUB_KEY)
+    contract.expect.element('@deployedContract').text.to.not.contain(NODE_TWO_PUB_KEY)
+    contract.expect.element('@deployedContract').text.to.not.contain(NODE_THREE_PUB_KEY)
+    contract.toggleExpand()
 
+    contract.testContractMethods('0', '123')
+
+    // close metadata
+    metadata.toggleMetadata()
+    metadata.expect.element('#metadata-collapsed').to.be.visible.before(500)
+    metadata.expect.element('#gas-price-input').to.be.not.present
+  },
+
+
+  'Toggle Private Transaction': function (browser) {
+    const privacy = browser.page.privacy()
+    privacy.expect.element('#private-for-select').to.not.be.present
+    privacy.expect.element('#private-from-select').to.not.be.present
+    privacy.togglePrivate()
+    privacy.expect.element('#private-for-select').to.be.visible.before(500)
+    privacy.expect.element('#private-from-select').to.be.visible.before(500)
+  },
+
+  'Private For Keys from User': function (browser) {
+    const privacy = browser.page.privacy()
+    privacy.addPrivateForKey('shouldFail')
+
+    browser.expect.element('#error-container').text.to.contain('Public key length must equal 44').before(5000)
+    browser.click('#error-container .fa-close')
+
+    privacy
+      .addPrivateForKey(NODE_ONE_PUB_KEY)
+      .addPrivateForKey(NODE_TWO_PUB_KEY)
+      .addPrivateForKey(NODE_THREE_PUB_KEY)
+    privacy.expect.element('@privateForSelect').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+    privacy.expect.element('@privateForSelect').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
+    privacy.expect.element('@privateForSelect').text.to.contain(NODE_THREE_PUB_KEY).before(5000)
+
+    privacy
+      .closeFirstPrivateForBubble()
+      .closeFirstPrivateForBubble()
+      .closeFirstPrivateForBubble()
+      .togglePrivateForMenu()
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_ONE_PUB_KEY).before(1000)
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_TWO_PUB_KEY).before(1000)
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_THREE_PUB_KEY).before(1000)
+
+    privacy
+      .deleteFirstPrivateForOption()
+      .deleteFirstPrivateForOption()
+      .deleteFirstPrivateForOption()
+      .expect.element('@privateForMenu').text.to.contain('No options').before(1000)
+    privacy.togglePrivateForMenu()
+  },
+
+  'Private From Keys from User': function (browser) {
+    const privacy = browser.page.privacy()
+    privacy.addPrivateFromKey('shouldFail')
+
+    browser.expect.element('#error-container').text.to.contain('Public key length must equal 44').before(5000)
+    browser.click('#error-container .fa-close')
+
+    privacy.addPrivateFromKey(NODE_ONE_PUB_KEY)
+    privacy.expect.element('@privateFromSelect').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+
+    privacy.togglePrivateFromMenu()
+    privacy.expect.element('@privateFromMenu').text.to.contain(NODE_ONE_PUB_KEY).before(1000)
+
+    privacy
+      .deleteFirstPrivateFromOption()
+      .expect.element('@privateFromMenu').text.to.contain('No options').before(1000)
+
+    privacy.togglePrivateFromMenu()
+  },
+
+  'Connect to Tessera Endpoint': function (browser) {
+    browser.page.network()
+      .edit()
+      .setTesseraEndpoint(rpcUrl(NODE_ONE_TESSERA))
+      .save()
+      .expect.element('@status').text.to.contain('Connected').before(10000)
+
+  },
+
+  'Public Keys from Server': function (browser) {
+    const privacy = browser.page.privacy()
+    privacy.togglePrivateFromMenu()
+    privacy.expect.element('@privateFromMenu').text.to.contain(NODE_ONE_PUB_KEY).before(1000)
+    privacy.expect.element('@privateFromOptionDelete').to.not.be.present
+
+
+    privacy.click('@privateFromOption')
+    privacy.expect.element('@privateFromSelect').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+
+
+    privacy.togglePrivateForMenu()
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_ONE_PUB_KEY).before(1000)
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_TWO_PUB_KEY).before(1000)
+    privacy.expect.element('@privateForMenu').text.to.contain(NODE_THREE_PUB_KEY).before(1000)
+
+    privacy
+      .selectPrivateForOption(NODE_ONE_PUB_KEY)
+      .togglePrivateForMenu()
+      .selectPrivateForOption(NODE_TWO_PUB_KEY)
+    privacy.expect.element('@privateForSelect').text.to.contain(NODE_ONE_PUB_KEY).before(5000)
+    privacy.expect.element('@privateForSelect').text.to.contain(NODE_TWO_PUB_KEY).before(5000)
+  },
+
+  'Deploy a private contract': async function (browser) {
+    const deploy = browser.page.deploy()
+    const contract = browser.page.contract()
+
+    deploy.expect.element('@deployButton').to.be.enabled
+    deploy.deploy()
+    contract.expect.element('@deployedContract').to.be.visible.before(5000)
+
+    // save address for later
+    PRIVATE_ADDRESS = await contract.getAddress()
+
+    contract.toggleExpand()
+      .waitForElementVisible('@methodContainerGet', 5000)
+    contract.expect.element('@deployedContract').text.to.contain(NODE_ONE_PUB_KEY)
+    contract.expect.element('@deployedContract').text.to.contain(NODE_TWO_PUB_KEY)
+    contract.expect.element('@deployedContract').text.to.not.contain(NODE_THREE_PUB_KEY)
+    contract.toggleExpand()
+
+    contract.testContractMethods('0', '123')
+  },
+
+  'Interact with contract from node 2': function (browser) {
     // connect to node 2
-    browser
-    .click('#network-form .fa-pencil')
-    .clearValue('#geth-endpoint')
-    .setValue('#geth-endpoint', rpcUrl(NODE_TWO_HOST))
-    .click('#network-form .fa-check')
-    .expect.element('#connection-status').text.to.contain('Connected').before(5000)
+    browser.page.network()
+      .edit()
+      .setQuorumEndpoint(rpcUrl(NODE_TWO_HOST))
+      .setTesseraEndpoint(rpcUrl(NODE_TWO_TESSERA))
+      .save()
+      .expect.element('@status').text.to.contain('Connected').before(10000)
 
-    browser
-    .click('#existing-button')
-    .waitForElementVisible('.deployed-contract .fa-caret-right', 5000)
-    .click('.deployed-contract .fa-caret-right')
-    .waitForElementVisible('div[data-method="store"]', 5000)
-    .click('div[data-method="retreive"] button')
-    .expect.element('div[data-method="retreive"]').text.to.contain('123').before(5000)
+    browser.page.deploy()
+      .setAddress(PRIVATE_ADDRESS)
+      .attach()
 
-    browser
-    .setValue('div[data-method="store"] input', '333')
-    .click('div[data-method="store"] button')
-    .expect.element('div[data-method="store"]').text.to.contain('Success').before(5000)
+    const contract = browser.page.contract()
+    contract.expect.element('@deployedContract').to.be.visible.before(5000)
 
+    contract.testContractMethods('123', '333')
   },
-  '10 Fail to interact with contract from node 3': function (browser) {
-    browser.click('.deployed-contract .fa-close')
-    .click('#network-form .fa-pencil')
-    .clearValue('#geth-endpoint')
-    .setValue('#geth-endpoint', rpcUrl(NODE_THREE_HOST))
-    .click('#network-form .fa-check')
-    .expect.element('#connection-status').text.to.contain('Connected').before(5000)
 
-    browser
-    .click('#existing-button')
-    .expect.element('#error-container').text.to.contain('Contract does not exist at').before(5000)
+  'Fail to interact with contract from node 3': function (browser) {
+    browser.page.network()
+      .edit()
+      .setQuorumEndpoint(rpcUrl(NODE_THREE_HOST))
+      .setTesseraEndpoint(rpcUrl(NODE_THREE_TESSERA))
+      .save()
+      .expect.element('@status').text.to.contain('Connected').before(10000)
+
+    const deploy = browser.page.deploy()
+    deploy.setAddress(PRIVATE_ADDRESS)
+      .attach()
+    browser.expect.element('#error-container').text.to.contain('Contract does not exist at').before(5000)
 
     browser.end()
   },

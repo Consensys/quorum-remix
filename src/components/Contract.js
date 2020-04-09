@@ -3,11 +3,11 @@ import { Method } from './Transact'
 import copy from 'copy-to-clipboard'
 import {
   bodyStyle,
-  checkboxLabelStyle,
   contractStyle,
   ellipsisStyle,
   headerStyle,
-  iconStyle
+  iconStyle,
+  smallCheckboxLabelStyle
 } from '../utils/Styles'
 import { useDispatch, useSelector } from 'react-redux'
 import { doMethodCall, expandContract, removeContract } from '../actions'
@@ -61,7 +61,7 @@ export function Contract ({ address }) {
       <div>Private for:</div>
       {selectedPrivateFor.map(
         ({ enabled, key }, index) => (
-          <label key={key} style={checkboxLabelStyle}>
+          <label key={key} style={smallCheckboxLabelStyle}>
             <input type="checkbox" name={key}
                    style={{marginRight: 4}}
                    checked={enabled}

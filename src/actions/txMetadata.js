@@ -5,6 +5,13 @@ export function showTxMetadata (show) {
   }
 }
 
+export function updatePrivateTransaction (isPrivate) {
+  return {
+    type: 'UPDATE_PRIVATE_TRANSACTION',
+    payload: isPrivate
+  }
+}
+
 export function updatePrivateFor (selection) {
   return {
     type: 'UPDATE_PRIVATE_FOR',
