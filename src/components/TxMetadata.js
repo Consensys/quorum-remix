@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
 import {
+  bootstrapSelectStyle,
   ellipsisStyle,
   formContainerStyle,
   headerStyle,
   iconStyle,
   inlineInputStyle,
   labelStyle,
+  largeInlineInputStyle,
   reactSelectStyle,
   txMetaRowStyle,
-  largeInlineInputStyle,
 } from '../utils/Styles'
 import copy from 'copy-to-clipboard'
 import { useDispatch, useSelector } from 'react-redux'
@@ -53,7 +54,7 @@ export function TxMetadata () {
     if (accounts.length > 0 && !accounts.includes(account)) {
       dispatch(selectAccount(accounts[0]))
     }
-  }, [accounts])
+  }, [accounts]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function expandedMetadata () {
     return <>
@@ -126,9 +127,12 @@ export function TxMetadata () {
   return <div style={formContainerStyle}>
     <div style={txMetaRowStyle}>
       <div style={labelStyle}>Account</div>
-      <select className="form-control" defaultValue={account}
-              id="account-select"
-              onChange={(e) => dispatch(selectAccount(e.target.value))}>
+      <select
+        style={bootstrapSelectStyle}
+        className="form-control custom-select"
+        defaultValue={account}
+        id="account-select"
+        onChange={(e) => dispatch(selectAccount(e.target.value))}>
         {accounts.map(
           (account) => <option key={account}
                                value={account}>{account}</option>)}

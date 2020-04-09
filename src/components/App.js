@@ -42,7 +42,7 @@ function Footer () {
     <div>
       <a href={"https://medium.com/remix-ide/quorum-plugin-for-remix-ee232ebca64c"} rel="noopener noreferrer" target="_blank">Help</a>
       {' | '}
-      <a href={`https://github.com/jpmorganchase/quorum-remix/tree/${gitHash}`} target="_blank">Version</a>
+      <a href={`https://github.com/jpmorganchase/quorum-remix/tree/${gitHash}`} rel="noopener noreferrer" target="_blank">Version</a>
     </div>
   </div>
 }

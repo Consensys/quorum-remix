@@ -28,6 +28,7 @@ export const Constructor = ({ method, onDeploy, onExisting, loading }) => {
         At Address
       </button>
       <input placeholder="Existing contract address"
+             className="form-control"
              id="existing-input"
              disabled={loading}
              style={inputStyle}

@@ -31,7 +31,7 @@ export function PrivateSelection (props) {
   const Option = (props) => {
     const option = props.data
 
-    return <components.Option {...props}>
+    return <components.Option className="bg-light" {...props}>
       <div style={optionStyle}>
         <div style={optionLabelContainerStyle}>
           <div style={optionLabelStyle}>
@@ -50,7 +50,25 @@ export function PrivateSelection (props) {
 
   return <SelectContainer
     id={props.containerId}
-    components={{ Option }}
+    styles={{
+      option: (provided, state) => ({ ...provided, color: 'inherit' }),
+      input: (provided, state) => ({ ...provided, color: 'inherit', fontSize: '10pt' }),
+      placeholder: (provided, state) => ({ ...provided, fontSize: '10pt' }),
+      singleValue: (provided, state) => ({ ...provided, color: 'inherit', fontSize: '10pt'  }),
+      multiValue: (provided, state) => ({ ...provided, color: 'inherit', fontSize: '10pt'  }),
+      multiValueLabel: (provided, state) => ({ ...provided, color: 'inherit', fontSize: '10pt'  }),
+      noOptionsMessage: (provided, state) => ({ ...provided, color: 'inherit', fontSize: '10pt'  }),
+    }}
+    className={''}
+    components={{
+      Option,
+      Control: (props) => <components.Control {...props} className={'bg-light border-light'}/>,
+      Menu: (props) => <components.Menu {...props} className={'bg-light'}/>,
+      MenuList: (props) => <components.MenuList {...props} className={'bg-light'}/>,
+      NoOptionsMessage: (props) => <components.NoOptionsMessage {...props} className={'bg-light'}/>,
+      MultiValue: (props) => <components.MultiValue {...props} className={'bg-light'}/>,
+      ValueContainer: (props) => <components.ValueContainer {...props} className={'bg-light'}/>,
+    }}
     placeholder="Select or add..."
     options={options}
     value={selectedOptions}
