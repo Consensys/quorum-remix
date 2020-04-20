@@ -2,8 +2,6 @@
 
 # Quorum Plugin for Remix
 
-<a href="https://bit.ly/quorum-slack" target="_blank" rel="noopener"><img title="Quorum Slack" src="https://clh7rniov2.execute-api.us-east-1.amazonaws.com/Express/badge.svg" alt="Quorum Slack" /></a>
-
 The Quorum plugin for Ethereum's Remix IDE adds support for creating and interacting with private contracts on a Quorum network.
 
 ![screenshot](docs/images/quorum-remix.png "screenshot")
@@ -52,3 +50,6 @@ To extend or add new tests, go to the [test-browser/tests](test-browser/tests) f
 
 `yarn build` to run a production build of the plugin. The output is in the build/ directory.
 `yarn serve` to serve the build folder from port 3000
+
+## Getting Help
+Stuck at some step? Please join our <a href="https://www.goquorum.com/slack-inviter" target="_blank" rel="noopener">slack community</a> for support.
