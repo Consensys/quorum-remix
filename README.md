@@ -11,8 +11,8 @@ The Quorum plugin for Ethereum's Remix IDE adds support for creating and interac
 Just go to the [Remix IDE](https://remix.ethereum.org) and activate the **Quorum Network** plugin on the plugins page. For step-by-step instructions, go to the [Getting Started](https://medium.com/remix-ide/quorum-plugin-for-remix-ee232ebca64c) doc.
 
 ## Common Issues
-**Firefox CORS Issues:**
-- Firefox seems to be a little more strict than Chrome at the moment about making cross-origin http requests on https pages. Remix currently loads our plugin in an iframe from an HTTPS url, but our users are frequently running their Quorum node on an HTTP localhost url. The latest Chrome release seems to allow these calls, but Firefox will block them and report a CORS error. We are tracking this issue in #8, but until that is fixed please use Chrome or another browser that doesn't block these requests.
+**CORS Issues:**
+- Make sure you have CORS enabled in your Quorum and Tessera configurations. Also, if you are connecting to an http url (like http://localhost:22000), make sure you are using the http version of Remix. If you are on the https Remix site, sometimes your browser will block cross-origin requests to non-secure urls.
 
 ## Contributing
 Quorum Plugin for Remix is built on open source and we invite you to contribute enhancements. Upon review you will be required to complete a Contributor License Agreement (CLA) before we are able to merge. If you have any questions about the contribution process, please feel free to send an email to [info@goquorum.com](mailto:info@goquorum.com).
