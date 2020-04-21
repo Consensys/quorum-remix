@@ -9,12 +9,8 @@ import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
-import {
-  addPublicKey,
-  connectToNetwork,
-  fetchCompilationResult
-} from './actions'
-import { getPluginDevMode, isDevelopment } from './utils/EnvUtils'
+import { addPublicKey, connectToNetwork, fetchCompilationResult, setError } from './actions'
+import { getPluginDevMode, isDevelopment, loadFromLocalStorage } from './utils/EnvUtils'
 
 const store = createStore(rootReducer,
   composeWithDevTools(applyMiddleware(thunk)))
@@ -60,12 +56,16 @@ async function initPlugin (client, dispatch) {
     await initDev(client, dispatch)
   }
 
-  const savedNetwork = JSON.parse(localStorage.network || '{}')
-  dispatch(
-    connectToNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+  if(!window.localStorage) {
+    dispatch(setError('Warning: Could not access local storage. You can still use all the features of the plugin, but network urls will not be remembered between reloads. To fix, allow 3rd party cookies in the browser settings. The Quorum plugin does not use cookies, however this setting also blocks the plugin from using local storage to remember settings.'))
 
-  const savedPublicKeys = JSON.parse(localStorage.keysFromUser || '[]')
-  savedPublicKeys.forEach((key) => dispatch(addPublicKey(key)))
+  } else {
+    const savedNetwork = JSON.parse(loadFromLocalStorage('network') || '{}')
+    dispatch(connectToNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
+
+    const savedPublicKeys = JSON.parse(loadFromLocalStorage('keysFromUser') || '[]')
+    savedPublicKeys.forEach((key) => dispatch(addPublicKey(key)))
+  }
 
   dispatch(fetchCompilationResult(client))
   client.solidity.on('compilationFinished',
