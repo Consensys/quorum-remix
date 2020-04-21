@@ -17,6 +17,7 @@ export function PrivateSelection (props) {
   const keysFromServer = props.serverKeys
   const privateKey = props.privateKey
   const remove = props.onRemove
+  const onUpdate = props.onUpdate
 
   const isFromServer = keysFromServer.length > 0
 
@@ -42,6 +43,9 @@ export function PrivateSelection (props) {
         <i style={iconStyle} className="fa fa-close"
            onClick={(event) => {
              event.stopPropagation()
+             if(selectedOptions.includes(option)) {
+               onUpdate(selectedOptions.filter((selected) => selected.value !== option.value))
+             }
              remove(option.value)
            }}/>
         }
@@ -78,7 +82,7 @@ export function PrivateSelection (props) {
     closeMenuOnSelect={true}
     isMulti={props.isMulti}
     autosize="false"
-    onChange={(selection) => props.onUpdate(selection)}
+    onChange={(selection) => onUpdate(selection)}
     formatCreateLabel={(value) => `Add '${value}'`}
     onCreateOption={(inputValue) => {
 
@@ -98,6 +102,6 @@ export function PrivateSelection (props) {
       }
       props.onAdd(option)
       const options = props.isMulti ? [...selectedOptions, option] : option
-      props.onUpdate(options)
+      onUpdate(options)
     }}/>
 }
