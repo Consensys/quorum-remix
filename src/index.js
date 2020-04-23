@@ -56,15 +56,17 @@ async function initPlugin (client, dispatch) {
     await initDev(client, dispatch)
   }
 
-  if(!window.localStorage) {
-    dispatch(setError('Warning: Could not access local storage. You can still use all the features of the plugin, but network urls will not be remembered between reloads. To fix, allow 3rd party cookies in the browser settings. The Quorum plugin does not use cookies, however this setting also blocks the plugin from using local storage to remember settings.'))
+  try {
+    // test setting a value to find out if localStorage is blocked
+    window.localStorage.initialized = 'true'
 
-  } else {
     const savedNetwork = JSON.parse(loadFromLocalStorage('network') || '{}')
     dispatch(connectToNetwork(savedNetwork.endpoint, savedNetwork.tesseraEndpoint))
 
     const savedPublicKeys = JSON.parse(loadFromLocalStorage('keysFromUser') || '[]')
     savedPublicKeys.forEach((key) => dispatch(addPublicKey(key)))
+  } catch (e) {
+    dispatch(setError('Warning: Could not access local storage. You can still use all the features of the plugin, but network urls will not be remembered between reloads. To fix, allow 3rd party cookies in the browser settings. The Quorum plugin does not use cookies, however this setting also blocks the plugin from using local storage to remember settings.'))
   }
 
   dispatch(fetchCompilationResult(client))
