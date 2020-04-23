@@ -1,3 +1,5 @@
+import { saveToLocalStorage } from '../utils/EnvUtils'
+
 const initialState = {
   endpoint: '',
   tesseraEndpoint: '',
@@ -9,7 +11,7 @@ const initialState = {
 export function networkReducer (network = initialState, action) {
   switch (action.type) {
     case 'SET_NETWORK':
-      localStorage.network = JSON.stringify(action.payload)
+      saveToLocalStorage('network', JSON.stringify(action.payload))
       return action.payload
 
     case 'EDIT_NETWORK':
