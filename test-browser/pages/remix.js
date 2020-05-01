@@ -23,7 +23,7 @@ const commands = [{
   switchToPluginFrame: function () {
     // this will switch to the iframe for the remaining tests
     // workaround for firefox (.frame('id') wasn't working)
-    this.api.element('css selector', '#plugins div iframe', (frame) => {
+    this.api.element('css selector', '#plugin-quorum', (frame) => {
       this.api.frame(frame.value)
     })
       .waitForElementVisible('.App', 5000)
