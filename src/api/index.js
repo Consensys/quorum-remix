@@ -147,14 +147,14 @@ export async function deploy (contract, params, txMetadata) {
     data: bytecode,
     arguments: orderedParams,
   })
-  const gas = txMetadata.gasLimit !== '' ? parseInt(txMetadata.gasLimit, 10) : await deployableContract.estimateGas()
 
   const tx = {
     from: txMetadata.account,
     gasPrice: txMetadata.gasPrice,
-    gas: gas,
     value: Web3.utils.toWei(txMetadata.value, txMetadata.valueDenomination),
   }
+
+  tx.gas = txMetadata.gasLimit !== '' ? parseInt(txMetadata.gasLimit, 10) : await deployableContract.estimateGas(tx)
 
   if (txMetadata.privateTransaction) {
     tx.privateFrom = txMetadata.privateFrom
@@ -176,17 +176,18 @@ export async function contractMethod (txMetadata, params, method, privateFor,
 
   let web3Contract = new web3.eth.Contract(contract.abi, contract.address)
   let web3Method = web3Contract.methods[method.name](..._params)
-  const gas = gasLimit !== '' ? parseInt(gasLimit, 10) : await web3Method.estimateGas()
 
   var methodArgs = {
     from: account,
-    gas: gas,
     gasPrice,
     value: Web3.utils.toWei(value, valueDenomination),
     args: _params,
     privateFor: privateFor && selectedPrivateFor.filter(
       ({ enabled }) => enabled).map(({ key }) => key)
   }
+
+  methodArgs.gas = gasLimit !== '' ? parseInt(gasLimit, 10) : await web3Method.estimateGas(methodArgs)
+
   let callOrSend = method.constant ? 'call' : 'send'
   const res = await web3Method[callOrSend](methodArgs)
   return { methodSig, methodArgs, res }
