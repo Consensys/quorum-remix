@@ -6,12 +6,8 @@ class setUpSolidityPlugins extends EventEmitter {
       // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
       .clickItemIfExists('#modal-footer-ok')
       .pause(1000)
-      .click('#icon-panel div[plugin="pluginManager"]')
-      .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidity"] button')
+      .click('button[data-id="landingPageStartSolidity"]')
       .pause(1000)
-      .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_udapp"] button')
-      .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_solidityStaticAnalysis"] button')
-      .scrollAndClick('#pluginManager article[id="remixPluginManagerListItem_debugger"] button')
       .clickLaunchIcon('solidity')
       .pause(500)
       .clickItemIfExists('#autoCompile')
