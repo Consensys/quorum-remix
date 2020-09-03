@@ -37,15 +37,15 @@ const commands = [{
     this
       .toggleExpand()
       .get()
-      .expect.element('@methodContainerGet').text.to.contain(expectedValue).before(5000)
+      .expect.element('@methodContainerGet').text.to.contain(expectedValue).before(15000)
 
     this
       .setInput(newValue)
       .set()
-      .expect.element('@methodContainerSet').text.to.contain('Success').before(5000)
+      .expect.element('@methodContainerSet').text.to.contain('Success').before(15000)
 
     this.get()
-      .expect.element('@methodContainerGet').text.to.contain(newValue).before(5000)
+      .expect.element('@methodContainerGet').text.to.contain(newValue).before(15000)
 
     this.close()
       .expect.element('@deployedContract').to.not.be.present.before(5000)

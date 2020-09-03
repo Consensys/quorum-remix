@@ -54,7 +54,7 @@ module.exports = {
     browser.page.network()
       .setQuorumEndpoint(rpcUrl(NODE_ONE_HOST))
       .save()
-      .expect.element('@status').text.to.contain('Connected').before(10000)
+      .expect.element('@status').text.to.contain('Connected').before(15000)
   },
 
   'Toggle transaction metadata': function (browser) {
@@ -85,13 +85,13 @@ module.exports = {
 
     metadata.setGasLimit('')
     deploy.deploy()
-    contract.expect.element('@deployedContract').to.be.visible.before(5000)
+    contract.expect.element('@deployedContract').to.be.visible.before(15000)
 
     // save address for later
     PUBLIC_ADDRESS = await contract.getAddress()
 
     contract.toggleExpand()
-      .waitForElementVisible('@methodContainerGet', 5000)
+      .waitForElementVisible('@methodContainerGet', 10000)
     contract.expect.element('@deployedContract').text.to.not.contain(NODE_ONE_PUB_KEY)
     contract.expect.element('@deployedContract').text.to.not.contain(NODE_TWO_PUB_KEY)
     contract.expect.element('@deployedContract').text.to.not.contain(NODE_THREE_PUB_KEY)
@@ -172,7 +172,7 @@ module.exports = {
       .edit()
       .setTesseraEndpoint(rpcUrl(NODE_ONE_TESSERA))
       .save()
-      .expect.element('@status').text.to.contain('Connected').before(10000)
+      .expect.element('@status').text.to.contain('Connected').before(15000)
 
   },
 
@@ -206,13 +206,13 @@ module.exports = {
 
     deploy.expect.element('@deployButton').to.be.enabled
     deploy.deploy()
-    contract.expect.element('@deployedContract').to.be.visible.before(5000)
+    contract.expect.element('@deployedContract').to.be.visible.before(15000)
 
     // save address for later
     PRIVATE_ADDRESS = await contract.getAddress()
 
     contract.toggleExpand()
-      .waitForElementVisible('@methodContainerGet', 5000)
+      .waitForElementVisible('@methodContainerGet', 10000)
     contract.expect.element('@deployedContract').text.to.contain(NODE_ONE_PUB_KEY)
     contract.expect.element('@deployedContract').text.to.contain(NODE_TWO_PUB_KEY)
     contract.expect.element('@deployedContract').text.to.not.contain(NODE_THREE_PUB_KEY)
@@ -228,14 +228,14 @@ module.exports = {
       .setQuorumEndpoint(rpcUrl(NODE_TWO_HOST))
       .setTesseraEndpoint(rpcUrl(NODE_TWO_TESSERA))
       .save()
-      .expect.element('@status').text.to.contain('Connected').before(10000)
+      .expect.element('@status').text.to.contain('Connected').before(15000)
 
     browser.page.deploy()
       .setAddress(PRIVATE_ADDRESS)
       .attach()
 
     const contract = browser.page.contract()
-    contract.expect.element('@deployedContract').to.be.visible.before(5000)
+    contract.expect.element('@deployedContract').to.be.visible.before(15000)
 
     contract.testContractMethods('123', '333')
   },
@@ -246,12 +246,12 @@ module.exports = {
       .setQuorumEndpoint(rpcUrl(NODE_THREE_HOST))
       .setTesseraEndpoint(rpcUrl(NODE_THREE_TESSERA))
       .save()
-      .expect.element('@status').text.to.contain('Connected').before(10000)
+      .expect.element('@status').text.to.contain('Connected').before(15000)
 
     const deploy = browser.page.deploy()
     deploy.setAddress(PRIVATE_ADDRESS)
       .attach()
-    browser.expect.element('#error-container').text.to.contain('Contract does not exist at').before(5000)
+    browser.expect.element('#error-container').text.to.contain('Contract does not exist at').before(10000)
 
     browser.end()
   },
