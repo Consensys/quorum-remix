@@ -79,7 +79,7 @@ module.exports = {
       webdriver: {
         start_process: true,
         port: 4444,
-        server_path: (Services.geckodriver ? Services.geckodriver.path : ''),
+        server_path: (Services.geckodriver ? Services.geckodriver.path : 'geckodriver'),
         cli_args: [
           // very verbose geckodriver logs
           // '-vv'
@@ -107,7 +107,7 @@ module.exports = {
       webdriver: {
         start_process: true,
         port: 9515,
-        server_path: (Services.chromedriver ? Services.chromedriver.path : ''),
+        server_path: (Services.chromedriver ? Services.chromedriver.path : 'chromedriver'),
         cli_args: [
           // '--verbose'
         ]
