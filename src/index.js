@@ -1,4 +1,5 @@
-import { buildIframeClient, PluginClient } from '@remixproject/plugin'
+import { createClient } from '@remixproject/plugin-iframe'
+import { PluginClient } from '@remixproject/plugin'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
@@ -15,7 +16,7 @@ import { getPluginDevMode, isDevelopment, loadFromLocalStorage } from './utils/E
 const store = createStore(rootReducer,
   composeWithDevTools(applyMiddleware(thunk)))
 
-const client = buildIframeClient(new PluginClient({
+const client = createClient(new PluginClient({
   devMode: getPluginDevMode()
 }))
 

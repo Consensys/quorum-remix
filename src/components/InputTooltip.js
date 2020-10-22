@@ -11,7 +11,6 @@ export const InputTooltip = ({ text, enabled=true, children }) => {
   return <OverlayTrigger
     placement='bottom-start'
     trigger={'hover'}
-    show={'false'}
     overlay={
       <Popover className="bg-light" id="popover-basic">
         <Popover.Content>
