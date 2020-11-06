@@ -161,7 +161,7 @@ export function TxMetadata () {
       <div style={labelStyle}>Privacy Level</div>
       <div style={reactSelectStyle}><PrivacyFlag/></div>
       <a title="Privacy Enhancements Documentation"
-         target="_blank"
+         target="_blank" rel="noopener noreferrer"
         href="https://docs.goquorum.consensys.net/en/stable/Concepts/Privacy/PrivacyEnhancements/">
         <i style={iconStyle} className="fa fa-info-circle" />
       </a>
