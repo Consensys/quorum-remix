@@ -131,7 +131,7 @@ export const txMetaRowRightStyle = {
 export const labelStyle = {
   fontSize: 12,
   whiteSpace: 'nowrap',
-  minWidth: 72,
+  minWidth: 80,
 }
 
 export const checkboxStyle = {

@@ -26,6 +26,13 @@ export function updatePrivateFrom (selection) {
   }
 }
 
+export function updatePrivacyFlag (privacyFlag) {
+  return {
+    type: 'UPDATE_PRIVACY_FLAG',
+    payload: privacyFlag,
+  }
+}
+
 export function selectAccount (account) {
   return { type: 'SELECT_ACCOUNT', payload: account }
 }

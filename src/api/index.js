@@ -159,6 +159,7 @@ export async function deploy (contract, params, txMetadata) {
   if (txMetadata.privateTransaction) {
     tx.privateFrom = txMetadata.privateFrom
     tx.privateFor = txMetadata.privateFor
+    tx.privacyFlag = parseInt(txMetadata.privacyFlag, 10)
   }
 
   const response = await deployableContract.send(tx)
@@ -183,7 +184,8 @@ export async function contractMethod (txMetadata, params, method, privateFor,
     value: Web3.utils.toWei(value, valueDenomination),
     args: _params,
     privateFor: privateFor && selectedPrivateFor.filter(
-      ({ enabled }) => enabled).map(({ key }) => key)
+      ({ enabled }) => enabled).map(({ key }) => key),
+    privacyFlag: contract.privacyFlag && parseInt(contract.privacyFlag, 10),
   }
 
   methodArgs.gas = gasLimit !== '' ? parseInt(gasLimit, 10) : await web3Method.estimateGas(methodArgs)

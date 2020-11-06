@@ -66,7 +66,8 @@ export function addContract (contract, address, txMetadata) {
       ...contract,
       address: address,
       privateFor: txMetadata.privateFor,
-      privateFrom: txMetadata.privateFrom
+      privateFrom: txMetadata.privateFrom,
+      privacyFlag: txMetadata.privacyFlag,
     }
   }
 }
