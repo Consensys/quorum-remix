@@ -7,6 +7,7 @@ const initialState = {
   privateTransaction: false,
   privateFor: undefined,
   privateFrom: undefined,
+  privacyFlag: "0",
 }
 
 export function txMetadataReducer (txMetadata = initialState, action) {
@@ -68,6 +69,14 @@ export function txMetadataReducer (txMetadata = initialState, action) {
         ...txMetadata,
         privateFrom,
       }
+
+    case 'UPDATE_PRIVACY_FLAG':
+      const privacyFlag = action.payload
+      return {
+        ...txMetadata,
+        privacyFlag,
+      }
+
 
     default:
       return txMetadata

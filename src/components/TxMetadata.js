@@ -26,6 +26,7 @@ import {
 import { InputTooltip } from './InputTooltip'
 import { PrivateFor } from './PrivateFor'
 import { PrivateFrom } from './PrivateFrom'
+import { PrivacyFlag } from './PrivacyFlag'
 
 export function TxMetadata () {
   const state = useSelector(state => state)
@@ -155,6 +156,15 @@ export function TxMetadata () {
     {privateTransaction && (<div style={txMetaRowStyle}>
       <div style={labelStyle}>Private for</div>
       <div style={reactSelectStyle}><PrivateFor/></div>
+    </div>)}
+    {privateTransaction && (<div style={txMetaRowStyle}>
+      <div style={labelStyle}>Privacy Level</div>
+      <div style={reactSelectStyle}><PrivacyFlag/></div>
+      <a title="Privacy Enhancements Documentation"
+         target="_blank" rel="noopener noreferrer"
+        href="https://docs.goquorum.consensys.net/en/stable/Concepts/Privacy/PrivacyEnhancements/">
+        <i style={iconStyle} className="fa fa-info-circle" />
+      </a>
     </div>)}
     {renderHeader()}
     {show ? expandedMetadata() : collapsedMetadata()}
