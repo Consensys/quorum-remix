@@ -25,7 +25,7 @@ jobs:
           cp -r .github test-browser package.json nightwatch.conf.js ../build/
           echo "Copying build directory to temp folder or it will be wiped out when we checkout gh-pages"
           echo "Setting environment variable COMMIT_SHA to the shortened hash of the current commit: ${GITHUB_SHA::8}"
-          echo "::set-env name=COMMIT_SHA::${GITHUB_SHA::8}"
+          echo "COMMIT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
       - name: Checkout gh-pages
         uses: actions/checkout@v2
         with:
@@ -41,7 +41,7 @@ jobs:
           echo "" >> README.md
           echo "Access through Remix at https://remix.ethereum.org" >> README.md
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           title: "[Prod Release] Merge to gh-pages"
           commit-message: "Build of #${{ env.COMMIT_SHA }}"
