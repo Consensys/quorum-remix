@@ -11,14 +11,12 @@ import { Provider } from 'react-redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import { addPublicKey, connectToNetwork, fetchCompilationResult, setError } from './actions'
-import { getPluginDevMode, isDevelopment, loadFromLocalStorage } from './utils/EnvUtils'
+import { isDevelopment, loadFromLocalStorage } from './utils/EnvUtils'
 
 const store = createStore(rootReducer,
   composeWithDevTools(applyMiddleware(thunk)))
 
-const client = createClient(new PluginClient({
-  devMode: getPluginDevMode()
-}))
+const client = createClient(new PluginClient({}))
 
 client.onload(async () => {
   ReactDOM.render(

@@ -4,8 +4,8 @@
   "private": true,
   "homepage": "https://remix-plugin.goquorum.com/",
   "dependencies": {
-    "@remixproject/plugin": "^0.3.0",
-    "@remixproject/plugin-iframe": "^0.3.0",
+    "@remixproject/plugin": "^0.3.3",
+    "@remixproject/plugin-iframe": "^0.3.3",
     "axios": "^0.20.0",
     "copy-to-clipboard": "^3.3.1",
     "dotenv-flow": "^3.2.0",
