@@ -26,7 +26,7 @@ const commands = [{
     this.api.element('css selector', '#plugin-quorum', (frame) => {
       this.api.frame(frame.value)
     })
-      .waitForElementVisible('.App', 15000)
+      .waitForElementVisible('.App', 5000)
     return this
   },
 }]
