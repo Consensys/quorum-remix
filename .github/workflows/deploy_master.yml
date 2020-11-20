@@ -41,7 +41,7 @@ jobs:
           echo "" >> README.md
           echo "Access through Remix at https://remix.ethereum.org" >> README.md
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           title: "[Prod Release] Merge to gh-pages"
           commit-message: "Build of #${{ env.COMMIT_SHA }}"
