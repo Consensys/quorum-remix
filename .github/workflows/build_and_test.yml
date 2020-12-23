@@ -21,6 +21,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.x
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Run wizard
+        run: |
+          npx quorum-wizard -q
+          cd network/3-nodes-quickstart
+          ./start.sh
+          cd -
       - name: Build and serve plugin from http://localhost:3000
         run: |
           yarn install
@@ -32,16 +42,20 @@ jobs:
           yarn test_chrome_headless
           yarn test_firefox_headless
         env:
-          RPC_USERNAME: ${{ secrets.KaleidoUsername }}
-          RPC_PASSWORD: ${{ secrets.KaleidoPassword }}
           RPC_SCHEME: http
           REMIX_URL: http://remix-dev.goquorum.com
-          NODE_ONE_HOST: u0suxofstd-u0ebuvkn9x-rpc.us0-aws.kaleido.io
-          NODE_ONE_TESSERA: u0suxofstd-u0ebuvkn9x-ptx.us0-aws.kaleido.io
-          NODE_ONE_PUB_KEY: +07DSpKfz/4OdhVeoGM+ggX2peoXvXjPf/p/iuzStkU=
-          NODE_TWO_HOST: u0suxofstd-u0eidl9700-rpc.us0-aws.kaleido.io
-          NODE_TWO_TESSERA: u0suxofstd-u0eidl9700-ptx.us0-aws.kaleido.io
-          NODE_TWO_PUB_KEY: 2GotprZj8m1nSC1W0IC5xj2pDnTBdQG4k7GPbgVjJTQ=
-          NODE_THREE_HOST: u0suxofstd-u0mi62ig6z-rpc.us0-aws.kaleido.io
-          NODE_THREE_TESSERA: u0suxofstd-u0mi62ig6z-ptx.us0-aws.kaleido.io
-          NODE_THREE_PUB_KEY: PEw8JvJPkBAuZ5UrQaHu6NuBHqIm+ICtRMhTzAnglBw=
+          NODE_ONE_HOST: "localhost:22000"
+          NODE_ONE_TESSERA: "localhost:9081"
+          NODE_ONE_PUB_KEY: BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=
+          NODE_TWO_HOST: "localhost:22001"
+          NODE_TWO_TESSERA: "localhost:9082"
+          NODE_TWO_PUB_KEY: QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc=
+          NODE_THREE_HOST: "localhost:22002"
+          NODE_THREE_TESSERA: "localhost:9083"
+          NODE_THREE_PUB_KEY: 1iTZde/ndBHvzhcl7V68x44Vx7pl8nwx9LqnM/AfJUg=
+      - name: Make reports/screenshots available
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: reports
+          path: reports
