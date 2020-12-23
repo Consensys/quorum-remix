@@ -78,7 +78,7 @@ module.exports = {
     const deploy = browser.page.deploy()
     const contract = browser.page.contract()
 
-    metadata.setGasLimit('100000')
+    metadata.setGasLimit('70000')
     deploy.expect.element('@deployButton').to.be.enabled
     deploy.deploy()
     browser.expect.element('#error-container').text.to.contain('The contract code couldn\'t be stored, please check your gas limit.').before(5000)
