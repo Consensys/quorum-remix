@@ -13,7 +13,10 @@ class setUpSolidityPlugins extends EventEmitter {
       .clickItemIfExists('#autoCompile')
       .scrollAndClick('#icon-panel div[plugin="fileExplorers"]')
       .pause(100)
-      .clickItemIfExists('div[key="browser/1_Storage.sol"]')
+      // newer structure
+      .clickItemIfExists('div[data-id="treeViewDivtreeViewItemcontracts"]')
+      .clickItemIfExists('div[data-id="treeViewDivtreeViewItemcontracts/1_Storage.sol"]')
+      // current structure
       .clickItemIfExists('div[data-id="treeViewDivtreeViewItembrowser/contracts/1_Storage.sol"]')
       .pause(100)
       .perform(() => {
