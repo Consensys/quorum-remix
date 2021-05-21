@@ -11,13 +11,13 @@ class setUpSolidityPlugins extends EventEmitter {
       .clickLaunchIcon('solidity')
       .pause(500)
       .clickItemIfExists('#autoCompile')
-      .scrollAndClick('#icon-panel div[plugin="fileExplorers"]')
+      .clickItemIfExists('div[plugin="fileExplorerIcons"]')
       .pause(100)
-      // newer structure
+      // already expanded in alpha, try clicking directly first
+      .clickItemIfExists('div[data-id="treeViewDivtreeViewItemcontracts/1_Storage.sol"]')
+      // if not, click the contract folder to expand, then the contract
       .clickItemIfExists('div[data-id="treeViewDivtreeViewItemcontracts"]')
       .clickItemIfExists('div[data-id="treeViewDivtreeViewItemcontracts/1_Storage.sol"]')
-      // current structure
-      .clickItemIfExists('div[data-id="treeViewDivtreeViewItembrowser/contracts/1_Storage.sol"]')
       .pause(100)
       .perform(() => {
         this.emit('complete')
