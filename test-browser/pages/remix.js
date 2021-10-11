@@ -1,6 +1,6 @@
 const elements = {
   pluginManager: '#icon-panel div[plugin="pluginManager"]',
-  activateQuorum: '#pluginManager article[id="remixPluginManagerListItem_quorum"] button',
+  activateQuorum: 'button[data-id="pluginManagerComponentActivateButtonquorum"]',
   remember: '#remember',
   permissionOk: '#modal-footer-ok',
   footer: '#footer',
