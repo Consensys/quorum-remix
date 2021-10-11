@@ -4,7 +4,9 @@ class setUpSolidityPlugins extends EventEmitter {
   command (target) {
     this.api
       // remix-alpha and non-ethereum.org sites show a warning dialog, close it if it exists
-      .clickItemIfExists('#modal-footer-ok')
+      .clickItemIfExists('#modal-body-id button.btn-secondary')
+      .pause(1000)
+      .clickItemIfExists('#remixTourSkipbtn')
       .pause(1000)
       .click('button[data-id="landingPageStartSolidity"]')
       .pause(1000)
