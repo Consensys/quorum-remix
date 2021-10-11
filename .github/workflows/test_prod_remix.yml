@@ -37,7 +37,7 @@ jobs:
           yarn test_firefox_headless
         env:
           RPC_SCHEME: http
-          REMIX_URL: http://remix.ethereum.org
+          REMIX_URL: https://remix.ethereum.org
           NODE_ONE_HOST: "localhost:22000"
           NODE_ONE_TESSERA: "localhost:9081"
           NODE_ONE_PUB_KEY: BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=
